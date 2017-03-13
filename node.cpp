@@ -48,28 +48,56 @@ Node::~Node()
 void Node::changeLocation(int direction)
 {
     QVector3D coords = prevNode->transform->translation();
+//  back to int
+    float y = coords.y()/0.8660254037844;
+    float x = coords.x() - y/2;
+
+    if (DEBUG_NODE)
+    {
+        qDebug() << direction;
+        qDebug() << " (" <<
+                    (prevNode->transform->translation().x()) << ", " <<
+                    (prevNode->transform->translation().y()) << ")";
+        qDebug() << " (" << x << ", " << y << ")";
+    }
+
     switch(direction)
     {
-    case 0:coords.setX(coords.x()-DISTANCE_NODE);
+    case 0:x-=DISTANCE_NODE;
         break;
-    case 1:coords.setX(coords.x()+DISTANCE_NODE);
+    case 1:x+=DISTANCE_NODE;
         break;
-    case 2:coords.setY(coords.y()+DISTANCE_NODE);
+    case 2:y-=DISTANCE_NODE;
         break;
-    case 3:coords.setY(coords.y()-DISTANCE_NODE);
+    case 3:y+=DISTANCE_NODE;
         break;
-//    case 4:coords.setY(coords.y()-DISTANCE_NODE);coords.setX(coords.x()+DISTANCE_NODE);
-//        break;
-//    case 5:coords.setY(coords.y()+DISTANCE_NODE);coords.setX(coords.x()-DISTANCE_NODE);
-//        break;
+    case 4:
+    {
+        x+=DISTANCE_NODE;
+        y-=DISTANCE_NODE;
+    }
+        break;
+    case 5:
+    {
+        x-=DISTANCE_NODE;
+        y+=DISTANCE_NODE;
+    }
+        break;
     default:
         break;
     }
-//    qDebug()<<coords.x();
-//    coords.setX(coords.x()*0.8660254037844);
-//    coords.setY(coords.y()+coords.x()/2);
 
+//  go to float
+    coords.setX(x + y/2.0);
+    coords.setY(y * 0.8660254037844);
+
+    if (DEBUG_NODE)
+    {
+        qDebug() << " (" << x << ", " << y << ")";
+        qDebug() << " (" << coords.x() << ", " << coords.y() << ")";
+    }
     this->transform->setTranslation(coords);
+
 
     if(this->connection)
         this->connection->changeLocation(prevNode->transform->translation(),coords);

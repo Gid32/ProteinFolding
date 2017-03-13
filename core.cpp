@@ -17,10 +17,10 @@ Coord Core::getDirectionCoord(int direction, Coord c)
         break;
     case 3:c.y++;
         break;
-//    case 4:c.x++;c.y--;
-//        break;
-//    case 5:c.x--;c.y++;
-//        break;
+    case 4:c.x++;c.y--;
+        break;
+    case 5:c.x--;c.y++;
+        break;
     }
     return c;
 }
@@ -59,9 +59,13 @@ QVector<int> Core::canTurn()
     }
     QString str;
     str.clear();
-//    for(int i=0;i<possible.size();i++)
-//        str.push_back(QString::number(possible.at(i))+" ");
-//    qDebug()<<str;
+    if (DEBUG_CORE)
+    {
+//      posible turns
+        for(int i=0;i<possible.size();i++)
+            str.push_back(QString::number(possible.at(i))+" ");
+        qDebug()<< "posible turns: " + str;
+    }
     return possible;
 }
 
@@ -105,20 +109,23 @@ QVector<int> Core::createConvolution()
         currentDirection = direction;
         currentCoords = newCoord;
     }
-   // qDebug()<<"---";
-//    for(int i=0;i<COUNT;i++)
-//    {
-//        QString str;
-//        str.clear();
-//        for(int j=0;j<COUNT;j++)
-//            str.push_back(QString::number(area[i][j]));
-//        qDebug()<<str;
-//    }
-//    for(int i=0;i<currentVectorTurn.size();i++)
-//    {
-//       // qDebug()<<currentVectorTurn.at(i);
-//    }
-//    //qDebug()<<"end";
+    if (DEBUG_CORE)
+    {
+        qDebug()<<"area";
+        for(int i=0;i<COUNT;i++)
+        {
+            QString str;
+            str.clear();
+            for(int j=0;j<COUNT;j++)
+                str.push_back(QString::number(area[i][j]));
+            qDebug()<<str;
+        }
+        qDebug()<<"turn vector";
+        for(int i=0;i<currentVectorTurn.size();i++)
+        {
+            qDebug()<<currentVectorTurn.at(i);
+        }
+    }
     return currentVectorTurn;
 }
 

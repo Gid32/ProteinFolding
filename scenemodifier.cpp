@@ -26,9 +26,12 @@ void SceneModifier::reDraw()
 {
     if(!hasVar)
         return;
+    if (DEBUG_SM) qDebug() << "--------------";
     for(int i=1;i<nodes.size();i++)//0 нод не трогаем (повороты начинаются с первого)
+    {
         if(vectorDirection.size()==COUNT-1)
             nodes.at(i)->changeLocation(vectorDirection.at(i-1));
+    }
     hasVar = false;
 }
 

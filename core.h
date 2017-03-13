@@ -35,7 +35,7 @@ signals:
     void hasBetterVariant(QVector<int> vectorTurn);
     void proteinLoaded(QVector<bool> protein);
 private:
-    int area[COUNT][COUNT];
+    int area[COUNT * 2 - 1][COUNT * 2 - 1];
     QVector<int> vectorTurn;
     QVector<bool> protein;
     Coord currentCoords;
