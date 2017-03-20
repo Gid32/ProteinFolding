@@ -3,31 +3,13 @@
 #include <windows.h>
 #include <QtCore/QDebug>
 #include <QTimer>
+#include "net.cpp"
+#include "trianglenet.cpp"
 using namespace std;
-
-Coord Core::getDirectionCoord(int direction, Coord c)
-{
-    switch(direction)
-    {
-    case 0:c.x--;
-        break;
-    case 1:c.x++;
-        break;
-    case 2:c.y--;
-        break;
-    case 3:c.y++;
-        break;
-    case 4:c.x++;c.y--;
-        break;
-    case 5:c.x--;c.y++;
-        break;
-    }
-    return c;
-}
 
 Core::Core()
 {
-
+    net = new TriangleNet();
 }
 
 void Core::init()
@@ -38,7 +20,7 @@ void Core::init()
     vectorTurn.clear();
     history.clear();
     currentDirection = 0;
-    blockTurn = -100;
+    blockTurn = BLOCK_AREA;
 }
 
 int Core::getResult()
@@ -50,10 +32,10 @@ int Core::getResult()
 QVector<int> Core::canTurn()
 {
     QVector<int> possible;
-    for(int i=MIN_TURN;i<=MAX_TURN;i++)
+    for(int i=net->getMinTurn();i<=net->getMaxTurn();i++)
     {
-        int direction = turnToDirection(currentDirection,i);
-        Coord newCoord = getDirectionCoord(direction,currentCoords);
+        int direction = net->turnToDirection(currentDirection,i);//turnToDirection(currentDirection,i);
+        Coord newCoord = net->getDirectionCoord(direction,currentCoords);//getDirectionCoord(direction,currentCoords);
         if(area[newCoord.x][newCoord.y]==FILL_AREA && blockTurn != i)
         {
             qDebug()<<i<<" "<<blockTurn;
@@ -101,10 +83,10 @@ QVector<int> Core::createConvolution()
         {
            turn = rand()%possible.size();
            turn = possible.at(turn);
-           direction = turnToDirection(currentDirection,turn);
-           newCoord = getDirectionCoord(direction,currentCoords);
+           direction = net->turnToDirection(currentDirection,turn);//turnToDirection(currentDirection,turn);
+           newCoord = net->getDirectionCoord(direction,currentCoords);//getDirectionCoord(direction,currentCoords);
            //qDebug()<<direction;
-           blockTurn = -100;
+           blockTurn = BLOCK_AREA;
         }
         area[newCoord.x][newCoord.y] = protein.at(i);
         currentVectorTurn.push_back(turn);
@@ -156,23 +138,14 @@ void Core::start()
     }
 }
 
-int Core::turnToDirection(int currentDirection,int turn)
-{
-    int direction = 0;
-
-    direction = (currentDirection+turn)%COUNT_DIRECTION;
-    if(direction<0)
-        direction += COUNT_DIRECTION;
-    return direction;
-}
 
 QVector<int> Core::getvectorDirection(QVector<int >vectorTurn)
 {
     QVector<int> vectorDirection;
     if(vectorTurn.size()==0)
         return vectorDirection;
-    vectorDirection.push_back(turnToDirection(0,vectorTurn.at(0)));
+    vectorDirection.push_back(net->turnToDirection(0,vectorTurn.at(0)));
     for(int i=1;i<vectorTurn.size();i++)
-        vectorDirection.push_back(turnToDirection(vectorDirection.last(),vectorTurn.at(i)));
+        vectorDirection.push_back(net->turnToDirection(vectorDirection.last(),vectorTurn.at(i)));
     return vectorDirection;
 }

@@ -8,9 +8,9 @@
 
 #define PI 3.14159265
 
-#define MIN_TURN 1
-#define COUNT_DIRECTION 4
-#define MAX_TURN COUNT_DIRECTION - 1
+//#define MIN_TURN 1
+//#define COUNT_DIRECTION 6
+//#define MAX_TURN COUNT_DIRECTION - 1
 
 #define COUNT 10
 
@@ -18,8 +18,8 @@
 #define DEBUG_CORE true
 #define DEBUG_SM false
 
-#define FILL_AREA 9
-#define BLOCK_AREA 8
+#define FILL_AREA -1
+#define BLOCK_AREA -2
 
 #endif // SETTINGS_H
 
