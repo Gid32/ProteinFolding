@@ -7,6 +7,7 @@ SOURCES += main.cpp \
     node.cpp \
     core.cpp \
     scenemodifier.cpp \
+    net.cpp
 
 
 HEADERS += \
@@ -15,6 +16,7 @@ HEADERS += \
     core.h \
     connection.h \
     scenemodifier.h \
+    net.h
 
 
 

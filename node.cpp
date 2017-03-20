@@ -11,8 +11,8 @@ Node::Node(Qt3DCore::QEntity *parent, bool hFob, QVector3D vect, Node *prevNode)
     if(!prevNode)
         color = QColor(255,255,0,255);
     mesh = new Qt3DExtras::QSphereMesh();
-    mesh->setRings(2);
-    mesh->setSlices(4);
+    mesh->setRings(10);
+    mesh->setSlices(10);
     mesh->setRadius(RADIUS_NODE);
 
     transform = new Qt3DCore::QTransform();

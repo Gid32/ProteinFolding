@@ -32,9 +32,9 @@ Core::Core()
 
 void Core::init()
 {
-    for(int i=0;i<COUNT;i++)
-        for(int j=0;j<COUNT;j++)
-            area[i][j] = 5;
+    for(int i=0;i<COUNT * 2 - 1;i++)
+        for(int j=0;j<COUNT * 2 - 1;j++)
+            area[i][j] = FILL_AREA;
     vectorTurn.clear();
     history.clear();
     currentDirection = 0;
@@ -54,8 +54,11 @@ QVector<int> Core::canTurn()
     {
         int direction = turnToDirection(currentDirection,i);
         Coord newCoord = getDirectionCoord(direction,currentCoords);
-        if(area[newCoord.x][newCoord.y]==5 && blockTurn != i)
+        if(area[newCoord.x][newCoord.y]==FILL_AREA && blockTurn != i)
+        {
+            qDebug()<<i<<" "<<blockTurn;
             possible.push_back(i);
+        }
     }
     QString str;
     str.clear();
@@ -85,7 +88,7 @@ QVector<int> Core::createConvolution()
         {
             //isBreak = true;
             i-=2;//-2 потому что не только этот шаг не удалось построить но и еще нужно старый удалить
-            area[history.last().coord.x][history.last().coord.y] = 7;
+            area[history.last().coord.x][history.last().coord.y] = BLOCK_AREA;
             blockTurn = history.last().turn;
             currentDirection = history.last().direction;
             //qDebug()<<"pzdc block "<<blockTurn<<" direction "<<direction;
@@ -123,7 +126,7 @@ QVector<int> Core::createConvolution()
         qDebug()<<"turn vector";
         for(int i=0;i<currentVectorTurn.size();i++)
         {
-            qDebug()<<currentVectorTurn.at(i);
+            qDebug()<<"turn "<<i<<": "<<currentVectorTurn.at(i);
         }
     }
     return currentVectorTurn;
