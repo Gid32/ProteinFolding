@@ -13,6 +13,7 @@
 #include <Qt3DExtras/QPlaneMesh>
 #include <Qt3DExtras/QSphereMesh>
 #include <Qt3DExtras/QPhongMaterial>
+#include <cmath>
 #include "settings.h"
 
 class Connection:public QObject

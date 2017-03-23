@@ -6,15 +6,20 @@
 #define LENGTH_CONNECTION 0.9f
 #define DISTANCE_NODE 1.0
 
-#define MIN_TURN 1
-#define MAX_TURN COUNT_DIRECTION - 1
-#define COUNT_DIRECTION 6
+#define PI 3.14159265
 
-#define COUNT 30
+//#define MIN_TURN 1
+//#define COUNT_DIRECTION 6
+//#define MAX_TURN COUNT_DIRECTION - 1
 
-#define DEBUG_NODE false
-#define DEBUG_CORE false
+#define COUNT 10
+
+#define DEBUG_NODE true
+#define DEBUG_CORE true
 #define DEBUG_SM false
+
+#define FILL_AREA -1
+#define BLOCK_AREA -2
 
 #endif // SETTINGS_H
 

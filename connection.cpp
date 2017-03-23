@@ -37,17 +37,15 @@ void Connection::changeLocation(QVector3D vect1,QVector3D vect2)
     delete transform;
     transform = new Qt3DCore::QTransform();
     transform->setScale(1.0f);
-    if(vect1.x()!=vect2.x())
-    {
-        vect.setX((vect1.x()+vect2.x())/2);
-        transform->setRotationZ(90.0f);
 
-    }
-    else if(vect1.y()!=vect2.y())
-    {
-        vect.setY((vect1.y()+vect2.y())/2);
-        transform->setRotationY(90.0f);
-    }
+    vect.setX((vect1.x()+vect2.x())/2);
+    vect.setY((vect1.y()+vect2.y())/2);
+    double gr = std::atan((vect2.y()-(vect.y()))/(vect2.x()-vect.x()))* 180 / PI;
+    (vect.x() > 0) ? gr+=90 : gr+=270;
+    qDebug()<<gr<<endl;
+    transform->setRotationZ(gr);
+//    transform->setRotationY(90.0f);
+
     transform->setTranslation(vect);
     obj->addComponent(transform);
 }

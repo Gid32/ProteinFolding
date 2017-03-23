@@ -17,7 +17,7 @@ void SceneModifier::genericNodes(QVector<bool> protein)
     Node *node = nullptr;
     for(int i=0;i<protein.size();i++)
     {
-        nodes.push_back(new Node(rootEntity,protein.at(i),QVector3D(0.0f, 0.0f, 0.0f),node));
+        nodes.push_back(new Node(rootEntity,protein.at(i),QVector3D(2.0f, 2.0f, 0.0f),node));
         node = nodes.last();
     }
 }
