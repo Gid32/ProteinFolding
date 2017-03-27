@@ -90,9 +90,9 @@ int main(int argc, char **argv)
     Core *core = new Core();
     SceneModifier *modifier = new SceneModifier(rootEntity);
 
-    qRegisterMetaType<QVector<int>>();
+    qRegisterMetaType<QVector<QVector3D>>();
     qRegisterMetaType<QVector<bool>>();
-    QObject::connect(core, SIGNAL(hasBetterVariant(QVector<int>)), modifier, SLOT(update(QVector<int>)));
+    QObject::connect(core, SIGNAL(hasBetterVariant(QVector<QVector3D>)), modifier, SLOT(update(QVector<QVector3D>)));
     QObject::connect(core, SIGNAL(proteinLoaded(QVector<bool>)), modifier, SLOT(genericNodes(QVector<bool>)));
 
     QThread* thread = new QThread;

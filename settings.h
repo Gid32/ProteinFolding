@@ -8,18 +8,14 @@
 
 #define PI 3.14159265
 
-//#define MIN_TURN 1
-//#define COUNT_DIRECTION 6
-//#define MAX_TURN COUNT_DIRECTION - 1
-
-#define COUNT 10
-
-#define DEBUG_NODE true
-#define DEBUG_CORE true
+#define COUNT 50
+#define DEBUG_NODE false
+#define DEBUG_CORE false
 #define DEBUG_SM false
+#define DEBUG_GLOBAL false
 
-#define FILL_AREA -1
-#define BLOCK_AREA -2
+#define FILL_AREA 8
+#define BLOCK_AREA 9
 
 #endif // SETTINGS_H
 

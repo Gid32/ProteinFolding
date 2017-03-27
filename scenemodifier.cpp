@@ -17,7 +17,7 @@ void SceneModifier::genericNodes(QVector<bool> protein)
     Node *node = nullptr;
     for(int i=0;i<protein.size();i++)
     {
-        nodes.push_back(new Node(rootEntity,protein.at(i),QVector3D(2.0f, 2.0f, 0.0f),node));
+        nodes.push_back(new Node(rootEntity,protein.at(i),QVector3D(0.0f, 0.0f, 0.0f),node));
         node = nodes.last();
     }
 }
@@ -29,8 +29,8 @@ void SceneModifier::reDraw()
     if (DEBUG_SM) qDebug() << "--------------";
     for(int i=1;i<nodes.size();i++)//0 нод не трогаем (повороты начинаются с первого)
     {
-        if(vectorDirection.size()==COUNT-1)
-            nodes.at(i)->changeLocation(vectorDirection.at(i-1));
+        if(vectorCoords.size()==COUNT-1)
+            nodes.at(i)->changeLocation(vectorCoords.at(i-1));
     }
     hasVar = false;
 }
@@ -45,9 +45,9 @@ SceneModifier::SceneModifier(Qt3DCore::QEntity *rootEntity)
     timer->start(1000);
 }
 
-void SceneModifier::update(QVector<int> vectorDirection)
+void SceneModifier::update(QVector<QVector3D> vectorCoords)
 {
-    this->vectorDirection = vectorDirection;
+    this->vectorCoords = vectorCoords;
     hasVar = true;
 }
 

@@ -1,27 +1,26 @@
 #ifndef NET_H
 #define NET_H
 #include "settings.h"
+#include <QObject>
+#include <QVector>
+#include <QVector3D>
+#include <QtCore/QObject>
+#include <QDebug>
 
-struct Coord
+class Net:public QObject
 {
-    int x;
-    int y;
-    Coord(int x,int y):x(x),y(y){}
-    Coord(){}
-};
-
-class Net
-{
+     Q_OBJECT
 protected:
     int minTurn;
     int maxTurn;
     int countDirection;
 public:
     int turnToDirection(int currentDirection,int turn);
-    virtual Coord getDirectionCoord(int direction, Coord c) = 0;
+    virtual QVector3D getDirectionCoord(int direction, QVector3D c, bool isDraw = false) = 0;
+    virtual QVector3D getCoords(QVector3D prevCoord, int direction) = 0;
     int getMinTurn();
     int getMaxTurn();
-    Net();
+    explicit Net();
 };
 
 #endif // NET_H

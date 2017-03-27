@@ -5,14 +5,17 @@
 #include <QVector>
 #include "settings.h"
 #include "trianglenet.h"
+#include "quadnet.h"
+#include "cubenet.h"
+#include "triangle3dnet.h"
 #include <QtCore/QObject>
 
 struct History
 {
-    Coord coord;
+    QVector3D coord;
     int turn;
     int direction;
-    History(Coord coord,int turn,int direction)
+    History(QVector3D coord,int turn,int direction)
     {
         this->coord = coord;
         this->turn = turn;
@@ -26,16 +29,15 @@ class Core:public QObject
 {
   Q_OBJECT
 signals:
-    void hasBetterVariant(QVector<int> vectorTurn);
+    void hasBetterVariant(QVector<QVector3D> vectorCoords);
     void proteinLoaded(QVector<bool> protein);
 private:
     Net *net;
-    int area[COUNT * 2 - 1][COUNT * 2 - 1];
+    int area[COUNT * 2 - 1][COUNT * 2 - 1][COUNT * 2 - 1];
     QVector<int> vectorTurn;
     QVector<bool> protein;
-    Coord currentCoords;
+    QVector3D currentCoords;
     int currentDirection;
-    //Coord getDirectionCoord(int direction, Coord c);
     QVector<int> createConvolution();
     int bestResult;
     int blockTurn;
@@ -46,7 +48,8 @@ private:
 public:
     explicit Core();
     QVector<int> getvectorDirection(QVector<int> vectorTurn);
-    //int turnToDirection(int currentDirection,int turn);
+    QVector<QVector3D> getVectorCoords(QVector<int> vectorDirection);
+    QVector<QVector3D> getVectorMCoords(QVector<int> vectorDirection);
     void init();
 public slots:
     void start();

@@ -30,7 +30,7 @@ public:
     Qt3DCore::QTransform *transform;
     explicit Node(Qt3DCore::QEntity *parent, bool hFob, QVector3D vect, Node *prevNode);
     ~Node();
-    void changeLocation(int direction);
+    void changeLocation(QVector3D coords);
 };
 
 #endif // NODE_H

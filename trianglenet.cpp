@@ -7,22 +7,34 @@ TriangleNet::TriangleNet()
     this->countDirection = 6;
 }
 
-Coord TriangleNet::getDirectionCoord(int direction, Coord c)
+QVector3D TriangleNet::getDirectionCoord(int direction, QVector3D c, bool isDraw)
 {
+    int operation = isDraw ? DISTANCE_NODE : 1;
     switch(direction)
     {
-    case 0:c.x--;
+    case 0:c.setX(c.x()-operation);
         break;
-    case 1:c.x++;
+    case 1:c.setX(c.x()+operation);
         break;
-    case 2:c.y--;
+    case 2:c.setY(c.y()-operation);
         break;
-    case 3:c.y++;
+    case 3:c.setY(c.y()+operation);
         break;
-    case 4:c.x++;c.y--;
+    case 4:c.setX(c.x()+operation);c.setY(c.y()-operation);
         break;
-    case 5:c.x--;c.y++;
+    case 5:c.setX(c.x()-operation);c.setY(c.y()+operation);
         break;
     }
     return c;
+}
+
+QVector3D TriangleNet::getCoords(QVector3D prevCoord, int direction)
+{
+    QVector3D coords;
+    qDebug()<<prevCoord.x()<<" - "<<prevCoord.y();
+    coords.setX(prevCoord.x()+prevCoord.y()/2.0);
+    coords.setY(prevCoord.y()*COORD_FORMULE);
+    qDebug()<<coords.x()<<" - "<<coords.y();
+
+    return coords;
 }

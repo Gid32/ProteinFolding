@@ -25,13 +25,13 @@ public:
     explicit SceneModifier(Qt3DCore::QEntity *rootEntity);
     ~SceneModifier();
 public slots:
-    void update(QVector<int> vectorDirection);
+    void update(QVector<QVector3D> vectorCoords);
     void genericNodes(QVector<bool> protein);
     void reDraw();
 private:
     bool hasVar;
     void clear();
-    QVector<int> vectorDirection;
+    QVector<QVector3D> vectorCoords;
     QVector<Node*> nodes;
     Qt3DCore::QEntity *rootEntity;
 };
