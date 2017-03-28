@@ -42,6 +42,7 @@ private:
     int bestResult;
     bool isBreak;
     QVector<History> history;
+    bool debug;
     int getResult();
     QVector<int> canTurn();
     void createConvolution();
