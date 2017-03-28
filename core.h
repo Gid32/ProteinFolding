@@ -10,6 +10,8 @@
 #include "triangle3dnet.h"
 #include <QtCore/QObject>
 
+typedef unsigned char BYTE;
+
 struct History
 {
     QVector3D coord;
@@ -33,7 +35,7 @@ signals:
     void proteinLoaded(QVector<bool> protein);
 private:
     Net *net;
-    int area[COUNT * 2 - 1][COUNT * 2 - 1][COUNT * 2 - 1];
+    BYTE area[COUNT * 2 - 1][COUNT * 2 - 1][COUNT * 2 - 1];
     QVector<bool> protein;
     QVector3D currentCoords;
     int currentDirection;

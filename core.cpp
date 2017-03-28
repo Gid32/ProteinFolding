@@ -39,8 +39,8 @@ int Core::getCount(QVector3D coord,QVector3D blockCoordPrev,QVector3D blockCoord
             count += isHydroFobByCoord(testCoord);
             if(isHydroFobByCoord(testCoord))
             {
-                qDebug()<<"eta";
-                debugCoord(testCoord);
+//                qDebug()<<"eta";
+//                debugCoord(testCoord);
             }
         }
     }
@@ -69,11 +69,11 @@ int Core::getResult()
         if(isHydroFobByCoord(coord))
             result += getCount(coord,blockCoordPrev,blockCoordNext);
 
-        qDebug()<<"----------";
-        debugCoord(blockCoordPrev);
-        debugCoord(coord);
-        debugCoord(blockCoordNext);
-        qDebug()<<"-----end----";
+//        qDebug()<<"----------";
+//        debugCoord(blockCoordPrev);
+//        debugCoord(coord);
+//        debugCoord(blockCoordNext);
+//        qDebug()<<"-----end----";
 
         blockCoordPrev = coord;
    }
@@ -144,7 +144,7 @@ void Core::start()
     {
         if(isBreak)
             break;
-        qDebug()<<"start conv";
+        //qDebug()<<"start conv";
         createConvolution();
 
         int result = getResult();
