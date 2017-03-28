@@ -52,11 +52,19 @@ void Core::debugCoord(QVector3D coord)
     qDebug()<<coord.x()<<" "<<coord.y();//<<" "<<coord.z();
 }
 
+void Core::debugHistoryCoord()
+{
+    for (int i = 0; i < history.size(); ++i)
+    {
+        debugCoord(history[i].coord);
+    }
+}
+
 int Core::getResult()
 {
    int result = 0;
    int x,y,z;
-   x = y = z = COUNT/2;
+   x = y = z = COUNT;
    QVector3D blockCoordPrev(x,y,z);
    QVector3D blockCoordNext = history[0].coord;
    if(isHydroFobByCoord(blockCoordPrev))
@@ -66,6 +74,9 @@ int Core::getResult()
         if(i!=history.size()-1)
             blockCoordNext = history[i+1].coord;
         QVector3D coord = history[i].coord;
+        if(coord.x()<1 || coord.y()<1)
+           qDebug()<<i<<" "<<coord.x()<<coord.y()<<coord.z();
+            //debugCoord(coord);
         if(isHydroFobByCoord(coord))
             result += getCount(coord,blockCoordPrev,blockCoordNext);
 
@@ -98,9 +109,9 @@ QVector<int> Core::canTurn()
 void Core::createConvolution()
 {
     init();
-    currentCoords.setX((int)COUNT/2);
-    currentCoords.setY((int)COUNT/2);
-    currentCoords.setZ((int)COUNT/2);
+    currentCoords.setX(COUNT);
+    currentCoords.setY(COUNT);
+    currentCoords.setZ(COUNT);
     QVector3D newCoords = currentCoords;
     area[(int)currentCoords.x()][(int)currentCoords.y()][(int)currentCoords.z()] = protein.at(0);
     int turn,direction;
@@ -155,13 +166,15 @@ void Core::start()
             QVector<QVector3D> coords;
             for (int i = 0; i < history.size(); ++i)
             {
-                QVector3D coord(history[i].coord.x()-COUNT/2,history[i].coord.y()-COUNT/2,history[i].coord.z()-COUNT/2);
+
+                //debugHistoryCoord();
+                QVector3D coord(history[i].coord.x()-COUNT,history[i].coord.y()-COUNT,history[i].coord.z()-COUNT);
                 coords.push_back(net->getCoords(coord));
             }
             emit hasBetterVariant(coords);
             if(bestResult % 2==1)
                 test++;
-            if(test==2)
+            if(test==1)
               break;
         }
         //break;

@@ -35,7 +35,7 @@ signals:
     void proteinLoaded(QVector<bool> protein);
 private:
     Net *net;
-    BYTE area[COUNT * 2 - 1][COUNT * 2 - 1][COUNT * 2 - 1];
+    BYTE area[COUNT * 2][COUNT * 2][COUNT * 2];
     QVector<bool> protein;
     QVector3D currentCoords;
     int currentDirection;
@@ -48,6 +48,7 @@ private:
     int getCount(QVector3D coord, QVector3D blockCoordPrev, QVector3D blockCoordNext);
     bool isHydroFobByCoord(QVector3D coord);
     void debugCoord(QVector3D coord);
+    void debugHistoryCoord();
 public:
     explicit Core();
     void init();
