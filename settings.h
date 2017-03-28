@@ -14,6 +14,8 @@
 #define DEBUG_SM false
 #define DEBUG_GLOBAL false
 
+#define H_FILL 0x0
+#define H_FOB 0x1
 #define FILL_AREA 0x2
 #define BLOCK_AREA 0x3
 
