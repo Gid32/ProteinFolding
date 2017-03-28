@@ -14,8 +14,8 @@
 #define DEBUG_SM false
 #define DEBUG_GLOBAL false
 
-#define FILL_AREA 8
-#define BLOCK_AREA 9
+#define FILL_AREA 0x2
+#define BLOCK_AREA 0x3
 
 #endif // SETTINGS_H
 
