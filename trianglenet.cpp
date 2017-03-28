@@ -28,13 +28,19 @@ QVector3D TriangleNet::getDirectionCoord(int direction, QVector3D c, bool isDraw
     return c;
 }
 
-QVector3D TriangleNet::getCoords(QVector3D prevCoord, int direction)
+QVector3D TriangleNet::getCoords(QVector3D mCoord)
 {
     QVector3D coords;
-    qDebug()<<prevCoord.x()<<" - "<<prevCoord.y();
-    coords.setX(prevCoord.x()+prevCoord.y()/2.0);
-    coords.setY(prevCoord.y()*COORD_FORMULE);
-    qDebug()<<coords.x()<<" - "<<coords.y();
+    //qDebug()<<mCoord.x()<<" - "<<mCoord.y();
+    coords.setX(mCoord.x()+mCoord.y()/2.0);
+    coords.setY(mCoord.y()*COORD_FORMULE);
+//    coords.setX(coords.x()-(int)COUNT/2);
+//    coords.setY(coords.y()-(int)COUNT/2);
+    //coords.setZ(0+mCoord.z());
+//    coords.setX(coords.x()+COUNT/2);
+//    coords.setY(coords.y()+COUNT/2);
+//    coords.setZ(COUNT/2);
+    //qDebug()<<coords.x()<<" - "<<coords.y();
 
     return coords;
 }

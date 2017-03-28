@@ -24,10 +24,7 @@ QVector3D QuadNet::getDirectionCoord(int direction, QVector3D c, bool isDraw)
     return c;
 }
 
-QVector3D QuadNet::getCoords(QVector3D prevCoord, int direction)
+QVector3D QuadNet::getCoords(QVector3D mCoord)
 {
-    QVector3D coords;
-    coords = prevCoord;
-
-    return coords;
+    return mCoord;
 }

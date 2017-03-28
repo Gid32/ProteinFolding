@@ -7,7 +7,7 @@ using namespace std;
 
 Core::Core()
 {
-    net = new TriangleNet();
+    net = new QuadNet();
 }
 
 void Core::init()
@@ -16,16 +16,48 @@ void Core::init()
         for(int j=0;j<COUNT * 2 - 1;j++)
             for(int k=0;k<COUNT * 2 - 1;k++)
                 area[i][j][k] = FILL_AREA;
-    vectorTurn.clear();
+    //vectorTurn.clear();
     history.clear();
     currentDirection = 0;
-    blockTurn = BLOCK_AREA;
+}
+
+bool Core::isHydroFobByCoord(QVector3D coord)
+{
+    int value = area[(int)coord.x()][(int)coord.y()][(int)coord.z()];
+    if(value == 1)
+        return value;
+    return false;
+}
+
+int Core::getCount(QVector3D coord,QVector3D blockCoordPrev,QVector3D blockCoordNext)
+{
+    int count = 0;
+    for(int i=0;i<=net->getMaxTurn();i++)
+    {
+        QVector3D testCoord = net->getDirectionCoord(i,coord);
+        if(testCoord != blockCoordPrev && testCoord != blockCoordNext)
+            count += isHydroFobByCoord(testCoord);
+    }
+    return count;
 }
 
 int Core::getResult()
 {
-   bestResult = 0;
-   return bestResult+1;
+   int result = 0;
+   int x,y,z;
+   x = y = z = COUNT/2;
+   QVector3D blockCoordPrev(x,y,z);
+   QVector3D blockCoordNext = blockCoordPrev;
+   for (int i = 0; i < history.size(); ++i)
+   {
+        QVector3D coord = history[i].coord;
+        if(isHydroFobByCoord(coord))
+            result += getCount(coord,blockCoordPrev,blockCoordNext);
+        blockCoordPrev = coord;
+        if(i!=history.size()-1)
+            blockCoordNext = history[i+1].coord;
+   }
+   return result;
 }
 
 QVector<int> Core::canTurn()
@@ -33,35 +65,25 @@ QVector<int> Core::canTurn()
     QVector<int> possible;
     for(int i=net->getMinTurn();i<=net->getMaxTurn();i++)
     {
-        int direction = net->turnToDirection(currentDirection,i);//turnToDirection(currentDirection,i);
-        QVector3D newCoord = net->getDirectionCoord(direction,currentCoords);//getDirectionCoord(direction,currentCoords);
-        if(area[(int)newCoord.x()][(int)newCoord.y()][(int)newCoord.z()]==FILL_AREA && blockTurn != i)
+        int direction = net->turnToDirection(currentDirection,i);
+        QVector3D newCoord = net->getDirectionCoord(direction,currentCoords);
+        if(area[(int)newCoord.x()][(int)newCoord.y()][(int)newCoord.z()]==FILL_AREA)
         {
-            //qDebug()<<i<<" "<<blockTurn;
             possible.push_back(i);
         }
-    }
-    QString str;
-    str.clear();
-    if (DEBUG_CORE)
-    {
-//      posible turns
-        for(int i=0;i<possible.size();i++)
-            str.push_back(QString::number(possible.at(i))+" ");
-        qDebug()<< "posible turns: " + str;
     }
     return possible;
 }
 
-QVector<int> Core::createConvolution()
+void Core::createConvolution()
 {
     init();
-    QVector3D newCoord(0.0,0.0,0.0);
     currentCoords.setX((int)COUNT/2);
     currentCoords.setY((int)COUNT/2);
-    area[(int)currentCoords.x()][(int)currentCoords.y()][(int)newCoord.z()] = protein.at(0);
+    currentCoords.setZ((int)COUNT/2);
+    QVector3D newCoords = currentCoords;
+    area[(int)currentCoords.x()][(int)currentCoords.y()][(int)currentCoords.z()] = protein.at(0);
     int turn,direction;
-    QVector<int> currentVectorTurn;
     for(int i=1;i<protein.size();i++)
     {
         QVector<int> possible = canTurn();
@@ -70,10 +92,8 @@ QVector<int> Core::createConvolution()
             //isBreak = true;
             i-=2;//-2 потому что не только этот шаг не удалось построить но и еще нужно старый удалить
             area[(int)history.last().coord.x()][(int)history.last().coord.x()][(int)history.last().coord.z()] = BLOCK_AREA;
-            blockTurn = history.last().turn;
             currentDirection = history.last().direction;
             history.removeLast();
-            currentVectorTurn.removeLast();
             currentCoords = history.last().coord;
             continue;
         }
@@ -82,35 +102,13 @@ QVector<int> Core::createConvolution()
            turn = rand()%possible.size();
            turn = possible.at(turn);
            direction = net->turnToDirection(currentDirection,turn);
-           newCoord = net->getDirectionCoord(direction,currentCoords);
-           blockTurn = BLOCK_AREA;
+           newCoords = net->getDirectionCoord(direction,currentCoords);
         }
-        area[(int)newCoord.x()][(int)newCoord.y()][(int)newCoord.z()] = protein.at(i);
-        currentVectorTurn.push_back(turn);
-        history.push_back(History(newCoord,turn,currentDirection));
+        area[(int)newCoords.x()][(int)newCoords.y()][(int)newCoords.z()] = protein.at(i);
+        history.push_back(History(newCoords,turn,currentDirection));
         currentDirection = direction;
-        currentCoords = newCoord;
+        currentCoords = newCoords;
     }
-
-    if (DEBUG_CORE)
-    {
-        qDebug()<<"area";
-        for(int i=0;i<COUNT*2-1;i++)
-        {
-            QString str;
-            str.clear();
-            for(int j=0;j<COUNT*2-1;j++)
-                for(int k=0;k<COUNT*2-1;k++)
-                    str.push_back(QString::number(area[i][j][k]));
-            qDebug()<<str;
-        }
-        qDebug()<<"turn vector";
-        for(int i=0;i<currentVectorTurn.size();i++)
-        {
-            qDebug()<<"turn "<<i<<": "<<currentVectorTurn.at(i);
-        }
-    }
-    return currentVectorTurn;
 }
 
 void Core::start()
@@ -125,49 +123,21 @@ void Core::start()
     {
         if(isBreak)
             break;
-        QVector<int> currentVectorTurn = createConvolution();
+        createConvolution();
 
         int result = getResult();
         if(result > bestResult)
         {
             bestResult = result;
-            vectorTurn = currentVectorTurn;
-            emit hasBetterVariant(getVectorCoords(getvectorDirection(vectorTurn)));
+            qDebug()<<bestResult;
+            QVector<QVector3D> coords;
+            for (int i = 0; i < history.size(); ++i)
+            {
+                QVector3D coord(history[i].coord.x()-COUNT/2,history[i].coord.y()-COUNT/2,history[i].coord.z()-COUNT/2);
+                coords.push_back(net->getCoords(coord));
+            }
+            emit hasBetterVariant(coords);
         }
         //break;
     }
-}
-
-QVector<int> Core::getvectorDirection(QVector<int >vectorTurn)
-{
-    QVector<int> vectorDirection;
-    if(vectorTurn.size()==0)
-        return vectorDirection;
-    vectorDirection.push_back(net->turnToDirection(0,vectorTurn.at(0)));
-    for(int i=1;i<vectorTurn.size();i++)
-        vectorDirection.push_back(net->turnToDirection(vectorDirection.last(),vectorTurn.at(i)));
-    return vectorDirection;
-}
-
-QVector<QVector3D> Core::getVectorMCoords(QVector<int> vectorDirection)
-{
-    QVector<QVector3D> coords;
-    QVector3D prevCoords = QVector3D(0.0,0.0,0.0);
-    for(int i=0;i<vectorDirection.size();i++)
-    {
-        coords.push_back(net->getDirectionCoord(vectorDirection.at(i),prevCoords));
-        prevCoords = coords[i];
-    }
-    return coords;
-}
-
-QVector<QVector3D> Core::getVectorCoords(QVector<int> vectorDirection)
-{
-    QVector<QVector3D> coords;
-    QVector<QVector3D> mCoords = getVectorMCoords(vectorDirection);
-    for(int i=0;i<mCoords.size();i++)
-    {
-        coords.push_back(net->getCoords(mCoords[i],vectorDirection.at(i)));
-    }
-    return coords;
 }

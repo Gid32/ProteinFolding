@@ -17,7 +17,7 @@ protected:
 public:
     int turnToDirection(int currentDirection,int turn);
     virtual QVector3D getDirectionCoord(int direction, QVector3D c, bool isDraw = false) = 0;
-    virtual QVector3D getCoords(QVector3D prevCoord, int direction) = 0;
+    virtual QVector3D getCoords(QVector3D mCoord) = 0;
     int getMinTurn();
     int getMaxTurn();
     explicit Net();

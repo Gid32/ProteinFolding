@@ -28,10 +28,7 @@ QVector3D CubeNet::getDirectionCoord(int direction, QVector3D c, bool isDraw)
     return c;
 }
 
-QVector3D CubeNet::getCoords(QVector3D prevCoord, int direction)
+QVector3D CubeNet::getCoords(QVector3D mCoord)
 {
-    QVector3D coords;
-    coords = getDirectionCoord(direction,prevCoord,true);
-
-    return coords;
+    return mCoord;
 }

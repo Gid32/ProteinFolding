@@ -11,7 +11,7 @@ class Triangle3DNet : public Net
 public:
     explicit Triangle3DNet();
     QVector3D getDirectionCoord(int direction, QVector3D c,bool isDraw = false);
-    QVector3D getCoords(QVector3D mCoord, int direction);
+    QVector3D getCoords(QVector3D mCoord);
 };
 
 #endif // TRIANGLE3DNET_H

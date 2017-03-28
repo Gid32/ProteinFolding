@@ -40,7 +40,7 @@ QVector3D Triangle3DNet::getDirectionCoord(int direction, QVector3D c, bool isDr
     return c;
 }
 
-QVector3D Triangle3DNet::getCoords(QVector3D mCoord, int direction)
+QVector3D Triangle3DNet::getCoords(QVector3D mCoord)
 {
     QVector3D coords;
 

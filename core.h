@@ -34,22 +34,19 @@ signals:
 private:
     Net *net;
     int area[COUNT * 2 - 1][COUNT * 2 - 1][COUNT * 2 - 1];
-    QVector<int> vectorTurn;
     QVector<bool> protein;
     QVector3D currentCoords;
     int currentDirection;
-    QVector<int> createConvolution();
     int bestResult;
-    int blockTurn;
-    int getResult();
     bool isBreak;
-    QVector<int> canTurn();
     QVector<History> history;
+    int getResult();
+    QVector<int> canTurn();
+    void createConvolution();
+    int getCount(QVector3D coord, QVector3D blockCoordPrev, QVector3D blockCoordNext);
+    bool isHydroFobByCoord(QVector3D coord);
 public:
     explicit Core();
-    QVector<int> getvectorDirection(QVector<int> vectorTurn);
-    QVector<QVector3D> getVectorCoords(QVector<int> vectorDirection);
-    QVector<QVector3D> getVectorMCoords(QVector<int> vectorDirection);
     void init();
 public slots:
     void start();
