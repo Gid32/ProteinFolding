@@ -45,6 +45,7 @@ private:
     void createConvolution();
     int getCount(QVector3D coord, QVector3D blockCoordPrev, QVector3D blockCoordNext);
     bool isHydroFobByCoord(QVector3D coord);
+    void debugCoord(QVector3D coord);
 public:
     explicit Core();
     void init();

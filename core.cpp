@@ -16,7 +16,6 @@ void Core::init()
         for(int j=0;j<COUNT * 2 - 1;j++)
             for(int k=0;k<COUNT * 2 - 1;k++)
                 area[i][j][k] = FILL_AREA;
-    //vectorTurn.clear();
     history.clear();
     currentDirection = 0;
 }
@@ -36,9 +35,21 @@ int Core::getCount(QVector3D coord,QVector3D blockCoordPrev,QVector3D blockCoord
     {
         QVector3D testCoord = net->getDirectionCoord(i,coord);
         if(testCoord != blockCoordPrev && testCoord != blockCoordNext)
+        {
             count += isHydroFobByCoord(testCoord);
+            if(isHydroFobByCoord(testCoord))
+            {
+                qDebug()<<"eta";
+                debugCoord(testCoord);
+            }
+        }
     }
     return count;
+}
+
+void Core::debugCoord(QVector3D coord)
+{
+    qDebug()<<coord.x()<<" "<<coord.y();//<<" "<<coord.z();
 }
 
 int Core::getResult()
@@ -47,15 +58,24 @@ int Core::getResult()
    int x,y,z;
    x = y = z = COUNT/2;
    QVector3D blockCoordPrev(x,y,z);
-   QVector3D blockCoordNext = blockCoordPrev;
+   QVector3D blockCoordNext = history[0].coord;
+   if(isHydroFobByCoord(blockCoordPrev))
+       result += getCount(blockCoordPrev, blockCoordNext, blockCoordNext);
    for (int i = 0; i < history.size(); ++i)
    {
+        if(i!=history.size()-1)
+            blockCoordNext = history[i+1].coord;
         QVector3D coord = history[i].coord;
         if(isHydroFobByCoord(coord))
             result += getCount(coord,blockCoordPrev,blockCoordNext);
+
+        qDebug()<<"----------";
+        debugCoord(blockCoordPrev);
+        debugCoord(coord);
+        debugCoord(blockCoordNext);
+        qDebug()<<"-----end----";
+
         blockCoordPrev = coord;
-        if(i!=history.size()-1)
-            blockCoordNext = history[i+1].coord;
    }
    return result;
 }
@@ -119,10 +139,12 @@ void Core::start()
     bestResult = 0;
     isBreak = false;
     emit proteinLoaded(protein);
+    int test = 0;
     while(true)
     {
         if(isBreak)
             break;
+        qDebug()<<"start conv";
         createConvolution();
 
         int result = getResult();
@@ -137,6 +159,10 @@ void Core::start()
                 coords.push_back(net->getCoords(coord));
             }
             emit hasBetterVariant(coords);
+            if(bestResult % 2==1)
+                test++;
+            if(test==2)
+              break;
         }
         //break;
     }
