@@ -12,9 +12,9 @@ Core::Core()
 
 void Core::init()
 {
-    for(int i=0;i<COUNT * 2 - 1;i++)
-        for(int j=0;j<COUNT * 2 - 1;j++)
-            for(int k=0;k<COUNT * 2 - 1;k++)
+    for(int i=0;i<COUNT * 2 + 1;i++)
+        for(int j=0;j<COUNT * 2 + 1;j++)
+            for(int k=0;k<COUNT * 2 + 1;k++)
                 area[i][j][k] = FILL_AREA;
     history.clear();
     currentDirection = 0;
