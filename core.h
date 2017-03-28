@@ -35,13 +35,14 @@ signals:
     void proteinLoaded(QVector<bool> protein);
 private:
     Net *net;
-    BYTE area[COUNT * 2][COUNT * 2][COUNT * 2];
+    BYTE area[COUNT * 2+1][COUNT * 2+1][COUNT * 2+1];
     QVector<bool> protein;
     QVector3D currentCoords;
     int currentDirection;
     int bestResult;
     bool isBreak;
     QVector<History> history;
+    bool debug;
     int getResult();
     QVector<int> canTurn();
     void createConvolution();

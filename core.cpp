@@ -8,6 +8,7 @@ using namespace std;
 Core::Core()
 {
     net = new QuadNet();
+    debug = false;
 }
 
 void Core::init()
@@ -39,8 +40,11 @@ int Core::getCount(QVector3D coord,QVector3D blockCoordPrev,QVector3D blockCoord
             count += isHydroFobByCoord(testCoord);
             if(isHydroFobByCoord(testCoord))
             {
-//                qDebug()<<"eta";
-//                debugCoord(testCoord);
+                if(debug)
+                {
+                    qDebug()<<"+1";
+                    debugCoord(testCoord);
+                }
             }
         }
     }
@@ -74,17 +78,16 @@ int Core::getResult()
         if(i!=history.size()-1)
             blockCoordNext = history[i+1].coord;
         QVector3D coord = history[i].coord;
-        if(coord.x()<1 || coord.y()<1)
-           qDebug()<<i<<" "<<coord.x()<<coord.y()<<coord.z();
-            //debugCoord(coord);
         if(isHydroFobByCoord(coord))
             result += getCount(coord,blockCoordPrev,blockCoordNext);
 
-//        qDebug()<<"----------";
-//        debugCoord(blockCoordPrev);
-//        debugCoord(coord);
-//        debugCoord(blockCoordNext);
-//        qDebug()<<"-----end----";
+        if(debug)
+        {
+            qDebug()<<i<<")";
+            debugCoord(blockCoordPrev);
+            debugCoord(coord);
+            debugCoord(blockCoordNext);
+        }
 
         blockCoordPrev = coord;
    }
@@ -159,6 +162,23 @@ void Core::start()
         createConvolution();
 
         int result = getResult();
+        if(result %2==1)
+        {
+            qDebug()<<"hernya"<<result;
+            debug = true;
+            result = getResult();
+            qDebug()<<result;
+            qDebug()<<"----------------------------";
+            debugHistoryCoord();
+            QVector<QVector3D> coords;
+            for (int i = 0; i < history.size(); ++i)
+            {
+                QVector3D coord(history[i].coord.x()-COUNT,history[i].coord.y()-COUNT,history[i].coord.z()-COUNT);
+                coords.push_back(net->getCoords(coord));
+            }
+            emit hasBetterVariant(coords);
+            break;
+        }
         if(result > bestResult)
         {
             bestResult = result;
@@ -166,16 +186,10 @@ void Core::start()
             QVector<QVector3D> coords;
             for (int i = 0; i < history.size(); ++i)
             {
-
-                //debugHistoryCoord();
                 QVector3D coord(history[i].coord.x()-COUNT,history[i].coord.y()-COUNT,history[i].coord.z()-COUNT);
                 coords.push_back(net->getCoords(coord));
             }
             emit hasBetterVariant(coords);
-            if(bestResult % 2==1)
-                test++;
-            if(test==1)
-              break;
         }
         //break;
     }
