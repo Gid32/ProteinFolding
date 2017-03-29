@@ -37,12 +37,14 @@ private:
     Net *net;
     BYTE area[COUNT * 2 + 1][COUNT * 2 + 1][COUNT * 2 + 1];
     QVector<bool> protein;
+//    BYTE numberOfLinks[COUNT];
     QVector3D currentCoords;
     int currentDirection;
     int bestResult;
     bool isBreak;
     QVector<History> history;
     bool debug;
+    int getElementNumByCoords(QVector3D coord);
     int getResult();
     QVector<int> canTurn();
     void createConvolution();

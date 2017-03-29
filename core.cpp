@@ -7,7 +7,7 @@ using namespace std;
 
 Core::Core()
 {
-    net = new QuadNet();
+    net = NET_TYPE;
     debug = false;
 }
 
@@ -17,6 +17,10 @@ void Core::init()
         for(int j=0;j<COUNT * 2 + 1;j++)
             for(int k=0;k<COUNT * 2 + 1;k++)
                 area[i][j][k] = FILL_AREA;
+    //========================
+//    for(int i=0;i<COUNT;i++)
+//        numberOfLinks[i] = 0;
+    //========================
     history.clear();
     currentDirection = 0;
 }
@@ -25,7 +29,21 @@ bool Core::isHydroFobByCoord(QVector3D coord)
 {
     int value = area[(int)coord.x()][(int)coord.y()][(int)coord.z()];
     if(value == 1)
+    {
+        //========================
+//        int num = getElementNumByCoords(coord);
+
+//        if(num>=0)numberOfLinks[num]++;
+//        else
+//        {
+//            qDebug()<<"SMTH TERRIBLE WAS HAPPENED!!";
+//            debugCoord(coord);
+//            qDebug()<<"coordinates are not in history nor start";
+//        }
+//        //numberOfLinks[getElementNumByCoords(coord)]--;
+        //========================
         return value;
+    }
     return false;
 }
 
@@ -38,6 +56,20 @@ int Core::getCount(QVector3D coord,QVector3D blockCoordPrev,QVector3D blockCoord
         if(testCoord != blockCoordPrev && testCoord != blockCoordNext)
         {
             count += isHydroFobByCoord(testCoord);
+            //========================
+//            if (isHydroFobByCoord(testCoord))
+//            {
+//                int num = getElementNumByCoords(coord);
+
+//                if(num>=0)numberOfLinks[num]--;
+//                else
+//                {
+//                    qDebug()<<"SMTH TERRIBLE WAS HAPPENED!!";
+//                    debugCoord(coord);
+//                    qDebug()<<"coordinates are not in history nor start(wut? O.o)";
+//                }
+//            }
+            //========================
             if(isHydroFobByCoord(testCoord))
             {
                 if(debug)
@@ -53,7 +85,7 @@ int Core::getCount(QVector3D coord,QVector3D blockCoordPrev,QVector3D blockCoord
 
 void Core::debugCoord(QVector3D coord)
 {
-    qDebug()<<coord.x()<<" "<<coord.y();//<<" "<<coord.z();
+    qDebug()<<coord.x()<<" "<<coord.y()<<" "<<coord.z();
 }
 
 void Core::debugHistoryCoord()
@@ -125,8 +157,11 @@ void Core::createConvolution()
         {
             //isBreak = true;
             i-=2;//-2 потому что не только этот шаг не удалось построить но и еще нужно старый удалить
-            area[(int)history.last().coord.x()][(int)history.last().coord.x()][(int)history.last().coord.z()] = BLOCK_AREA;
-            currentDirection = history.last().direction;
+
+            History a = history.last();
+            area[(int)a.coord.x()][(int)a.coord.y()][(int)a.coord.z()] = BLOCK_AREA;
+            currentDirection = a.direction;
+
             history.removeLast();
             currentCoords = history.last().coord;
             continue;
@@ -162,7 +197,7 @@ void Core::start()
         createConvolution();
 
         int result = getResult();
-        if(result %2==1)
+        if(result%2==1)
         {
             qDebug()<<"hernya"<<result;
             debug = true;
@@ -193,4 +228,15 @@ void Core::start()
         }
         //break;
     }
+}
+
+
+int Core::getElementNumByCoords(QVector3D coord)
+{
+    if (coord == QVector3D(COUNT,COUNT,COUNT)) return 0;
+    for(int i = 0; i < COUNT-1; i++)
+    {
+        if(history[i].coord == coord) return i+1;
+    }
+    return -1;//smth wrong with this shit!
 }
