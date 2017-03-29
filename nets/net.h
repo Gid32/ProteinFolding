@@ -6,6 +6,7 @@
 #include <QVector3D>
 #include <QtCore/QObject>
 #include <QDebug>
+#include <QMap>
 
 class Net:public QObject
 {
@@ -14,13 +15,13 @@ protected:
     int minTurn;
     int maxTurn;
     int countDirection;
+    explicit Net();
 public:
     int turnToDirection(int currentDirection,int turn);
     virtual QVector3D getDirectionCoord(int direction, QVector3D c, bool isDraw = false) = 0;
     virtual QVector3D getCoords(QVector3D mCoord) = 0;
     int getMinTurn();
     int getMaxTurn();
-    explicit Net();
 };
 
 #endif // NET_H

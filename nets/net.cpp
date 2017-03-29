@@ -18,6 +18,7 @@ int Net::getMaxTurn()
     return maxTurn;
 }
 
+
 Net::Net()
 {
 

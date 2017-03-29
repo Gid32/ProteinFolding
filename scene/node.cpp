@@ -1,16 +1,16 @@
 #include "node.h"
 #include <QtCore/QDebug>
 
-Node::Node(Qt3DCore::QEntity *parent, bool hFob, QVector3D vect, Node *prevNode)
+Node::Node(Qt3DCore::QEntity *parent, BYTE hFob, QVector3D vect, Node *prevNode)
 {
 
     this->parent = parent;
     QColor color = QColor(0,0,255,255);
-    if(hFob)
+    if(hFob == H_FOB)
         color = QColor(255,0,0,255);
-    if(!prevNode && !hFob)
+    if(!prevNode && hFob == H_FILL)
         color = QColor(0,200,255,255);
-    if(!prevNode && hFob)
+    if(!prevNode && hFob == H_FOB)
         color = QColor(255,0,100,255);
 
     mesh = new Qt3DExtras::QSphereMesh();

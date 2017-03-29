@@ -28,7 +28,7 @@ private:
 public:
     Node *prevNode;
     Qt3DCore::QTransform *transform;
-    explicit Node(Qt3DCore::QEntity *parent, bool hFob, QVector3D vect, Node *prevNode);
+    explicit Node(Qt3DCore::QEntity *parent, BYTE hFob, QVector3D vect, Node *prevNode);
     ~Node();
     void changeLocation(QVector3D coords);
 };

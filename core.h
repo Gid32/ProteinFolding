@@ -4,23 +4,18 @@
 #include <QObject>
 #include <QVector>
 #include "settings.h"
-#include "trianglenet.h"
-#include "quadnet.h"
-#include "cubenet.h"
-#include "triangle3dnet.h"
-#include <QtCore/QObject>
 
-typedef unsigned char BYTE;
+#include "netfactory.h"
+#include <QtCore/QObject>
 
 struct History
 {
-    QVector3D coord;
+    QVector3D coords;
     int turn;
     int direction;
-    History(QVector3D coord,int turn,int direction)
+    History(QVector3D coords,int direction)
     {
-        this->coord = coord;
-        this->turn = turn;
+        this->coords = coords;
         this->direction = direction;
     }
     History(){}
@@ -32,31 +27,36 @@ class Core:public QObject
   Q_OBJECT
 signals:
     void hasBetterVariant(QVector<QVector3D> vectorCoords);
-    void proteinLoaded(QVector<bool> protein);
+    void proteinLoaded(VECTORBYTE protein);
 private:
     Net *net;
-    BYTE area[COUNT * 2 + 1][COUNT * 2 + 1][COUNT * 2 + 1];
-    QVector<bool> protein;
-//    BYTE numberOfLinks[COUNT];
-    QVector3D currentCoords;
-    int currentDirection;
-    int bestResult;
-    bool isBreak;
-    QVector<History> history;
-    bool debug;
+    BYTE area[AREA_SIZE][AREA_SIZE][AREA_SIZE];
+    QVector<BYTE> protein_;
+    QVector3D currentCoords_;
+    int currentDirection_;
+    int bestResult_;
+    QVector<History> history_;
+    bool isProteinLoaded_;
+
     int getElementNumByCoords(QVector3D coord);
     int getResult();
-    QVector<int> canTurn();
     void createConvolution();
     int getCount(QVector3D coord, QVector3D blockCoordPrev, QVector3D blockCoordNext);
     bool isHydroFobByCoord(QVector3D coord);
+    void setValueByCoord(QVector3D coord, BYTE value);
+    BYTE getValueByCoord(QVector3D coord);
+    bool getNextCoordsByCurrentDirection(QVector3D &coords);
+    QVector3D getCoordsRelationZeroPosition(QVector3D coords);
     void debugCoord(QVector3D coord);
     void debugHistoryCoord();
+    void init();
+    void loadProtein();
 public:
     explicit Core();
-    void init();
+    void setNet(QString netName);
 public slots:
     void start();
+    void stop();
 };
 
 #endif // CORE_H

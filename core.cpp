@@ -7,43 +7,34 @@ using namespace std;
 
 Core::Core()
 {
-    net = NET_TYPE;
-    debug = false;
+    isProteinLoaded_ = false;
 }
 
 void Core::init()
 {
-    for(int i=0;i<COUNT * 2 + 1;i++)
-        for(int j=0;j<COUNT * 2 + 1;j++)
-            for(int k=0;k<COUNT * 2 + 1;k++)
+    for(int i=0;i<AREA_SIZE;i++)
+        for(int j=0;j<AREA_SIZE;j++)
+            for(int k=0;k<AREA_SIZE;k++)
                 area[i][j][k] = FILL_AREA;
-    //========================
-//    for(int i=0;i<COUNT;i++)
-//        numberOfLinks[i] = 0;
-    //========================
-    history.clear();
-    currentDirection = 0;
+    history_.clear();
+    currentDirection_ = 0;
+}
+
+void Core::setValueByCoord(QVector3D coord, BYTE value)
+{
+    area[(int)coord.x()][(int)coord.y()][(int)coord.z()] = value;
+}
+
+BYTE Core::getValueByCoord(QVector3D coord)
+{
+    return area[(int)coord.x()][(int)coord.y()][(int)coord.z()];
 }
 
 bool Core::isHydroFobByCoord(QVector3D coord)
 {
-    int value = area[(int)coord.x()][(int)coord.y()][(int)coord.z()];
-    if(value == 1)
-    {
-        //========================
-//        int num = getElementNumByCoords(coord);
-
-//        if(num>=0)numberOfLinks[num]++;
-//        else
-//        {
-//            qDebug()<<"SMTH TERRIBLE WAS HAPPENED!!";
-//            debugCoord(coord);
-//            qDebug()<<"coordinates are not in history nor start";
-//        }
-//        //numberOfLinks[getElementNumByCoords(coord)]--;
-        //========================
-        return value;
-    }
+    BYTE value = getValueByCoord(coord);
+    if(value == H_FOB)
+        return true;
     return false;
 }
 
@@ -54,31 +45,7 @@ int Core::getCount(QVector3D coord,QVector3D blockCoordPrev,QVector3D blockCoord
     {
         QVector3D testCoord = net->getDirectionCoord(i,coord);
         if(testCoord != blockCoordPrev && testCoord != blockCoordNext)
-        {
             count += isHydroFobByCoord(testCoord);
-            //========================
-//            if (isHydroFobByCoord(testCoord))
-//            {
-//                int num = getElementNumByCoords(coord);
-
-//                if(num>=0)numberOfLinks[num]--;
-//                else
-//                {
-//                    qDebug()<<"SMTH TERRIBLE WAS HAPPENED!!";
-//                    debugCoord(coord);
-//                    qDebug()<<"coordinates are not in history nor start(wut? O.o)";
-//                }
-//            }
-            //========================
-            if(isHydroFobByCoord(testCoord))
-            {
-                if(debug)
-                {
-                    qDebug()<<"+1";
-                    debugCoord(testCoord);
-                }
-            }
-        }
     }
     return count;
 }
@@ -90,153 +57,137 @@ void Core::debugCoord(QVector3D coord)
 
 void Core::debugHistoryCoord()
 {
-    for (int i = 0; i < history.size(); ++i)
+    for (int i = 0; i < history_.size(); ++i)
     {
-        debugCoord(history[i].coord);
+        debugCoord(history_[i].coords);
     }
 }
 
 int Core::getResult()
 {
    int result = 0;
-   int x,y,z;
-   x = y = z = COUNT;
-   QVector3D blockCoordPrev(x,y,z);
-   QVector3D blockCoordNext = history[0].coord;
+   QVector3D blockCoordPrev(START_POSITION,START_POSITION,START_POSITION);
+   QVector3D blockCoordNext = history_[0].coords;
    if(isHydroFobByCoord(blockCoordPrev))
        result += getCount(blockCoordPrev, blockCoordNext, blockCoordNext);
-   for (int i = 0; i < history.size(); ++i)
+   for (int i = 0; i < history_.size(); ++i)
    {
-        if(i!=history.size()-1)
-            blockCoordNext = history[i+1].coord;
-        QVector3D coord = history[i].coord;
-        if(isHydroFobByCoord(coord))
-            result += getCount(coord,blockCoordPrev,blockCoordNext);
-
-        if(debug)
-        {
-            qDebug()<<i<<")";
-            debugCoord(blockCoordPrev);
-            debugCoord(coord);
-            debugCoord(blockCoordNext);
-        }
-
-        blockCoordPrev = coord;
+        if(i!=history_.size()-1)
+            blockCoordNext = history_[i+1].coords;
+        QVector3D coords = history_[i].coords;
+        if(isHydroFobByCoord(coords))
+            result += getCount(coords,blockCoordPrev,blockCoordNext);
+        blockCoordPrev = coords;
    }
    return result;
 }
 
-QVector<int> Core::canTurn()
+bool Core::getNextCoordsByCurrentDirection(QVector3D &coords)
 {
-    QVector<int> possible;
+    QVector<QVector3D> possible;
     for(int i=net->getMinTurn();i<=net->getMaxTurn();i++)
     {
-        int direction = net->turnToDirection(currentDirection,i);
-        QVector3D newCoord = net->getDirectionCoord(direction,currentCoords);
-        if(area[(int)newCoord.x()][(int)newCoord.y()][(int)newCoord.z()]==FILL_AREA)
-        {
-            possible.push_back(i);
-        }
+        currentDirection_ = net->turnToDirection(currentDirection_,i);
+        QVector3D newCoords = net->getDirectionCoord(currentDirection_,currentCoords_);
+        if(getValueByCoord(newCoords)==FILL_AREA)
+            possible.push_back(newCoords);
     }
-    return possible;
+    if(possible.empty())
+        return false;
+    int n = rand()%possible.size();
+    coords = possible.at(n);
+    possible.clear();
+    return true;
 }
 
 void Core::createConvolution()
 {
     init();
-    currentCoords.setX(COUNT);
-    currentCoords.setY(COUNT);
-    currentCoords.setZ(COUNT);
-    QVector3D newCoords = currentCoords;
-    area[(int)currentCoords.x()][(int)currentCoords.y()][(int)currentCoords.z()] = protein.at(0);
-    int turn,direction;
-    for(int i=1;i<protein.size();i++)
+    currentCoords_ = QVector3D(START_POSITION,START_POSITION,START_POSITION);
+    setValueByCoord(currentCoords_, protein_.at(0));
+    QVector3D newCoords = currentCoords_;
+    int direction = currentDirection_;
+    for(int i=1;i<protein_.size();i++)
     {
-        QVector<int> possible = canTurn();
-        if(possible.empty())//нельзя ходить
+        if(!getNextCoordsByCurrentDirection(newCoords))//нельзя ходить
         {
-            //isBreak = true;
             i-=2;//-2 потому что не только этот шаг не удалось построить но и еще нужно старый удалить
-
-            History a = history.last();
-            area[(int)a.coord.x()][(int)a.coord.y()][(int)a.coord.z()] = BLOCK_AREA;
-            currentDirection = a.direction;
-
-            history.removeLast();
-            currentCoords = history.last().coord;
+            History history = history_.last();
+            setValueByCoord(history.coords,BLOCK_AREA);
+            currentDirection_ = history.direction;
+            history_.removeLast();
+            currentCoords_ = history_.last().coords;
             continue;
         }
-        else
-        {
-           turn = rand()%possible.size();
-           turn = possible.at(turn);
-           direction = net->turnToDirection(currentDirection,turn);
-           newCoords = net->getDirectionCoord(direction,currentCoords);
-        }
-        area[(int)newCoords.x()][(int)newCoords.y()][(int)newCoords.z()] = protein.at(i);
-        history.push_back(History(newCoords,turn,currentDirection));
-        currentDirection = direction;
-        currentCoords = newCoords;
+        setValueByCoord(newCoords,protein_.at(i));
+        history_.push_back(History(newCoords,direction));
+        currentCoords_ = newCoords;
     }
+}
+
+QVector3D Core::getCoordsRelationZeroPosition(QVector3D coords)
+{
+    return QVector3D(coords.x()-START_POSITION,coords.y()-START_POSITION,coords.z()-START_POSITION);
+}
+
+void Core::loadProtein()
+{
+    srand(time(NULL));
+    for(int i=0;i<COUNT;i++)
+    {
+        if(rand()%2)
+            protein_.push_back(H_FOB);
+        else
+            protein_.push_back(H_FILL);
+    }
+    isProteinLoaded_ = true;
+    emit proteinLoaded(protein_);
+}
+
+void Core::setNet(QString netName)
+{
+    net = NetFactory::getInstance()->getNetByName(netName);
 }
 
 void Core::start()
 {
-    srand(time(NULL));
-    for(int i=0;i<COUNT;i++)
-        protein.push_back(rand()%2);
-    bestResult = 0;
-    isBreak = false;
-    emit proteinLoaded(protein);
-    int test = 0;
+    if(!isProteinLoaded_)
+        loadProtein();
+    qDebug()<<"aaa";
+    if(!net)
+        return;
+    bestResult_ = 0;
+    int i = 0;
     while(true)
     {
-        if(isBreak)
-            break;
-        //qDebug()<<"start conv";
+        qDebug()<<i;
+        i++;
         createConvolution();
-
         int result = getResult();
-        if(result%2==1)
+        if(result > bestResult_)
         {
-            qDebug()<<"hernya"<<result;
-            debug = true;
-            result = getResult();
-            qDebug()<<result;
-            qDebug()<<"----------------------------";
-            debugHistoryCoord();
-            QVector<QVector3D> coords;
-            for (int i = 0; i < history.size(); ++i)
-            {
-                QVector3D coord(history[i].coord.x()-COUNT,history[i].coord.y()-COUNT,history[i].coord.z()-COUNT);
-                coords.push_back(net->getCoords(coord));
-            }
-            emit hasBetterVariant(coords);
-            break;
-        }
-        if(result > bestResult)
-        {
-            bestResult = result;
-            qDebug()<<bestResult;
-            QVector<QVector3D> coords;
-            for (int i = 0; i < history.size(); ++i)
-            {
-                QVector3D coord(history[i].coord.x()-COUNT,history[i].coord.y()-COUNT,history[i].coord.z()-COUNT);
-                coords.push_back(net->getCoords(coord));
-            }
-            emit hasBetterVariant(coords);
+            bestResult_ = result;
+            qDebug()<<bestResult_;
+            QVector<QVector3D> vectorCoords;
+            for (int i = 0; i < history_.size(); ++i)
+                vectorCoords.push_back(net->getCoords(getCoordsRelationZeroPosition(history_[i].coords)));
+            emit hasBetterVariant(vectorCoords);
         }
         //break;
     }
 }
 
+void Core::stop()
+{
+}
 
 int Core::getElementNumByCoords(QVector3D coord)
 {
     if (coord == QVector3D(COUNT,COUNT,COUNT)) return 0;
     for(int i = 0; i < COUNT-1; i++)
     {
-        if(history[i].coord == coord) return i+1;
+        if(history_[i].coords == coord)
+            return i+1;
     }
     return -1;//smth wrong with this shit!
 }

@@ -1,6 +1,8 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include <QVector>
+
 #define RADIUS_NODE 0.2f
 #define RADIUS_CONNECTION 0.05f
 #define LENGTH_CONNECTION 0.9f
@@ -19,12 +21,15 @@
 #define FILL_AREA 0x2
 #define BLOCK_AREA 0x3
 
+#define AREA_SIZE COUNT*2+1
+#define START_POSITION COUNT
 
-#define NET_TYPE Triangle2D
-#define Square2D new QuadNet()
-#define Square3D new CubeNet()
-#define Triangle2D new TriangleNet()
-#define Triangle3D new Triangle3DNet()
+
+typedef unsigned char BYTE;
+typedef QVector<BYTE> VECTORBYTE;
+
+
+
 
 #endif // SETTINGS_H
 

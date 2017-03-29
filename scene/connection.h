@@ -28,6 +28,7 @@ public:
     explicit Connection(Qt3DCore::QEntity *parent, QVector3D vect);
     ~Connection();
     void changeLocation(QVector3D,QVector3D);
+    void setColor(QColor color);
 };
 
 #endif // Connection_H
