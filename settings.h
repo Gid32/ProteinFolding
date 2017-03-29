@@ -19,5 +19,12 @@
 #define FILL_AREA 0x2
 #define BLOCK_AREA 0x3
 
+
+#define NET_TYPE Triangle2D
+#define Square2D new QuadNet()
+#define Square3D new CubeNet()
+#define Triangle2D new TriangleNet()
+#define Triangle3D new Triangle3DNet()
+
 #endif // SETTINGS_H
 
