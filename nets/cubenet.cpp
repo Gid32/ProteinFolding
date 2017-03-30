@@ -3,8 +3,8 @@
 CubeNet::CubeNet()
 {
     this->minTurn = 1;
-    this->maxTurn = 6;
-    this->countDirection = 7;
+    this->maxTurn = 5;
+    this->countDirection = 6;
 }
 
 QVector3D CubeNet::getDirectionCoord(int direction, QVector3D c, bool isDraw)
