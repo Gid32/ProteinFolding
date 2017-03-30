@@ -37,7 +37,7 @@ private:
     int bestResult_;
     QVector<History> history_;
     bool isProteinLoaded_;
-
+    bool isBreak_;
     int getElementNumByCoords(QVector3D coord);
     int getResult();
     void createConvolution();

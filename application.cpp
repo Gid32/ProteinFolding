@@ -19,17 +19,18 @@ Application::Application(QObject *parent) : QObject(parent)
 
     QObject::connect(coreThread_,SIGNAL(started()),core_,SLOT(start()));
 
-    //    coreThread_->start();
 }
 
 void Application::coreStart(QString netName)
 {
     core_->setNet(netName);
     coreThread_->start();
+
 }
 
 void Application::coreStop()
 {
+    core_->stop();
     coreThread_->terminate();
 }
 

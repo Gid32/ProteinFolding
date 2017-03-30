@@ -90,6 +90,7 @@ private:
     void initSettingsStartStopApplication();
 
     void clear();
+    void test();
 };
 
 #endif // Scene_H

@@ -8,6 +8,7 @@ using namespace std;
 Core::Core()
 {
     isProteinLoaded_ = false;
+    isBreak_ = false;
 }
 
 void Core::init()
@@ -146,13 +147,14 @@ void Core::loadProtein()
 
 void Core::setNet(QString netName)
 {
-    net = NetFactory::getInstance()->getNetByName(netName);
+   net = NetFactory::getInstance()->getNetByName(netName);
 }
 
 void Core::start()
 {
     if(!isProteinLoaded_)
         loadProtein();
+    isBreak_ = false;
     qDebug()<<"aaa";
     if(!net)
         return;
@@ -160,8 +162,13 @@ void Core::start()
     int i = 0;
     while(true)
     {
-        qDebug()<<i;
-        i++;
+        if(isBreak_)
+        {
+            qDebug()<<"stopped";
+            break;
+        }
+        //qDebug()<<i;
+        //i++;
         createConvolution();
         int result = getResult();
         if(result > bestResult_)
@@ -179,6 +186,7 @@ void Core::start()
 
 void Core::stop()
 {
+    isBreak_ = true;
 }
 
 int Core::getElementNumByCoords(QVector3D coord)

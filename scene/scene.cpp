@@ -10,6 +10,13 @@ void Scene::clear()
     nodes.clear();
 }
 
+void Scene::test()
+{
+    QVector3D coords(0.0,0.0,0.0);
+    for(int i=0;i<nodes.size();i++)
+        nodes.at(i)->changeLocation(coords);
+}
+
 void Scene::genericNodes(VECTORBYTE protein)
 {
     clear();
@@ -189,6 +196,7 @@ void Scene::stop()
 {
     timerUpdate_->stop();
     emit stopped();
+    test();
 }
 
 
