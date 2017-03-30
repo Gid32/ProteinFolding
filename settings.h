@@ -10,7 +10,7 @@
 
 #define PI 3.14159265
 
-#define COUNT 20
+#define COUNT 200
 #define DEBUG_NODE false
 #define DEBUG_CORE false
 #define DEBUG_SM false

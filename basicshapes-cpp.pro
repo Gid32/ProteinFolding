@@ -5,10 +5,12 @@ QT += widgets
 INCLUDE_DIR = .
 NET_DIR = $${INCLUDE_DIR}/nets
 SCENE_DIR = $${INCLUDE_DIR}/scene
+CORE_DIR = $${INCLUDE_DIR}/core
 
 INCLUDEPATH += $${NET_DIR} \
                $${INCLUDE_DIR} \
                $${SCENE_DIR} \
+               $${CORE_DIR} \
 
 DEPENDPATH += $$INCLUDEPATH
 
@@ -21,10 +23,10 @@ SOURCES += main.cpp \
     $${NET_DIR}/netfactory.cpp \
     $${SCENE_DIR}/connection.cpp \
     $${SCENE_DIR}/node.cpp \
-    core.cpp \
-    debug.cpp \
+    $${CORE_DIR}/core.cpp \
     $${SCENE_DIR}/scene.cpp \
-    application.cpp
+    application.cpp \
+    $${CORE_DIR}/convolution.cpp
 
 HEADERS += \
     settings.h \
@@ -34,12 +36,12 @@ HEADERS += \
     $${NET_DIR}/quadnet.h \
     $${NET_DIR}/cubenet.h \
     $${NET_DIR}/netfactory.h \
-    core.h \
+    $${CORE_DIR}/core.h \
     $${SCENE_DIR}/connection.h \
     $${SCENE_DIR}/node.h \
-    debug.h \
     $${SCENE_DIR}/scene.h \
-    application.h
+    application.h \
+    $${CORE_DIR}/convolution.h
 
 
 
