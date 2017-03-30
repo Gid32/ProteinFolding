@@ -4,7 +4,7 @@ Application::Application(QObject *parent) : QObject(parent)
 {
     //init core and scene
     core_ = new Core();
-    scene_ = new Scene("Protein Folding",1200,800);
+    scene_ = new Scene("Protein Folding",800,600);
 
     qRegisterMetaType<QVector<QVector3D>>();
     qRegisterMetaType<VECTORBYTE>("VECTORBYTE");
