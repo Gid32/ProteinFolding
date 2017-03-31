@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QVector>
 #include <QVector3D>
+#include <QMap>
 #include "netfactory.h"
 #include "settings.h"
 
@@ -23,7 +24,7 @@ class Convolution : public QObject
 {
     Q_OBJECT
 private:
-    BYTE area[AREA_SIZE][AREA_SIZE][AREA_SIZE];
+    QMap<QString,BYTE> area;
     QVector3D currentCoords_;
     QVector<History> history_;
     int currentDirection_;
@@ -33,13 +34,14 @@ private:
     QVector3D getCoordsRelationZeroPosition(QVector3D coords);
     bool isHydroFobByCoord(QVector3D coord);
     int getCount(QVector3D coord,QVector3D blockCoordPrev,QVector3D blockCoordNext);
-    void clearArea();
+    void create();
 public:
+    QString coordToQString(QVector3D coord);
     static Net* net;
     static QVector<BYTE> protein;
-    explicit Convolution(Convolution* prevConvolution, QObject *parent = 0);
+    explicit Convolution(QObject *parent = 0);
+    ~Convolution();
     int getResult();
-    void create();
     QVector<QVector3D> getVectorCoords();
 signals:
 

@@ -14,6 +14,7 @@ private:
     QThread *coreThread_;
     Core *core_;
     Scene *scene_;
+    bool isStart;
 public:
     explicit Application(QObject *parent = 0);
     void start();

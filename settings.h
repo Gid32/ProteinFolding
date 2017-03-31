@@ -10,11 +10,8 @@
 
 #define PI 3.14159265
 
-#define COUNT 200
-#define DEBUG_NODE false
-#define DEBUG_CORE false
-#define DEBUG_SM false
-#define DEBUG_GLOBAL false
+#define COUNT 10
+#define COUNT_ANT 1
 
 #define H_FILL 0x0
 #define H_FOB 0x1
@@ -24,11 +21,8 @@
 #define AREA_SIZE COUNT*2+1
 #define START_POSITION COUNT
 
-
 typedef unsigned char BYTE;
 typedef QVector<BYTE> VECTORBYTE;
-
-
 
 
 #endif // SETTINGS_H

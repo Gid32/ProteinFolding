@@ -49,11 +49,12 @@ signals:
     void started(QString);
     void stopped();
 public slots:
-    void update(QVector<QVector3D> vectorCoords);
+    void update(QVector<QVector3D> vectorCoords, int value);
     void genericNodes(VECTORBYTE protein);
     void reDraw();
     void start();
     void stop();
+    void countConvolution(int count);
 private:
     const char* title_;
     Qt3DExtras::Qt3DWindow* view_;
@@ -69,6 +70,10 @@ private:
     QLabel *settingsLabel_;
 
     QLabel *settingsNetChangesLabel_;
+    QLabel *settingsRateLabel_;
+    QLabel *settingsRate_;
+    QLabel *settingsCountConvolutionLabel_;
+    QLabel *settingsCountConvolution_;
     QComboBox *settingsNetChanges_;
     QPushButton *settingsStartApplication_;
     QPushButton *settingsStopApplication_;
@@ -87,7 +92,10 @@ private:
 
     void initSettingsLabel();
     void initSettingsNetChanges();
+    void initSettingsRate();
     void initSettingsStartStopApplication();
+    void initSettingsCountConvolution();
+
 
     void clear();
     void test();

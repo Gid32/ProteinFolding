@@ -1,28 +1,20 @@
 #include "convolution.h"
 Net* Convolution::net = nullptr;
 QVector<BYTE> Convolution::protein = QVector<BYTE>();
-Convolution::Convolution(Convolution *prevConvolution, QObject *parent) : QObject(parent)
+Convolution::Convolution(QObject *parent) : QObject(parent)
 {
-    if(prevConvolution)
-    {
-
-        return;
-    }
-
-    clearArea();
     history_.clear();
     currentDirection_ = 0;
 
     currentCoords_ = QVector3D(START_POSITION,START_POSITION,START_POSITION);//начальная координата в массиве откуда начинается свертка
     setValueByCoord(currentCoords_, protein.at(0));//записываем в массив первую аминокислоту
+
+    create();
 }
 
-void Convolution::clearArea()
+Convolution::~Convolution()
 {
-    for(int i=0;i<AREA_SIZE;i++)
-        for(int j=0;j<AREA_SIZE;j++)
-            for(int k=0;k<AREA_SIZE;k++)
-                area[i][j][k] = FILL_AREA;
+
 }
 
 void Convolution::create()
@@ -68,12 +60,30 @@ bool Convolution::getNext(QVector3D &coords, int &direction)
 
 void Convolution::setValueByCoord(QVector3D coord, BYTE value)
 {
-    area[(int)coord.x()][(int)coord.y()][(int)coord.z()] = value;
+    area.insert(coordToQString(coord),value);
+    //area[(int)coord.x()][(int)coord.y()][(int)coord.z()] = value;
 }
 
 BYTE Convolution::getValueByCoord(QVector3D coord)
 {
-    return area[(int)coord.x()][(int)coord.y()][(int)coord.z()];
+    QString str = coordToQString(coord);
+    if(area.contains(str))
+    {
+        return area[str];
+    }
+    return FILL_AREA;
+    //return area[(int)coord.x()][(int)coord.y()][(int)coord.z()];
+}
+
+QString Convolution::coordToQString(QVector3D coord)
+{
+    QString str = "";
+    str.append(QString::number(coord.x()));
+    str.append(" ");
+    str.append(QString::number(coord.y()));
+    str.append(" ");
+    str.append(QString::number(coord.z()));
+    return str;
 }
 
 QVector3D Convolution::getCoordsRelationZeroPosition(QVector3D coords)

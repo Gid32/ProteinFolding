@@ -8,8 +8,9 @@ Application::Application(QObject *parent) : QObject(parent)
 
     qRegisterMetaType<QVector<QVector3D>>();
     qRegisterMetaType<VECTORBYTE>("VECTORBYTE");
-    QObject::connect(core_, SIGNAL(hasBetterVariant(QVector<QVector3D>)), scene_, SLOT(update(QVector<QVector3D>)));
+    QObject::connect(core_, SIGNAL(hasBetterVariant(QVector<QVector3D>,int)), scene_, SLOT(update(QVector<QVector3D>,int)));
     QObject::connect(core_, SIGNAL(proteinLoaded(VECTORBYTE)), scene_, SLOT(genericNodes(VECTORBYTE)));
+    QObject::connect(core_, SIGNAL(countConvolution(int)), scene_, SLOT(countConvolution(int)));
 
     coreThread_ = new QThread;
     core_->moveToThread(coreThread_);
@@ -19,19 +20,25 @@ Application::Application(QObject *parent) : QObject(parent)
 
     QObject::connect(coreThread_,SIGNAL(started()),core_,SLOT(start()));
 
+    isStart = false;
+
 }
 
 void Application::coreStart(QString netName)
 {
+    if(isStart)
+        return;
+    isStart = true;
     core_->setNet(netName);
+    core_->createAnts(COUNT_ANT);
     coreThread_->start();
-
 }
 
 void Application::coreStop()
 {
     core_->stop();
     coreThread_->terminate();
+    isStart = false;
 }
 
 

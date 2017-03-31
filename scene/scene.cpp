@@ -49,10 +49,11 @@ Scene::Scene(const char* title, int width, int height)
 
     widget_ = new QWidget;
     widget_->setWindowTitle(title_);
-    widget_->setStyleSheet("QLabel {color:blue;font-size:15px;}"
-                           "QLabel#settingsLabel {color:red;font-size:20px;margin:5px}"
+    widget_->setStyleSheet("QLabel {color:#1E90FF;font-size:15px;}"
+                           "QLabel#settingsLabel {color:#DC143C;font-size:20px;margin:5px}"
+                           "QLabel#settingsRate,QLabel#settingsCountConvolution {color:#DC143C}"
                            "QPushButton {color:white;background-color:green;font-size:15px}"
-                           "QPushButton#settingsStopApplication {background-color:red}"
+                           "QPushButton#settingsStopApplication {background-color:#DC143C}"
                            );
 
     mainLayout_ = new QHBoxLayout(widget_);
@@ -76,10 +77,16 @@ Scene::Scene(const char* title, int width, int height)
 
 }
 
-void Scene::update(QVector<QVector3D> vectorCoords)
+void Scene::update(QVector<QVector3D> vectorCoords, int value)
 {
     this->vectorCoords = vectorCoords;
+    settingsRate_->setText(QString::number(value));
     hasVariantToUpdate_ = true;
+}
+
+void Scene::countConvolution(int count)
+{
+    settingsCountConvolution_->setText(QString::number(count));
 }
 
 void Scene::initMainContainer()
@@ -102,7 +109,8 @@ void Scene::initSettingsLayout()
     initSettingsLabel();
     initSettingsNetChanges();
     initSettingsStartStopApplication();
-
+    initSettingsRate();
+    initSettingsCountConvolution();
 }
 
 void Scene::initSettingsLabel()
@@ -124,7 +132,6 @@ void Scene::initSettingsNetChanges()
    settingsLayout_->addWidget(settingsNetChangesLabel_);
 
    settingsNetChanges_ = new QComboBox(widget_);
-   //settingsNetChanges_->addItem("TriangleNet",1);
    settingsNetChanges_->addItems(NetFactory::getInstance()->getStringList());
    settingsNetChanges_->setMaximumSize(100,50);
 
@@ -146,7 +153,38 @@ void Scene::initSettingsStartStopApplication()
     connect(settingsStartApplication_,SIGNAL(clicked(bool)),this,SLOT(start()));
     connect(settingsStopApplication_,SIGNAL(clicked(bool)),this,SLOT(stop()));
 
+}
 
+void Scene::initSettingsRate()
+{
+    settingsRateLabel_ = new QLabel(widget_);
+    settingsRateLabel_->setText("Рейтинг:");
+    settingsRateLabel_->setMinimumWidth(150);
+
+    settingsRate_ = new QLabel(widget_);
+    settingsRate_->setText("0");
+    settingsRate_->setMinimumWidth(150);
+    settingsRate_->setObjectName("settingsRate");
+
+
+    settingsLayout_->addWidget(settingsRateLabel_);
+    settingsLayout_->addWidget(settingsRate_);
+}
+
+void Scene::initSettingsCountConvolution()
+{
+    settingsCountConvolutionLabel_ = new QLabel(widget_);
+    settingsCountConvolutionLabel_->setText("Количество сверток:");
+    settingsCountConvolutionLabel_->setMinimumWidth(150);
+
+    settingsCountConvolution_ = new QLabel(widget_);
+    settingsCountConvolution_->setText("0");
+    settingsCountConvolution_->setMinimumWidth(150);
+    settingsCountConvolution_->setObjectName("settingsCountConvolution");
+
+
+    settingsLayout_->addWidget(settingsCountConvolutionLabel_);
+    settingsLayout_->addWidget(settingsCountConvolution_);
 }
 
 void Scene::setColor(QColor color)
