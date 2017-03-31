@@ -45,18 +45,7 @@ void Core::start()
     isBreak_ = false;
     bestResult_ = 0;
 //    createStartConvolutions();
-//    runAnts();
-    while(true)
-    {
-    Convolution *convolution = new Convolution();
-    int result = convolution->getResult();
-    allConvolutions_.push_back(convolution);
-    qDebug()<<result;
-    QVector<QVector3D> vectorCoords = convolution->getVectorCoords();
-    emit hasBetterVariant(vectorCoords,result);
-    delete convolution;
-    }
-
+    runAnts();
 }
 
 void Core::deleteAnts()
@@ -101,16 +90,13 @@ void Core::getConvolution(Convolution *convolution)
 {
     int result = convolution->getResult();
     allConvolutions_.push_back(convolution);
-    qDebug()<<result;
-    QVector<QVector3D> vectorCoords = convolution->getVectorCoords();
-    emit hasBetterVariant(vectorCoords,result);
-//    if(result > bestResult_)
-//    {
-//        bestResult_ = result;
-//        qDebug()<<bestResult_;
-//        QVector<QVector3D> vectorCoords = convolution->getVectorCoords();
-//        emit hasBetterVariant(vectorCoords,bestResult_);
-//    }
+    if(result > bestResult_)
+    {
+        bestResult_ = result;
+        qDebug()<<bestResult_;
+        QVector<QVector3D> vectorCoords = convolution->getVectorCoords();
+        emit hasBetterVariant(vectorCoords,bestResult_);
+    }
     delete convolution;
     emit countConvolution(allConvolutions_.size());
 }

@@ -10,8 +10,8 @@
 
 #define PI 3.14159265
 
-#define COUNT 10
-#define COUNT_ANT 1
+#define COUNT 40
+#define COUNT_ANT 10
 
 #define H_FILL 0x0
 #define H_FOB 0x1

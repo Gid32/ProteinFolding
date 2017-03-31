@@ -18,6 +18,8 @@ public:
     void setConvolution(Convolution *convolution);
 signals:
     void convolutionCreated(Convolution*);
+    void test(int);
+
 public slots:
 };
 
