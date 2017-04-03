@@ -32,42 +32,14 @@ Connection::~Connection()
 
 void Connection::changeLocation(QVector3D vect1,QVector3D vect2)
 {
-    QVector3D vect = vect1;
     obj->removeComponent(transform);
     delete transform;
+
     transform = new Qt3DCore::QTransform();
+
     transform->setScale(1.0f);
+    transform->setRotation(QQuaternion::rotationTo(QVector3D(0,1,0),vect2 - vect1));
+    transform->setTranslation((vect1 + vect2)/2);
 
-//    vect.setX((vect1.x()+vect2.x())/2);
-//    vect.setY((vect1.y()+vect2.y())/2);
-//    double gr = std::atan((vect2.y()-(vect.y()))/(vect2.x()-vect.x()))* 180 / PI;
-//    (vect.x() > 0) ? gr+=90 : gr+=270;
-//    transform->setRotationZ(gr);
-
-
-    vect.setX((vect1.x()+vect2.x())/2);
-    vect.setY((vect1.y()+vect2.y())/2);
-    vect.setZ((vect1.z()+vect2.z())/2);
-    double gr = std::atan((vect2.y()-(vect.y()))/(vect2.x()-vect.x()))* 180 / PI;
-    (vect.x() > 0) ? gr+=90 : gr+=270;
-     //qDebug()<<gr;
-    if(gr>=0 && gr<=360)
-        transform->setRotationZ(gr);
-
-    if(vect1.z() != vect2.z())
-    {
-        gr = std::atan((vect2.y()-(vect.y()))/(vect2.z()-vect.z()))* 180 / PI;
-        (vect.z() > 0) ? gr+=90 : gr+=270;
-        //qDebug()<<"-> "<<gr;
-//        if(gr>=0 && gr<=360)
-//            transform->setRotationX(gr);
-    }
-
-    //transform->setRotation(QQuaternion::fromDirection(vect2,vect1));
-    //transform->setRotationX(90);
-    //transform->setRotationX(45);
-
-
-    transform->setTranslation(vect);
     obj->addComponent(transform);
 }
