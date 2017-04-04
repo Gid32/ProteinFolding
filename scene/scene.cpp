@@ -108,6 +108,7 @@ void Scene::initSettingsLayout()
 
     initSettingsLabel();
     initSettingsNetChanges();
+    initSettingsSelectMethod();
     initSettingsStartStopApplication();
     initSettingsRate();
     initSettingsCountConvolution();
@@ -125,17 +126,34 @@ void Scene::initSettingsLabel()
 
 void Scene::initSettingsNetChanges()
 {
-   settingsNetChangesLabel_ = new QLabel(widget_);
-   settingsNetChangesLabel_->setText("Выбрать сетку:");
-   settingsNetChangesLabel_->setObjectName("settingsNetChangesLabel");
+    settingsNetChangesLabel_ = new QLabel(widget_);
+    settingsNetChangesLabel_->setText("Выбрать сетку:");
+    settingsNetChangesLabel_->setObjectName("settingsNetChangesLabel");
 
-   settingsLayout_->addWidget(settingsNetChangesLabel_);
+    settingsLayout_->addWidget(settingsNetChangesLabel_);
 
-   settingsNetChanges_ = new QComboBox(widget_);
-   settingsNetChanges_->addItems(NetFactory::getInstance()->getStringList());
-   settingsNetChanges_->setMaximumSize(100,50);
+    settingsNetChanges_ = new QComboBox(widget_);
+    settingsNetChanges_->addItems(NetFactory::getInstance()->getStringList());
+    settingsNetChanges_->setMaximumSize(100,50);
 
-   settingsLayout_->addWidget(settingsNetChanges_);
+    settingsLayout_->addWidget(settingsNetChanges_);
+}
+
+void Scene::initSettingsSelectMethod()
+{
+    settingsSelectMethodLabel_ = new QLabel(widget_);
+    settingsSelectMethodLabel_->setText("Выбрать метод:");
+    settingsSelectMethodLabel_->setObjectName("settingsSelectMethodLabel");
+
+    settingsLayout_->addWidget(settingsSelectMethodLabel_);
+
+    settingsSelectMethod_ = new QComboBox(widget_);
+    settingsSelectMethod_->addItem("рэндом",0);
+    settingsSelectMethod_->addItem("безвероятностный",1);
+    settingsSelectMethod_->addItem("вероятностный",2);
+    settingsSelectMethod_->setMaximumSize(120,50);
+
+    settingsLayout_->addWidget(settingsSelectMethod_);
 }
 
 void Scene::initSettingsStartStopApplication()
@@ -221,7 +239,7 @@ void Scene::initCamera()
 void Scene::start()
 {
     timerUpdate_->start(1000);
-    emit started(settingsNetChanges_->currentText());
+    emit started(settingsNetChanges_->currentText(),settingsSelectMethod_->currentIndex());
 }
 
 void Scene::show()

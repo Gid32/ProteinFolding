@@ -1,7 +1,7 @@
 #include "core.h"
-#include <ctime>
 #include <windows.h>
 #include <QtCore/QDebug>
+#include <QTime>
 #include <QTimer>
 using namespace std;
 
@@ -13,10 +13,11 @@ Core::Core()
 
 void Core::loadProtein()
 {
-    srand(time(NULL));
+    QTime time = QTime::currentTime();
+    qsrand((uint)time.msec());
     for(int i=0;i<COUNT;i++)
     {
-        if(rand()%2)
+        if(qrand()%2)
             Convolution::protein.push_back(H_FOB);
         else
             Convolution::protein.push_back(H_FILL);
@@ -32,10 +33,11 @@ void Core::setNet(QString netName)
 
 void Core::createStartConvolutions()
 {
+    int method = Convolution::method;
+    Convolution::method = 0;//random
     for(int i=0;i<ants_.size();i++)
-    {
-        //currentConvolutions_.push_back(Convolution());
-    }
+        currentConvolutions_.push_back(new Convolution());
+    Convolution::method = method;
 }
 
 void Core::start()
@@ -44,7 +46,7 @@ void Core::start()
         loadProtein();
     isBreak_ = false;
     bestResult_ = 0;
-//    createStartConvolutions();
+    createStartConvolutions();
     runAnts();
 }
 
@@ -72,6 +74,9 @@ void Core::runAnts()
      countAntsReady_ = 0;
      for(int i=0;i<ants_.size();i++)
      {
+         QVector<QVector3D> vectorCoords = currentConvolutions_[i]->getVectorCoords();
+         emit hasBetterVariant(vectorCoords,bestResult_);
+         ants_[i]->setConvolution(currentConvolutions_[i]);
          ants_[i]->start();
      }
 }
@@ -79,9 +84,9 @@ void Core::runAnts()
 void Core::antFinish()
 {
     countAntsReady_++;
-    //qDebug()<<countAntsReady_;
     if(countAntsReady_ == ants_.size())
     {
+        //qDebug()<<"ants finished";
         runAnts();
     }
 }

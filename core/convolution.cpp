@@ -1,6 +1,8 @@
 #include "convolution.h"
 Net* Convolution::net = nullptr;
 QVector<BYTE> Convolution::protein = QVector<BYTE>();
+int Convolution::method = 0;
+
 Convolution::Convolution(QObject *parent) : QObject(parent)
 {
     history_.clear();
@@ -8,8 +10,36 @@ Convolution::Convolution(QObject *parent) : QObject(parent)
 
     currentCoords_ = QVector3D(START_POSITION,START_POSITION,START_POSITION);//начальная координата в массиве откуда начинается свертка
     setValueByCoord(currentCoords_, protein.at(0));//записываем в массив первую аминокислоту
-
+    currentTurnNumber_ = 1;
     create();
+}
+
+Convolution::Convolution(Convolution *convolution, int turnNumber) : QObject(0)
+{
+    //turnNumber начинается с 0
+    qDebug()<<"--"<<turnNumber;
+    history_.clear();
+    QVector<History> historyVect = convolution->getHistory();
+    currentDirection_ = historyVect.at(turnNumber).direction;
+    //qDebug()<<"size:"<<historyVect.size();
+    if(turnNumber==0)
+        currentCoords_ = QVector3D(START_POSITION,START_POSITION,START_POSITION);
+    else
+        currentCoords_ = historyVect.at(turnNumber-1).coords;
+
+    setValueByCoord(QVector3D(START_POSITION,START_POSITION,START_POSITION), protein.at(0));//записываем в массив первую аминокислоту
+    for(int i = 0;i < turnNumber-1;i++)
+    {
+        history_.append(historyVect[i]);
+        setValueByCoord(historyVect[i].coords, protein.at(0));
+    }
+    currentTurnNumber_ = turnNumber+1;//+1 потому что currentTurnNumber_ начинается с 1
+    create();
+}
+
+QVector<History> Convolution::getHistory()
+{
+    return history_;
 }
 
 Convolution::~Convolution()
@@ -21,7 +51,7 @@ void Convolution::create()
 {
     QVector3D newCoords = currentCoords_;
     int direction = currentDirection_;
-    for(int i=1;i<protein.size();i++)
+    for(int i=currentTurnNumber_;i<protein.size();i++)
     {
         if(!getNext(newCoords,direction))//нельзя ходить
         {
@@ -40,6 +70,51 @@ void Convolution::create()
     }
 }
 
+QVector3D Convolution::randomMethod(QVector<QVector3D> possible)
+{
+    int n = qrand()%possible.size();
+    return  possible.at(n);
+}
+
+QVector3D Convolution::withoutProbabilistic(QVector<QVector3D> possible)
+{
+    int indexMax = 0;
+    int count = 0;
+    if(history_.size()==0)
+       return  possible.at(indexMax);
+    for(int i=0;i<possible.size();i++)
+    {
+        int localCount = getCount(possible.at(i),history_.last().coords,history_.last().coords);
+        if(localCount > count)
+        {
+            count = localCount;
+            indexMax = i;
+        }
+    }
+    return  possible.at(indexMax);
+}
+
+QVector3D Convolution::probabilistic(QVector<QVector3D> possible)
+{
+    return randomMethod(possible);
+    //to do
+//    int indexMax = 0;
+//    int count = 0;
+//    if(history_.size()==0)
+//       return  possible.at(indexMax);
+//    for(int i=0;i<possible.size();i++)
+//    {
+//        int localCount = getCount(possible.at(i),history_.last().coords,history_.last().coords);
+//        if(localCount > count)
+//        {
+//            count = localCount;
+//            indexMax = i;
+//        }
+//    }
+//    return  possible.at(indexMax);
+}
+
+
 bool Convolution::getNext(QVector3D &coords, int &direction)
 {
     QVector<QVector3D> possible;
@@ -52,8 +127,12 @@ bool Convolution::getNext(QVector3D &coords, int &direction)
     }
     if(possible.empty())
         return false;
-    int n = rand()%possible.size();
-    coords = possible.at(n);
+    if(method == 0)
+        coords = randomMethod(possible);
+    else if(method == 1)
+        coords = withoutProbabilistic(possible);
+    else
+        coords = probabilistic(possible);
     possible.clear();
     return true;
 }

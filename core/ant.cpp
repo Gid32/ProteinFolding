@@ -1,8 +1,7 @@
 #include "ant.h"
-#include <ctime>
+#include <QTime>
 Ant::Ant()
 {
-
 }
 
 void Ant::setConvolution(Convolution *convolution)
@@ -12,8 +11,9 @@ void Ant::setConvolution(Convolution *convolution)
 
 void Ant::run()
 {
-    srand(time(NULL));
-     Convolution *conv = new Convolution();
-     emit convolutionCreated(conv);
-    //emit test(rand()%n);
+    QTime time = QTime::currentTime();
+    qsrand((uint)time.msec());
+    int i = qrand()%(COUNT-1);
+    Convolution *convolution = new Convolution(convolution_,i);
+    emit convolutionCreated(convolution);
 }
