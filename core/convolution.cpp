@@ -17,22 +17,21 @@ Convolution::Convolution(QObject *parent) : QObject(parent)
 Convolution::Convolution(Convolution *convolution, int turnNumber) : QObject(0)
 {
     //turnNumber начинается с 0
-    qDebug()<<"--"<<turnNumber;
     history_.clear();
-    QVector<History> historyVect = convolution->getHistory();
-    currentDirection_ = historyVect.at(turnNumber).direction;
-    //qDebug()<<"size:"<<historyVect.size();
+    historyPrev_ = convolution->getHistory();
+    currentDirection_ = historyPrev_.at(turnNumber).direction;
     if(turnNumber==0)
         currentCoords_ = QVector3D(START_POSITION,START_POSITION,START_POSITION);
     else
-        currentCoords_ = historyVect.at(turnNumber-1).coords;
+        currentCoords_ = historyPrev_.at(turnNumber-1).coords;
 
     setValueByCoord(QVector3D(START_POSITION,START_POSITION,START_POSITION), protein.at(0));//записываем в массив первую аминокислоту
-    for(int i = 0;i < turnNumber-1;i++)
+    for(int i = 0;i < turnNumber;i++)
     {
-        history_.append(historyVect[i]);
-        setValueByCoord(historyVect[i].coords, protein.at(0));
+        history_.append(historyPrev_[i]);
+        setValueByCoord(historyPrev_[i].coords, protein.at(0));
     }
+    setValueByCoord(historyPrev_[turnNumber].coords, BLOCK_AREA);//делаем невозможными повтор свертки
     currentTurnNumber_ = turnNumber+1;//+1 потому что currentTurnNumber_ начинается с 1
     create();
 }
@@ -49,39 +48,36 @@ Convolution::~Convolution()
 
 void Convolution::create()
 {
-    QVector3D newCoords = currentCoords_;
-    int direction = currentDirection_;
-    for(int i=currentTurnNumber_;i<protein.size();i++)
+    QVector3D newCoords;
+    int direction;
+    int turn;
+    while(currentTurnNumber_!=protein.size())
     {
-        if(!getNext(newCoords,direction))//нельзя ходить
+        if(!getNext(newCoords,direction,turn))//нельзя ходить
         {
-            i-=2;//-2 потому что не только этот шаг не удалось построить но и еще нужно старый удалить
-            History history = history_.last();
-            setValueByCoord(history.coords,BLOCK_AREA);
-            currentDirection_ = history.direction;
-            history_.removeLast();
-            currentCoords_ = history_.last().coords;
+            deadEnd();
             continue;
         }
-        setValueByCoord(newCoords,protein.at(i));
-        history_.push_back(History(newCoords,currentDirection_));//в историю добавляем координату и дайрекшин который был перед этим
+        setValueByCoord(newCoords,protein.at(currentTurnNumber_));
+        history_.push_back(History(newCoords,currentDirection_,turn));//в историю добавляем координату и дайрекшин который был перед этим
         currentDirection_ = direction;
         currentCoords_ = newCoords;
+        currentTurnNumber_++;
     }
 }
 
-QVector3D Convolution::randomMethod(QVector<QVector3D> possible)
+int Convolution::randomMethod(QVector<QVector3D> possible)
 {
     int n = qrand()%possible.size();
-    return  possible.at(n);
+    return n;
 }
 
-QVector3D Convolution::withoutProbabilistic(QVector<QVector3D> possible)
+int Convolution::withoutProbabilistic(QVector<QVector3D> possible)
 {
     int indexMax = 0;
     int count = 0;
-    if(history_.size()==0)
-       return  possible.at(indexMax);
+    if(history_.size()==0 || possible.size()==1)
+       return 0;
     for(int i=0;i<possible.size();i++)
     {
         int localCount = getCount(possible.at(i),history_.last().coords,history_.last().coords);
@@ -91,67 +87,110 @@ QVector3D Convolution::withoutProbabilistic(QVector<QVector3D> possible)
             indexMax = i;
         }
     }
-    return  possible.at(indexMax);
+    return indexMax;
 }
 
-QVector3D Convolution::probabilistic(QVector<QVector3D> possible)
+int Convolution::probabilistic(QVector<QVector3D> possible)
 {
-    return randomMethod(possible);
-    //to do
-//    int indexMax = 0;
-//    int count = 0;
-//    if(history_.size()==0)
-//       return  possible.at(indexMax);
-//    for(int i=0;i<possible.size();i++)
-//    {
-//        int localCount = getCount(possible.at(i),history_.last().coords,history_.last().coords);
-//        if(localCount > count)
-//        {
-//            count = localCount;
-//            indexMax = i;
-//        }
-//    }
-//    return  possible.at(indexMax);
+    QVector<int> chances;
+    int count = 0;
+    if(history_.size()==0 || possible.size()==1)
+       return  0;
+    for(int i=0;i<possible.size();i++)
+    {
+        int localCount = getCount(possible.at(i),history_.last().coords,history_.last().coords);
+        chances.push_back(count);
+        count+=localCount;
+    }
+    int n = qrand()%(count+1);
+    for(int i=0;i<chances.size();i++)
+    {
+        if(n<=chances.at(i))
+            return i;
+    }
+    return 0;
 }
 
+void Convolution::deadEnd()
+{
+    currentTurnNumber_-=2;//-2 потому что не только этот шаг не удалось построить но и еще нужно старый удалить
+    History history = history_.last();
+    setValueByCoord(history.coords,BLOCK_AREA);
+    currentDirection_ = history.direction;
+    history_.removeLast();
+    currentCoords_ = history_.last().coords;
+}
 
-bool Convolution::getNext(QVector3D &coords, int &direction)
+bool Convolution::addNewTurn(int turn,QVector3D &coords, int &direction)
+{
+    direction = net->turnToDirection(currentDirection_,turn);
+    coords = net->getDirectionCoord(direction,currentCoords_);
+    if(getValueByCoord(coords)==FILL_AREA)
+        return true;
+    return false;
+}
+
+bool Convolution::getNext(QVector3D &coords, int &direction,int &turn)
 {
     QVector<QVector3D> possible;
-    for(int i=net->getMinTurn();i<=net->getMaxTurn();i++)
+    QVector<int> turns;
+    QVector<int> directions;
+    bool f = false;
+//    if(!historyPrev_.empty())
+//    {
+//        if(addNewTurn(historyPrev_.at(currentTurnNumber_).turn,coords,direction))
+//        {
+//            possible.push_back(coords);
+//            turns.push_back(historyPrev_.at(currentTurnNumber_).turn);
+//            directions.push_back(direction);
+//            f = true;
+//            qDebug()<<coords;
+//        }
+//    }
+    if(!f)
     {
-        direction = net->turnToDirection(direction,i);
-        QVector3D newCoords = net->getDirectionCoord(direction,currentCoords_);
-        if(getValueByCoord(newCoords)==FILL_AREA)
-            possible.push_back(newCoords);
+        for(int i=net->getMinTurn();i<=net->getMaxTurn();i++)
+        {
+            if(addNewTurn(i,coords,direction))
+            {
+                possible.push_back(coords);
+                turns.push_back(i);
+                directions.push_back(direction);
+            }
+        }
     }
+
     if(possible.empty())
         return false;
+
+    int n;
     if(method == 0)
-        coords = randomMethod(possible);
+        n = randomMethod(possible);
     else if(method == 1)
-        coords = withoutProbabilistic(possible);
+        n = withoutProbabilistic(possible);
     else
-        coords = probabilistic(possible);
+        n = probabilistic(possible);
+
+    coords = possible.at(n);
+    turn = turns.at(n);
+    direction = directions.at(n);
+
     possible.clear();
+    turns.clear();
     return true;
 }
 
 void Convolution::setValueByCoord(QVector3D coord, BYTE value)
 {
     area.insert(coordToQString(coord),value);
-    //area[(int)coord.x()][(int)coord.y()][(int)coord.z()] = value;
 }
 
 BYTE Convolution::getValueByCoord(QVector3D coord)
 {
     QString str = coordToQString(coord);
     if(area.contains(str))
-    {
         return area[str];
-    }
     return FILL_AREA;
-    //return area[(int)coord.x()][(int)coord.y()][(int)coord.z()];
 }
 
 QString Convolution::coordToQString(QVector3D coord)

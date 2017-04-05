@@ -30,10 +30,10 @@ private:
     void runAnts();
     void deleteAnts();
     void createStartConvolutions();
+    void createAnts(int count);
 public:
     explicit Core();
-    void createAnts(int count);
-    void setNet(QString netName);
+    void setSettings(QString netName,int method,int count);
 public slots:
     void start();
     void stop();

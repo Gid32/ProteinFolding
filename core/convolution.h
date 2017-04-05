@@ -12,10 +12,12 @@ struct History
 {
     QVector3D coords;
     int direction;
-    History(QVector3D coords,int direction)
+    int turn;
+    History(QVector3D coords,int direction,int turn)
     {
         this->coords = coords;
         this->direction = direction;
+        this->turn = turn;
     }
     History(){}
 };
@@ -29,17 +31,20 @@ private:
     QVector<History> history_;
     int currentDirection_;
     int currentTurnNumber_;
+    QVector<History> historyPrev_;
     void setValueByCoord(QVector3D coord, BYTE value);
     BYTE getValueByCoord(QVector3D coord);
-    bool getNext(QVector3D &coords, int &direction);
-    QVector3D randomMethod(QVector<QVector3D> possible);
-    QVector3D withoutProbabilistic(QVector<QVector3D> possible);
-    QVector3D probabilistic(QVector<QVector3D> possible);
+    bool getNext(QVector3D &coords, int &direction, int &turn);
+    int randomMethod(QVector<QVector3D> possible);
+    int withoutProbabilistic(QVector<QVector3D> possible);
+    int probabilistic(QVector<QVector3D> possible);
     QVector3D getCoordsRelationZeroPosition(QVector3D coords);
     bool isHydroFobByCoord(QVector3D coord);
     int getCount(QVector3D coord,QVector3D blockCoordPrev,QVector3D blockCoordNext);
     QString coordToQString(QVector3D coord);
+    bool addNewTurn(int turn,QVector3D &coords, int &direction);
     void create();
+    void deadEnd();
 public:
     static Net* net;
     static QVector<BYTE> protein;

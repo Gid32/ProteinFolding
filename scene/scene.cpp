@@ -33,9 +33,12 @@ void Scene::reDraw()
     if(!hasVariantToUpdate_)
         return;
     hasVariantToUpdate_ = false;
-    for(int i=1;i<nodes.size();i++)//0 нод не трогаем
-        if(vectorCoords.size()==COUNT-1)
+    //qDebug()<<vectorCoords.size()<<COUNT-1;
+    if(vectorCoords.size()==COUNT-1)
+    {
+        for(int i=1;i<nodes.size();i++)//0 нод не трогаем
             nodes.at(i)->changeLocation(vectorCoords.at(i-1));
+    }
 }
 
 Scene::Scene(const char* title, int width, int height)
@@ -109,6 +112,7 @@ void Scene::initSettingsLayout()
     initSettingsLabel();
     initSettingsNetChanges();
     initSettingsSelectMethod();
+    initSettingsCountAnt();
     initSettingsStartStopApplication();
     initSettingsRate();
     initSettingsCountConvolution();
@@ -134,6 +138,7 @@ void Scene::initSettingsNetChanges()
 
     settingsNetChanges_ = new QComboBox(widget_);
     settingsNetChanges_->addItems(NetFactory::getInstance()->getStringList());
+    settingsNetChanges_->setCurrentIndex(1);
     settingsNetChanges_->setMaximumSize(100,50);
 
     settingsLayout_->addWidget(settingsNetChanges_);
@@ -151,9 +156,27 @@ void Scene::initSettingsSelectMethod()
     settingsSelectMethod_->addItem("рэндом",0);
     settingsSelectMethod_->addItem("безвероятностный",1);
     settingsSelectMethod_->addItem("вероятностный",2);
+    settingsSelectMethod_->setCurrentIndex(2);
     settingsSelectMethod_->setMaximumSize(120,50);
 
     settingsLayout_->addWidget(settingsSelectMethod_);
+}
+
+void Scene::initSettingsCountAnt()
+{
+    settingsSelectCountAntLabel_ = new QLabel(widget_);
+    settingsSelectCountAntLabel_->setText("Количество муравьев:");
+    settingsSelectCountAntLabel_->setObjectName("settingsSelectCountAntLabel");
+
+    settingsLayout_->addWidget(settingsSelectCountAntLabel_);
+
+    settingsSelectCountAnt_ = new QComboBox(widget_);
+    for(int i=1;i<=MAX_ANT;i++)
+        settingsSelectCountAnt_->addItem(QString::number(i),i);
+    settingsSelectCountAnt_->setCurrentIndex(9);
+    settingsSelectCountAnt_->setMaximumSize(100,50);
+
+    settingsLayout_->addWidget(settingsSelectCountAnt_);
 }
 
 void Scene::initSettingsStartStopApplication()
@@ -239,7 +262,7 @@ void Scene::initCamera()
 void Scene::start()
 {
     timerUpdate_->start(1000);
-    emit started(settingsNetChanges_->currentText(),settingsSelectMethod_->currentIndex());
+    emit started(settingsNetChanges_->currentText(),settingsSelectMethod_->currentIndex(),settingsSelectCountAnt_->currentIndex()+1);
 }
 
 void Scene::show()

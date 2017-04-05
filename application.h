@@ -21,7 +21,7 @@ public:
 signals:
 
 public slots:
-    void coreStart(QString netName, int method);
+    void coreStart(QString netName, int method, int countAnt);
     void coreStop();
 };
 

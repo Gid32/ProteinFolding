@@ -46,7 +46,7 @@ public:
     void show();
     ~Scene();
 signals:
-    void started(QString,int);
+    void started(QString,int,int);
     void stopped();
 public slots:
     void update(QVector<QVector3D> vectorCoords, int value);
@@ -75,8 +75,10 @@ private:
     QLabel *settingsRate_;
     QLabel *settingsCountConvolutionLabel_;
     QLabel *settingsCountConvolution_;
+    QLabel *settingsSelectCountAntLabel_;
     QComboBox *settingsNetChanges_;
     QComboBox *settingsSelectMethod_;
+    QComboBox *settingsSelectCountAnt_;
     QPushButton *settingsStartApplication_;
     QPushButton *settingsStopApplication_;
 
@@ -95,6 +97,7 @@ private:
     void initSettingsLabel();
     void initSettingsNetChanges();
     void initSettingsSelectMethod();
+    void initSettingsCountAnt();
     void initSettingsRate();
     void initSettingsStartStopApplication();
     void initSettingsCountConvolution();

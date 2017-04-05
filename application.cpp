@@ -15,7 +15,7 @@ Application::Application(QObject *parent) : QObject(parent)
     coreThread_ = new QThread;
     core_->moveToThread(coreThread_);
 
-    QObject::connect(scene_,SIGNAL(started(QString,int)),this,SLOT(coreStart(QString,int)));
+    QObject::connect(scene_,SIGNAL(started(QString,int,int)),this,SLOT(coreStart(QString,int,int)));
     QObject::connect(scene_,SIGNAL(stopped()),this,SLOT(coreStop()));
 
     QObject::connect(coreThread_,SIGNAL(started()),core_,SLOT(start()));
@@ -24,14 +24,12 @@ Application::Application(QObject *parent) : QObject(parent)
 
 }
 
-void Application::coreStart(QString netName,int method)
+void Application::coreStart(QString netName,int method, int countAnt)
 {
     if(isStart)
         return;
     isStart = true;
-    Convolution::method = method;
-    core_->setNet(netName);
-    core_->createAnts(COUNT_ANT);
+    core_->setSettings(netName,method,countAnt);
     coreThread_->start();
 }
 

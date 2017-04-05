@@ -26,9 +26,12 @@ void Core::loadProtein()
     emit proteinLoaded(Convolution::protein);
 }
 
-void Core::setNet(QString netName)
+
+void Core::setSettings(QString netName,int method,int count)
 {
    Convolution::net = NetFactory::getInstance()->getNetByName(netName);
+   Convolution::method = method;
+   createAnts(count);
 }
 
 void Core::createStartConvolutions()
@@ -38,6 +41,7 @@ void Core::createStartConvolutions()
     for(int i=0;i<ants_.size();i++)
         currentConvolutions_.push_back(new Convolution());
     Convolution::method = method;
+    emit hasBetterVariant(currentConvolutions_[0]->getVectorCoords(),currentConvolutions_[0]->getResult());
 }
 
 void Core::start()
@@ -75,7 +79,6 @@ void Core::runAnts()
      for(int i=0;i<ants_.size();i++)
      {
          QVector<QVector3D> vectorCoords = currentConvolutions_[i]->getVectorCoords();
-         emit hasBetterVariant(vectorCoords,bestResult_);
          ants_[i]->setConvolution(currentConvolutions_[i]);
          ants_[i]->start();
      }
