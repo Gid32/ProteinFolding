@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QVector>
+#include <QTime>
 #include "settings.h"
 
 #include "netfactory.h"
@@ -15,10 +16,11 @@ class Core:public QObject
 {
   Q_OBJECT
 signals:
-    void hasBetterVariant(QVector<QVector3D> vectorCoords,int);
+    void hasBetterVariant(QVector<QVector3D> vectorCoords,int,QString time);
     void proteinLoaded(VECTORBYTE protein);
     void countConvolution(int);
 private:
+    QTime startTime_;
     int bestResult_;
     bool isProteinLoaded_;
     bool isBreak_;

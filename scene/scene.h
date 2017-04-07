@@ -49,7 +49,7 @@ signals:
     void started(QString,int,int);
     void stopped();
 public slots:
-    void update(QVector<QVector3D> vectorCoords, int value);
+    void update(QVector<QVector3D> vectorCoords, int value, QString time);
     void genericNodes(VECTORBYTE protein);
     void reDraw();
     void start();
@@ -73,6 +73,8 @@ private:
     QLabel *settingsSelectMethodLabel_;
     QLabel *settingsRateLabel_;
     QLabel *settingsRate_;
+    QLabel *settingsTimeBest_;
+    QLabel *settingsTimeBestLabel_;
     QLabel *settingsCountConvolutionLabel_;
     QLabel *settingsCountConvolution_;
     QLabel *settingsSelectCountAntLabel_;
@@ -101,6 +103,7 @@ private:
     void initSettingsRate();
     void initSettingsStartStopApplication();
     void initSettingsCountConvolution();
+    void initSettingsTimeBest();
 
 
     void clear();

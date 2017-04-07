@@ -54,7 +54,7 @@ Scene::Scene(const char* title, int width, int height)
     widget_->setWindowTitle(title_);
     widget_->setStyleSheet("QLabel {color:#1E90FF;font-size:15px;}"
                            "QLabel#settingsLabel {color:#DC143C;font-size:20px;margin:5px}"
-                           "QLabel#settingsRate,QLabel#settingsCountConvolution {color:#DC143C}"
+                           "QLabel#settingsRate,QLabel#settingsCountConvolution,QLabel#settingsTimeBest {color:#DC143C}"
                            "QPushButton {color:white;background-color:green;font-size:15px}"
                            "QPushButton#settingsStopApplication {background-color:#DC143C}"
                            );
@@ -80,10 +80,11 @@ Scene::Scene(const char* title, int width, int height)
 
 }
 
-void Scene::update(QVector<QVector3D> vectorCoords, int value)
+void Scene::update(QVector<QVector3D> vectorCoords, int value, QString time)
 {
     this->vectorCoords = vectorCoords;
     settingsRate_->setText(QString::number(value));
+    settingsTimeBest_->setText(time);
     hasVariantToUpdate_ = true;
 }
 
@@ -115,6 +116,7 @@ void Scene::initSettingsLayout()
     initSettingsCountAnt();
     initSettingsStartStopApplication();
     initSettingsRate();
+    initSettingsTimeBest();
     initSettingsCountConvolution();
 }
 
@@ -210,6 +212,22 @@ void Scene::initSettingsRate()
 
     settingsLayout_->addWidget(settingsRateLabel_);
     settingsLayout_->addWidget(settingsRate_);
+}
+
+void Scene::initSettingsTimeBest()
+{
+    settingsTimeBestLabel_ = new QLabel(widget_);
+    settingsTimeBestLabel_->setText("Время:");
+    settingsTimeBestLabel_->setMinimumWidth(150);
+
+    settingsTimeBest_ = new QLabel(widget_);
+    settingsTimeBest_->setText("0");
+    settingsTimeBest_->setMinimumWidth(150);
+    settingsTimeBest_->setObjectName("settingsTimeBest");
+
+
+    settingsLayout_->addWidget(settingsTimeBestLabel_);
+    settingsLayout_->addWidget(settingsTimeBest_);
 }
 
 void Scene::initSettingsCountConvolution()

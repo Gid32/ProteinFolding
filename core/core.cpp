@@ -41,7 +41,7 @@ void Core::createStartConvolutions()
     for(int i=0;i<ants_.size();i++)
         currentConvolutions_.push_back(new Convolution());
     Convolution::method = method;
-    emit hasBetterVariant(currentConvolutions_[0]->getVectorCoords(),currentConvolutions_[0]->getResult());
+    emit hasBetterVariant(currentConvolutions_[0]->getVectorCoords(),currentConvolutions_[0]->getResult(),"стартовая свертка");
 }
 
 void Core::start()
@@ -50,6 +50,7 @@ void Core::start()
         loadProtein();
     isBreak_ = false;
     bestResult_ = 0;
+    startTime_.start();
     createStartConvolutions();
     runAnts();
 }
@@ -103,7 +104,9 @@ void Core::getConvolution(Convolution *convolution)
         bestResult_ = result;
         qDebug()<<bestResult_;
         QVector<QVector3D> vectorCoords = convolution->getVectorCoords();
-        emit hasBetterVariant(vectorCoords,bestResult_);
+        QString time = QString::number(startTime_.elapsed());
+        qDebug()<<startTime_.elapsed();
+        emit hasBetterVariant(vectorCoords,bestResult_,time);
     }
     delete convolution;
     emit countConvolution(allConvolutions_.size());
