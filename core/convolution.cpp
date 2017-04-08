@@ -136,17 +136,7 @@ bool Convolution::getNext(QVector3D &coords, int &direction,int &turn)
     QVector<int> turns;
     QVector<int> directions;
     bool f = false;
-//    if(!historyPrev_.empty())
-//    {
-//        if(addNewTurn(historyPrev_.at(currentTurnNumber_).turn,coords,direction))
-//        {
-//            possible.push_back(coords);
-//            turns.push_back(historyPrev_.at(currentTurnNumber_).turn);
-//            directions.push_back(direction);
-//            f = true;
-//            qDebug()<<coords;
-//        }
-//    }
+
     if(!f)
     {
         for(int i=net->getMinTurn();i<=net->getMaxTurn();i++)

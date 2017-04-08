@@ -45,22 +45,9 @@ QVector3D Triangle3DNet::getCoords(QVector3D mCoord)
 {
     QVector3D coords;
 
-//    qDebug()<<prevCoord.x()<<" - "<<prevCoord.y()<<" - "<<prevCoord.z();;
-//    coords.setY(prevCoord.y()/DIV);
-//    coords.setX(prevCoord.x()-coords.y()/2);
-//    //add direction
-//    qDebug()<<coords.x()<<" - "<<coords.y()<<" - "<<coords.z();
-//    coords = getDirectionCoord(direction,coords,true);
-//    coords.setX(coords.x()+coords.y()/2.0);
-//    coords.setY(coords.y()*DIV);
-//    qDebug()<<coords.x()<<" - "<<coords.y()<<" - "<<coords.z();
-//    qDebug()<<"ENDgetCoords";
-
-
     coords.setX(mCoord.x()*SQRT3DIV2 + mCoord.z()*SQRT3DIV6);
     coords.setY(mCoord.x()*0.5 + mCoord.y() + mCoord.z()*0.5);
     coords.setZ(mCoord.z()*SQRT33DIV6);
 
     return coords;
-
 }

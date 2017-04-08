@@ -102,10 +102,8 @@ void Core::getConvolution(Convolution *convolution)
     if(result > bestResult_)
     {
         bestResult_ = result;
-        qDebug()<<bestResult_;
         QVector<QVector3D> vectorCoords = convolution->getVectorCoords();
         QString time = QString::number(startTime_.elapsed());
-        qDebug()<<startTime_.elapsed();
         emit hasBetterVariant(vectorCoords,bestResult_,time);
     }
     delete convolution;
