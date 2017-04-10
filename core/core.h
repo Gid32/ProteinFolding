@@ -33,6 +33,7 @@ private:
     void deleteAnts();
     void createStartConvolutions();
     void createAnts(int count);
+    void currentClear();
 public:
     explicit Core();
     void setSettings(QString netName,int method,int count);

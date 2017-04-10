@@ -46,6 +46,14 @@ void Core::createStartConvolutions()
     emit hasBetterVariant(currentConvolutions_[0]->getVectorCoords(),currentConvolutions_[0]->getResult(),"стартовая свертка");
 }
 
+void Core::currentClear()
+{
+    for(int i=0;i<currentConvolutions_.size();i++)
+        delete currentConvolutions_.at(i);
+    currentConvolutions_.clear();
+}
+
+
 void Core::start()
 {
     if(!isProteinLoaded_)
@@ -53,6 +61,7 @@ void Core::start()
     isBreak_ = false;
     bestResult_ = 0;
     startTime_.start();
+    currentClear();
     createStartConvolutions();
     runAnts();
 }
