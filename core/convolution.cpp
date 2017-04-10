@@ -33,6 +33,12 @@ Convolution::Convolution(Convolution *convolution, int turnNumber) : QObject(0)
     }
     setValueByCoord(historyPrev_[turnNumber].coords, BLOCK_AREA);//делаем невозможными повтор свертки
     currentTurnNumber_ = turnNumber+1;//+1 потому что currentTurnNumber_ начинается с 1
+
+//    for(int i=0;i<historyPrev_.size();i++)
+//    {
+//        qDebug()<<i<<historyPrev_[i].direction<<historyPrev_[i].turn;
+//    }
+
     create();
 }
 
@@ -136,17 +142,16 @@ bool Convolution::getNext(QVector3D &coords, int &direction,int &turn)
     QVector<int> turns;
     QVector<int> directions;
     bool f = false;
-//    if(!historyPrev_.empty())
-//    {
-//        if(addNewTurn(historyPrev_.at(currentTurnNumber_).turn,coords,direction))
-//        {
-//            possible.push_back(coords);
-//            turns.push_back(historyPrev_.at(currentTurnNumber_).turn);
-//            directions.push_back(direction);
-//            f = true;
-//            qDebug()<<coords;
-//        }
-//    }
+    if(!historyPrev_.empty())
+    {
+        if(addNewTurn(historyPrev_.at(currentTurnNumber_-1).turn,coords,direction))
+        {
+            possible.push_back(coords);
+            turns.push_back(historyPrev_.at(currentTurnNumber_-1).turn);
+            directions.push_back(direction);
+            f = true;
+        }
+    }
     if(!f)
     {
         for(int i=net->getMinTurn();i<=net->getMaxTurn();i++)

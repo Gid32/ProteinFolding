@@ -45,6 +45,8 @@ HEADERS += \
     $${CORE_DIR}/convolution.h \
     $${CORE_DIR}/ant.h
 
+FORMS +=
+
 
 
 

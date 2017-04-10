@@ -30,6 +30,7 @@
 #include <QLabel>
 #include <QComboBox>
 #include <QPushButton>
+#include <QSpinBox>
 
 #include <QThread>
 
@@ -68,7 +69,9 @@ private:
     int height_;
 
     QLabel *settingsLabel_;
-
+    QLabel *settingsGenericLabel_;
+    QSpinBox *settingsGenericCount_;
+    QPushButton *settingsGenericStart_;
     QLabel *settingsNetChangesLabel_;
     QLabel *settingsSelectMethodLabel_;
     QLabel *settingsRateLabel_;
@@ -80,7 +83,7 @@ private:
     QLabel *settingsSelectCountAntLabel_;
     QComboBox *settingsNetChanges_;
     QComboBox *settingsSelectMethod_;
-    QComboBox *settingsSelectCountAnt_;
+    QSpinBox *settingsSelectCountAnt_;
     QPushButton *settingsStartApplication_;
     QPushButton *settingsStopApplication_;
 
@@ -97,6 +100,7 @@ private:
     void initSettingsLayout();
 
     void initSettingsLabel();
+    void initSettingsGenericConvolution();
     void initSettingsNetChanges();
     void initSettingsSelectMethod();
     void initSettingsCountAnt();

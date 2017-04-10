@@ -39,6 +39,8 @@ void Scene::reDraw()
         for(int i=1;i<nodes.size();i++)//0 нод не трогаем
             nodes.at(i)->changeLocation(vectorCoords.at(i-1));
     }
+    else
+        qDebug()<<"pzdc count"<<vectorCoords.size();
 }
 
 Scene::Scene(const char* title, int width, int height)
@@ -111,6 +113,7 @@ void Scene::initSettingsLayout()
     mainLayout_->addLayout(settingsLayout_);
 
     initSettingsLabel();
+    initSettingsGenericConvolution();
     initSettingsNetChanges();
     initSettingsSelectMethod();
     initSettingsCountAnt();
@@ -118,6 +121,7 @@ void Scene::initSettingsLayout()
     initSettingsRate();
     initSettingsTimeBest();
     initSettingsCountConvolution();
+
 }
 
 void Scene::initSettingsLabel()
@@ -128,6 +132,23 @@ void Scene::initSettingsLabel()
     settingsLabel_->setObjectName("settingsLabel");
 
     settingsLayout_->addWidget(settingsLabel_);
+}
+
+void Scene::initSettingsGenericConvolution()
+{
+    settingsGenericLabel_ = new QLabel(widget_);
+    settingsGenericLabel_->setText("Генерация свертки:");
+    settingsGenericLabel_->setMinimumWidth(150);
+
+    settingsGenericCount_ = new QSpinBox(widget_);
+    settingsGenericCount_->setMinimumWidth(150);
+
+    settingsGenericStart_ = new QPushButton("Сгенерировать",widget_);
+    settingsGenericStart_->setMaximumWidth(100);
+
+    settingsLayout_->addWidget(settingsGenericLabel_);
+    settingsLayout_->addWidget(settingsGenericCount_);
+    settingsLayout_->addWidget(settingsGenericStart_);
 }
 
 void Scene::initSettingsNetChanges()
@@ -172,10 +193,7 @@ void Scene::initSettingsCountAnt()
 
     settingsLayout_->addWidget(settingsSelectCountAntLabel_);
 
-    settingsSelectCountAnt_ = new QComboBox(widget_);
-    for(int i=1;i<=MAX_ANT;i++)
-        settingsSelectCountAnt_->addItem(QString::number(i),i);
-    settingsSelectCountAnt_->setCurrentIndex(9);
+    settingsSelectCountAnt_ = new QSpinBox(widget_);
     settingsSelectCountAnt_->setMaximumSize(100,50);
 
     settingsLayout_->addWidget(settingsSelectCountAnt_);
@@ -280,7 +298,7 @@ void Scene::initCamera()
 void Scene::start()
 {
     timerUpdate_->start(1000);
-    emit started(settingsNetChanges_->currentText(),settingsSelectMethod_->currentIndex(),settingsSelectCountAnt_->currentIndex()+1);
+    emit started(settingsNetChanges_->currentText(),settingsSelectMethod_->currentIndex(),settingsSelectCountAnt_->value());
 }
 
 void Scene::show()

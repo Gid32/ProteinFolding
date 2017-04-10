@@ -10,8 +10,7 @@
 
 #define PI 3.14159265
 
-#define COUNT 20
-#define COUNT_ANT 10
+#define COUNT 100
 #define MAX_ANT 40
 
 #define H_FILL 0x0
