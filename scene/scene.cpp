@@ -33,7 +33,7 @@ void Scene::reDraw()
     if(!hasVariantToUpdate_)
         return;
     hasVariantToUpdate_ = false;
-    //qDebug()<<vectorCoords.size()<<COUNT-1;
+
     if(vectorCoords.size()==COUNT-1)
     {
         for(int i=1;i<nodes.size();i++)//0 нод не трогаем
