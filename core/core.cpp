@@ -81,7 +81,7 @@ void Core::createAnts(int count)
         Ant *ant = new Ant();
         connect(ant,SIGNAL(finished()),this,SLOT(antFinish()));
         connect(ant,SIGNAL(convolutionCreated(Convolution*)),this,SLOT(getConvolution(Convolution*)));
-        connect(this,SIGNAL(stopped()),ant,SLOT(terminate()));
+        connect(this,SIGNAL(stopped()),ant,SLOT(quit()));
         ants_.push_back(ant);
     }
 }
