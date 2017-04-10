@@ -20,6 +20,7 @@ void Scene::test()
 void Scene::genericNodes(VECTORBYTE protein)
 {
     clear();
+    qDebug()<<"aaaa";
     Node *node = nullptr;
     for(int i=0;i<protein.size();i++)
     {

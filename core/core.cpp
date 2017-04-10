@@ -8,7 +8,6 @@ using namespace std;
 Core::Core()
 {
     isProteinLoaded_ = false;
-    isBreak_ = false;
 }
 
 void Core::loadProtein(int count)
@@ -25,6 +24,7 @@ void Core::loadProtein(int count)
             Convolution::protein.push_back(H_FILL);
     }
     isProteinLoaded_ = true;
+    qDebug()<<"test";
     emit proteinLoaded(Convolution::protein);
 }
 
@@ -72,6 +72,7 @@ void Core::createAnts(int count)
         Ant *ant = new Ant();
         connect(ant,SIGNAL(finished()),this,SLOT(antFinish()));
         connect(ant,SIGNAL(convolutionCreated(Convolution*)),this,SLOT(getConvolution(Convolution*)));
+        connect(this,SIGNAL(stopped()),ant,SLOT(terminate()));
         ants_.push_back(ant);
     }
 }
@@ -92,8 +93,8 @@ void Core::antFinish()
     countAntsReady_++;
     if(countAntsReady_ == ants_.size())
     {
-        //qDebug()<<"ants finished";
-        runAnts();
+        if(!isBreak_)
+            runAnts();
     }
 }
 
@@ -115,4 +116,5 @@ void Core::getConvolution(Convolution *convolution)
 void Core::stop()
 {
     isBreak_ = true;
+    emit stopped();
 }

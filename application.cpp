@@ -13,13 +13,9 @@ Application::Application(QObject *parent) : QObject(parent)
     QObject::connect(core_, SIGNAL(countConvolution(int)), scene_, SLOT(countConvolution(int)));
     QObject::connect(scene_,SIGNAL(createdProtein(int)),core_,SLOT(loadProtein(int)));
 
-    coreThread_ = new QThread;
-    core_->moveToThread(coreThread_);
-
     QObject::connect(scene_,SIGNAL(started(QString,int,int)),this,SLOT(coreStart(QString,int,int)));
     QObject::connect(scene_,SIGNAL(stopped()),this,SLOT(coreStop()));
 
-    QObject::connect(coreThread_,SIGNAL(started()),core_,SLOT(start()));
 
     isStart = false;
 
@@ -31,13 +27,12 @@ void Application::coreStart(QString netName,int method, int countAnt)
         return;
     isStart = true;
     core_->setSettings(netName,method,countAnt);
-    coreThread_->start();
+    core_->start();
 }
 
 void Application::coreStop()
 {
     core_->stop();
-    coreThread_->terminate();
     isStart = false;
 }
 

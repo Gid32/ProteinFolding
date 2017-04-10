@@ -11,7 +11,6 @@ class Application : public QObject
 {
     Q_OBJECT
 private:
-    QThread *coreThread_;
     Core *core_;
     Scene *scene_;
     bool isStart;

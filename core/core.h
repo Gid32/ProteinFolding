@@ -19,6 +19,7 @@ signals:
     void hasBetterVariant(QVector<QVector3D> vectorCoords,int,QString time);
     void proteinLoaded(VECTORBYTE protein);
     void countConvolution(int);
+    void stopped();
 private:
     QTime startTime_;
     int bestResult_;
@@ -41,7 +42,6 @@ public slots:
     void stop();
     void antFinish();
     void getConvolution(Convolution *convolution);
-    //void antFinished();
 };
 
 #endif // CORE_H
