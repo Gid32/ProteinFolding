@@ -49,6 +49,7 @@ public:
     static Net* net;
     static QVector<BYTE> protein;
     static int method;
+    static int count;
     explicit Convolution(QObject *parent = 0);
     explicit Convolution(Convolution *convolution, int turnNumber);
     ~Convolution();

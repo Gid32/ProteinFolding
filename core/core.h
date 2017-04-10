@@ -24,7 +24,6 @@ private:
     int bestResult_;
     bool isProteinLoaded_;
     bool isBreak_;
-    void loadProtein();
     QVector<Ant*> ants_;
     QVector<Convolution*> allConvolutions_;
     QVector<Convolution*> currentConvolutions_;
@@ -37,6 +36,7 @@ public:
     explicit Core();
     void setSettings(QString netName,int method,int count);
 public slots:
+    void loadProtein(int);
     void start();
     void stop();
     void antFinish();

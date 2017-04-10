@@ -13,7 +13,7 @@ void Ant::run()
 {
     QTime time = QTime::currentTime();
     qsrand((uint)time.msec());
-    int i = qrand()%(COUNT-1);
+    int i = qrand()%(Convolution::count-1);
     Convolution *convolution = new Convolution(convolution_,i);
     emit convolutionCreated(convolution);
 }

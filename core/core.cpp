@@ -11,11 +11,13 @@ Core::Core()
     isBreak_ = false;
 }
 
-void Core::loadProtein()
+void Core::loadProtein(int count)
 {
+    Convolution::protein.clear();
+    Convolution::count = count;
     QTime time = QTime::currentTime();
     qsrand((uint)time.msec());
-    for(int i=0;i<COUNT;i++)
+    for(int i=0;i<count;i++)
     {
         if(qrand()%2)
             Convolution::protein.push_back(H_FOB);
@@ -47,7 +49,7 @@ void Core::createStartConvolutions()
 void Core::start()
 {
     if(!isProteinLoaded_)
-        loadProtein();
+        return;
     isBreak_ = false;
     bestResult_ = 0;
     startTime_.start();

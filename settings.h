@@ -10,7 +10,6 @@
 
 #define PI 3.14159265
 
-#define COUNT 100
 #define MAX_ANT 40
 
 #define H_FILL 0x0
@@ -18,8 +17,6 @@
 #define FILL_AREA 0x2
 #define BLOCK_AREA 0x3
 
-#define AREA_SIZE COUNT*2+1
-#define START_POSITION COUNT
 
 typedef unsigned char BYTE;
 typedef QVector<BYTE> VECTORBYTE;

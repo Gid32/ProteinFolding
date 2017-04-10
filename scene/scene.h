@@ -48,6 +48,7 @@ public:
     ~Scene();
 signals:
     void started(QString,int,int);
+    void createdProtein(int);
     void stopped();
 public slots:
     void update(QVector<QVector3D> vectorCoords, int value, QString time);
@@ -56,6 +57,7 @@ public slots:
     void start();
     void stop();
     void countConvolution(int count);
+    void createProtein();
 private:
     const char* title_;
     Qt3DExtras::Qt3DWindow* view_;

@@ -2,13 +2,14 @@
 Net* Convolution::net = nullptr;
 QVector<BYTE> Convolution::protein = QVector<BYTE>();
 int Convolution::method = 0;
+int Convolution::count = 10;
 
 Convolution::Convolution(QObject *parent) : QObject(parent)
 {
     history_.clear();
     currentDirection_ = 0;
 
-    currentCoords_ = QVector3D(START_POSITION,START_POSITION,START_POSITION);//начальная координата в массиве откуда начинается свертка
+    currentCoords_ = QVector3D(0,0,0);//начальная координата в массиве откуда начинается свертка
     setValueByCoord(currentCoords_, protein.at(0));//записываем в массив первую аминокислоту
     currentTurnNumber_ = 1;
     create();
@@ -21,11 +22,11 @@ Convolution::Convolution(Convolution *convolution, int turnNumber) : QObject(0)
     historyPrev_ = convolution->getHistory();
     currentDirection_ = historyPrev_.at(turnNumber).direction;
     if(turnNumber==0)
-        currentCoords_ = QVector3D(START_POSITION,START_POSITION,START_POSITION);
+        currentCoords_ = QVector3D(0,0,0);
     else
         currentCoords_ = historyPrev_.at(turnNumber-1).coords;
 
-    setValueByCoord(QVector3D(START_POSITION,START_POSITION,START_POSITION), protein.at(0));//записываем в массив первую аминокислоту
+    setValueByCoord(QVector3D(0,0,0), protein.at(0));//записываем в массив первую аминокислоту
     for(int i = 0;i < turnNumber;i++)
     {
         history_.append(historyPrev_[i]);
@@ -142,7 +143,6 @@ bool Convolution::getNext(QVector3D &coords, int &direction,int &turn)
     QVector<int> turns;
     QVector<int> directions;
     bool f = false;
-<<<<<<< HEAD
     if(!historyPrev_.empty())
     {
         if(addNewTurn(historyPrev_.at(currentTurnNumber_-1).turn,coords,direction))
@@ -153,9 +153,6 @@ bool Convolution::getNext(QVector3D &coords, int &direction,int &turn)
             f = true;
         }
     }
-=======
-
->>>>>>> origin/master
     if(!f)
     {
         for(int i=net->getMinTurn();i<=net->getMaxTurn();i++)
@@ -215,7 +212,7 @@ QString Convolution::coordToQString(QVector3D coord)
 
 QVector3D Convolution::getCoordsRelationZeroPosition(QVector3D coords)
 {
-    return QVector3D(coords.x()-START_POSITION,coords.y()-START_POSITION,coords.z()-START_POSITION);
+    return QVector3D(coords.x(),coords.y(),coords.z());
 }
 
 bool Convolution::isHydroFobByCoord(QVector3D coord)
@@ -241,7 +238,7 @@ int Convolution::getCount(QVector3D coord,QVector3D blockCoordPrev,QVector3D blo
 int Convolution::getResult()
 {
    int result = 0;
-   QVector3D blockCoordPrev(START_POSITION,START_POSITION,START_POSITION);
+   QVector3D blockCoordPrev(0,0,0);
    QVector3D blockCoordNext = history_[0].coords;
    if(isHydroFobByCoord(blockCoordPrev))
        result += getCount(blockCoordPrev, blockCoordNext, blockCoordNext);

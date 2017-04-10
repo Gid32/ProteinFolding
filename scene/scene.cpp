@@ -34,13 +34,8 @@ void Scene::reDraw()
         return;
     hasVariantToUpdate_ = false;
 
-    if(vectorCoords.size()==COUNT-1)
-    {
-        for(int i=1;i<nodes.size();i++)//0 нод не трогаем
-            nodes.at(i)->changeLocation(vectorCoords.at(i-1));
-    }
-    else
-        qDebug()<<"pzdc count"<<vectorCoords.size();
+    for(int i=1;i<nodes.size();i++)//0 нод не трогаем
+         nodes.at(i)->changeLocation(vectorCoords.at(i-1));
 }
 
 Scene::Scene(const char* title, int width, int height)
@@ -141,14 +136,16 @@ void Scene::initSettingsGenericConvolution()
     settingsGenericLabel_->setMinimumWidth(150);
 
     settingsGenericCount_ = new QSpinBox(widget_);
-    settingsGenericCount_->setMinimumWidth(150);
+    settingsGenericCount_->setMaximumWidth(100);
 
     settingsGenericStart_ = new QPushButton("Сгенерировать",widget_);
-    settingsGenericStart_->setMaximumWidth(100);
+    settingsGenericStart_->setMaximumWidth(120);
 
     settingsLayout_->addWidget(settingsGenericLabel_);
     settingsLayout_->addWidget(settingsGenericCount_);
     settingsLayout_->addWidget(settingsGenericStart_);
+
+    connect(settingsGenericStart_,SIGNAL(clicked()),this,SLOT(createProtein()));
 }
 
 void Scene::initSettingsNetChanges()
@@ -299,6 +296,11 @@ void Scene::start()
 {
     timerUpdate_->start(1000);
     emit started(settingsNetChanges_->currentText(),settingsSelectMethod_->currentIndex(),settingsSelectCountAnt_->value());
+}
+
+void Scene::createProtein()
+{
+    emit createdProtein(settingsGenericCount_->value());
 }
 
 void Scene::show()
