@@ -137,6 +137,7 @@ void Scene::initSettingsGenericConvolution()
 
     settingsGenericCount_ = new QSpinBox(widget_);
     settingsGenericCount_->setMaximumWidth(100);
+    settingsGenericCount_->setMinimum(3);
 
     settingsGenericStart_ = new QPushButton("Сгенерировать",widget_);
     settingsGenericStart_->setMaximumWidth(120);
@@ -192,6 +193,7 @@ void Scene::initSettingsCountAnt()
 
     settingsSelectCountAnt_ = new QSpinBox(widget_);
     settingsSelectCountAnt_->setMaximumSize(100,50);
+    settingsSelectCountAnt_->setMinimum(1);
 
     settingsLayout_->addWidget(settingsSelectCountAnt_);
 }
