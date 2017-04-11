@@ -17,8 +17,9 @@ public:
     void run();
     void setConvolution(Convolution *convolution);
 signals:
-    void convolutionCreated(Convolution*);
+    void convolutionCreated(Convolution*,int);
     void test(int);
+
 
 public slots:
 };

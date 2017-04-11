@@ -15,5 +15,5 @@ void Ant::run()
     qsrand((uint)time.msec());
     int i = qrand()%(Convolution::count-1);
     Convolution *convolution = new Convolution(convolution_,i);
-    emit convolutionCreated(convolution);
+    emit convolutionCreated(convolution,i);
 }

@@ -28,12 +28,13 @@ private:
     QVector<Ant*> ants_;
     QVector<Convolution*> allConvolutions_;
     QVector<Convolution*> currentConvolutions_;
+    QVector<Convolution*> tempConvolutions_;
     int countAntsReady_;
     void runAnts();
     void deleteAnts();
     void createStartConvolutions();
     void createAnts(int count);
-    void currentClear();
+    void clearVectorConvolution(QVector<Convolution*> *vect);
 public:
     explicit Core();
     void setSettings(QString netName,int method,int count);
@@ -42,7 +43,7 @@ public slots:
     void start();
     void stop();
     void antFinish();
-    void getConvolution(Convolution *convolution);
+    void getConvolution(Convolution *, int i);
 };
 
 #endif // CORE_H

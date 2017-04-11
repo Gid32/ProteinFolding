@@ -46,11 +46,11 @@ void Core::createStartConvolutions()
     emit hasBetterVariant(currentConvolutions_[0]->getVectorCoords(),currentConvolutions_[0]->getResult(),"стартовая свертка");
 }
 
-void Core::currentClear()
+void Core::clearVectorConvolution(QVector<Convolution*> *vect)
 {
-    for(int i=0;i<currentConvolutions_.size();i++)
-        delete currentConvolutions_.at(i);
-    currentConvolutions_.clear();
+    for(int i=0;i<vect->size();i++)
+        delete vect->at(i);
+    vect->clear();
 }
 
 
@@ -61,7 +61,9 @@ void Core::start()
     isBreak_ = false;
     bestResult_ = 0;
     startTime_.start();
-    currentClear();
+    clearVectorConvolution(&currentConvolutions_);
+    Convolution::clearTrace();
+    Convolution::createTrace();
     createStartConvolutions();
     runAnts();
 }
@@ -80,7 +82,7 @@ void Core::createAnts(int count)
     {
         Ant *ant = new Ant();
         connect(ant,SIGNAL(finished()),this,SLOT(antFinish()));
-        connect(ant,SIGNAL(convolutionCreated(Convolution*)),this,SLOT(getConvolution(Convolution*)));
+        connect(ant,SIGNAL(convolutionCreated(Convolution*,int)),this,SLOT(getConvolution(Convolution*,int)));
         connect(this,SIGNAL(stopped()),ant,SLOT(quit()));
         ants_.push_back(ant);
     }
@@ -91,7 +93,6 @@ void Core::runAnts()
      countAntsReady_ = 0;
      for(int i=0;i<ants_.size();i++)
      {
-         QVector<QVector3D> vectorCoords = currentConvolutions_[i]->getVectorCoords();
          ants_[i]->setConvolution(currentConvolutions_[i]);
          ants_[i]->start();
      }
@@ -102,15 +103,46 @@ void Core::antFinish()
     countAntsReady_++;
     if(countAntsReady_ == ants_.size())
     {
+        //trace start
+        qDebug()<<tempConvolutions_.size();
+        int minresult = tempConvolutions_.at(0)->getResult();
+        int maxresult = minresult;
+        for(int i=1;i<tempConvolutions_.size();i++)
+        {
+            if(minresult < tempConvolutions_.at(i)->getResult())
+                minresult = tempConvolutions_.at(i)->getResult();
+            if(maxresult > tempConvolutions_.at(i)->getResult())
+                maxresult = tempConvolutions_.at(i)->getResult();
+        }
+        for(int i=0;i<tempConvolutions_.size();i++)
+        {
+            QVector<History> history = tempConvolutions_.at(i)->getHistory();
+            int del = maxresult-minresult;
+            if(del == 0)
+                del =1;
+            float result = (float)(tempConvolutions_.at(i)->getResult()-minresult)/del;
+            for(int j=0;j<Convolution::trace.size();j++)
+            {
+                QVector<float*> v = Convolution::trace.at(j);
+                *v.at(history.at(j).turn-1) += result;
+            }
+            //qDebug()<<history.size()<<j<<Convolution::trace.size()<<history.at(j).turn<<Convolution::trace.at(j).size();
+
+        }
+        clearVectorConvolution(&tempConvolutions_);
+        //tempConvolutions_.clear();
+        //clearVectorConvolution(&allConvolutions_);
+        //trace end
         if(!isBreak_)
             runAnts();
     }
 }
 
-void Core::getConvolution(Convolution *convolution)
+void Core::getConvolution(Convolution *convolution,int i)
 {
     int result = convolution->getResult();
     allConvolutions_.push_back(convolution);
+    tempConvolutions_.push_back(convolution);
     if(result > bestResult_)
     {
         bestResult_ = result;
@@ -118,7 +150,7 @@ void Core::getConvolution(Convolution *convolution)
         QString time = QString::number(startTime_.elapsed());
         emit hasBetterVariant(vectorCoords,bestResult_,time);
     }
-    delete convolution;
+    //delete convolution;
     emit countConvolution(allConvolutions_.size());
 }
 

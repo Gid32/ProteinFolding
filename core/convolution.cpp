@@ -3,6 +3,7 @@ Net* Convolution::net = nullptr;
 QVector<BYTE> Convolution::protein = QVector<BYTE>();
 int Convolution::method = 0;
 int Convolution::count = 10;
+QVector<QVector<float*>> Convolution::trace = QVector<QVector<float*>>();
 
 Convolution::Convolution(QObject *parent) : QObject(parent)
 {
@@ -35,12 +36,26 @@ Convolution::Convolution(Convolution *convolution, int turnNumber) : QObject(0)
     setValueByCoord(historyPrev_[turnNumber].coords, BLOCK_AREA);//делаем невозможными повтор свертки
     currentTurnNumber_ = turnNumber+1;//+1 потому что currentTurnNumber_ начинается с 1
 
-//    for(int i=0;i<historyPrev_.size();i++)
-//    {
-//        qDebug()<<i<<historyPrev_[i].direction<<historyPrev_[i].turn;
-//    }
-
     create();
+}
+
+void Convolution::createTrace()
+{
+    for(int i=0;i<count;i++)
+    {
+       QVector<float*> vect;
+       for(int j=net->getMinTurn();j<=net->getMaxTurn();j++)
+       {
+           float *a = new float(0);
+           vect.push_back(a);
+       }
+       trace.push_back(vect);
+    }
+}
+
+void Convolution::clearTrace()
+{
+    trace.clear();
 }
 
 QVector<History> Convolution::getHistory()

@@ -50,6 +50,9 @@ public:
     static QVector<BYTE> protein;
     static int method;
     static int count;
+    static QVector<QVector<float*>> trace;
+    static void clearTrace();
+    static void createTrace();
     explicit Convolution(QObject *parent = 0);
     explicit Convolution(Convolution *convolution, int turnNumber);
     ~Convolution();
