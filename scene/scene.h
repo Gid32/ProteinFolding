@@ -33,6 +33,7 @@
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QCheckBox>
+#include <QFileDialog>
 
 #include <QThread>
 
@@ -64,6 +65,8 @@ public slots:
     void stop();
     void countConvolution(int count);
     void createProtein();
+    void saveToFileProtein();
+    void loadFromFileProtein();
 private:
     const char* title_;
     Qt3DExtras::Qt3DWindow* view_;
@@ -84,6 +87,7 @@ private:
 
     QTimer *timerUpdate_;
 
+    VECTORBYTE protein_;
     bool hasVariantToUpdate_;
     bool drawAll_;
     bool hasVariant_;

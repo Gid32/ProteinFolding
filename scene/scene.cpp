@@ -44,6 +44,7 @@ void Scene::clear()
 void Scene::genericNodes(VECTORBYTE protein)
 {
     clear();
+    protein_ = protein;
     Node *node = nullptr;
     for(int i=0;i<protein.size();i++)
     {
@@ -64,10 +65,8 @@ void Scene::reDrawBetter()
 
 void Scene::reDraw()
 {
-   //qDebug()<<drawAll_<<hasVariant_;
    if(!drawAll_ || !hasVariant_)
        return;
-   //qDebug()<<"hasVar";
    hasVariant_ = false;
    for(int i=1;i<nodes.size();i++)//0 нод не трогаем
        nodes.at(i)->changeLocation(variant.at(i-1));
@@ -144,6 +143,32 @@ void Scene::hasVariant(QVector<QVector3D> vectorCoords)
    hasVariant_ = true;
 }
 
+void Scene::saveToFileProtein()
+{
+    QString filename = QFileDialog::getSaveFileName();
+    if(filename.isEmpty())
+        return;
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly);
+    char *data = new char[protein_.size()];
+    for(int i = 0;i < protein_.size();i++)
+       data[i] = protein_.at(i);
+    file.write(data,protein_.size());
+    delete data;
+    file.close();
+}
+
+void Scene::loadFromFileProtein()
+{
+    QString filename = QFileDialog::getOpenFileName();
+    if(filename.isEmpty())
+        return;
+    QFile file(filename);
+    file.open(QIODevice::ReadOnly);
+    QByteArray array = file.readAll();
+    file.close();
+}
+
 void Scene::countConvolution(int count)
 {
     QLabel *countConvolution = widget_->findChild<QLabel*>("countConvolution");
@@ -180,6 +205,10 @@ void Scene::initSettingsLayout()
     addSettingsSpinBox(settingsLayout_,"genericCount",3,1000,45);
     QPushButton * genericButton = addSettingsPushButton(settingsLayout_,"genericButton","Сгенерировать",styleButtonGreen_);
     connect(genericButton,SIGNAL(clicked()),this,SLOT(createProtein()));
+
+    //save
+    QPushButton * saveButton = addSettingsPushButton(settingsLayout_,"saveButton","Сохранить",styleButtonGreen_);
+    connect(saveButton,SIGNAL(clicked()),this,SLOT(saveToFileProtein()));
 
     //net
     addSettingsLabel(settingsLayout_,"netLabel","Выбрать сетку",styleLabel_);
