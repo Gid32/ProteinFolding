@@ -193,7 +193,6 @@ bool ConvolutionFactory::getNext(Convolution *convolution, int currentDirection,
 
 Convolution* ConvolutionFactory::getConvolution()
 {
-
     QVector3D currentCoords;
     int currentDirection;
     Convolution *currentConv;

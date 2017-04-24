@@ -66,7 +66,6 @@ void Core::antFinish()
 
 void Core::getConvolution(Convolution *convolution)
 {
-
     int result = ConvolutionFactory::getFactory()->getResult(convolution);
     allConvolutions_.push_back(convolution);
     tempConvolutions_.push_back(convolution);
@@ -74,8 +73,9 @@ void Core::getConvolution(Convolution *convolution)
     {
         bestResult_ = result;
         QVector<QVector3D> vectorCoords = ConvolutionFactory::getFactory()->getVectorCoords(convolution);
-        QString time = QString::number(startTime_.elapsed());
-        emit hasBetterVariant(vectorCoords,bestResult_,time);
+        QTime time = QTime(0,0,0,0).addMSecs(startTime_.elapsed());
+        QString timeStr = time.toString("hh:mm:ss.zzz");
+        emit hasBetterVariant(vectorCoords,bestResult_,timeStr);
     }
     emit countConvolution(allConvolutions_.size());
 }
