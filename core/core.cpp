@@ -16,9 +16,12 @@ void Core::clearVectorConvolution(QVector<Convolution*> *vect)
     vect->clear();
 }
 
-void Core::start(int count)
+
+void Core::start(SETTINGS settings)
 {
-    createAnts(count);
+    int countAnt = settings.value("antsCount").toInt();
+    int countThread = settings.value("threadsCount").toInt();
+    createAnts(countAnt,countThread);
     isBreak_ = false;
     bestResult_ = 0;
     startTime_.start();
@@ -32,12 +35,16 @@ void Core::deleteAnts()
     ants_.clear();
 }
 
-void Core::createAnts(int count)
+void Core::createAnts(int countAnt, int countThreads)
 {
     deleteAnts();
-    for(int i=0;i<count;i++)
+    int countConvInAnt = countAnt/countThreads;
+    for(int i=0;i<countThreads;i++)
     {
         Ant *ant = new Ant();
+        if(i==0)
+            ant->setCount(countConvInAnt+(countAnt%countThreads));
+        ant->setCount(countConvInAnt);
         connect(ant,SIGNAL(finished()),this,SLOT(antFinish()));
         connect(ant,SIGNAL(convolutionCreated(Convolution*)),this,SLOT(getConvolution(Convolution*)));
         connect(this,SIGNAL(stopped()),ant,SLOT(quit()));

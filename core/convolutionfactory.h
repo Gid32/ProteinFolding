@@ -48,7 +48,7 @@ public:
     QVector<QVector3D> getVectorCoords(Convolution *convolution);
     void changeTrace(QVector<Convolution*> convolutions);
 signals:
-    void ready(int countAnt);
+    void ready(SETTINGS settings);
     void createdProtein(VECTORBYTE);
     void error(QString);
 public slots:

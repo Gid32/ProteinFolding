@@ -11,7 +11,9 @@ class Ant : public QThread
 {
     Q_OBJECT
 private:
+    int count_;
 public:
+    void setCount(int);
     explicit Ant();
     void run();
 signals:

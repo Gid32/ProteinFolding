@@ -19,7 +19,7 @@ Application::Application(QObject *parent) : QObject(parent)
     connect(factory, SIGNAL(createdProtein(VECTORBYTE)), scene_, SLOT(genericNodes(VECTORBYTE)));
 
     connect(scene_,SIGNAL(started(SETTINGS)),factory,SLOT(setSettings(SETTINGS)));
-    connect(factory,SIGNAL(ready(int)),core_,SLOT(start(int)));
+    connect(factory,SIGNAL(ready(SETTINGS)),core_,SLOT(start(SETTINGS)));
     connect(scene_,SIGNAL(stopped()),factory,SLOT(stop()));
     connect(scene_,SIGNAL(stopped()),core_,SLOT(stop()));
 

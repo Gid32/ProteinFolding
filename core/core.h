@@ -31,12 +31,12 @@ private:
     int countAntsReady_;
     void runAnts();
     void deleteAnts();
-    void createAnts(int count);
+    void createAnts(int countAnt, int countThreads);
     void clearVectorConvolution(QVector<Convolution *> *vect);
 public:
     explicit Core();
 public slots:
-    void start(int count);
+    void start(SETTINGS settings);
     void stop();
     void antFinish();
     void getConvolution(Convolution *);

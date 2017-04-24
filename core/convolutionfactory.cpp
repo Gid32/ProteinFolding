@@ -72,13 +72,6 @@ void ConvolutionFactory::setSettings(SETTINGS settings)
     traceEvaporation_ = settings.value("traceEvaporation").toDouble();
     traceCoef_ = settings.value("traceCoef").toDouble();
 
-//    weightsFOBFOB_ = settings.value("weightsFOBFOB").toDouble();
-//    weightsFOBFIL_ = settings.value("weightsFOBFIL").toDouble();
-//    weightsFOBFREE_ = settings.value("weightsFOBFREE").toDouble();
-//    weightsFILFOB_ = settings.value("weightsFILFOB").toDouble();
-//    weightsFILFIL_ = settings.value("weightsFILFIL").toDouble();
-//    weightsFILFREE_ = settings.value("weightsFILFREE").toDouble();
-
     weights_[H_FOB][H_FOB] = settings.value("weightsFOBFOB").toDouble();
     weights_[H_FOB][H_FILL] = settings.value("weightsFOBFIL").toDouble();
     weights_[H_FOB][FILL_AREA] = settings.value("weightsFOBFREE").toDouble();
@@ -88,13 +81,11 @@ void ConvolutionFactory::setSettings(SETTINGS settings)
     weights_[H_FILL][FILL_AREA] = settings.value("weightsFILFREE").toDouble();
     weights_[H_FILL][BLOCK_AREA] = settings.value("weightsFILFREE").toDouble();
 
-
-    int countAnt = settings.value("antsCount").toInt();
     clearTrace();
     createTrace();
 
     isStarted_ = true;
-    emit ready(countAnt);
+    emit ready(settings);
 }
 
 void ConvolutionFactory::stop()

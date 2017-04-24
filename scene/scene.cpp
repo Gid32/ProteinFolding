@@ -159,6 +159,10 @@ void Scene::initSettingsLayout()
     QString str ="рэндом,безвероятностный,вероятностный";
     addSettingsComboBox(settingsLayout_,"methodValue", str.split(","),2);
 
+    //threads
+    addSettingsLabel(settingsLayout_,"threadsLabel","Количество потоков",styleLabel_);
+    addSettingsSpinBox(settingsLayout_,"threadsCount",1,MAX_ANT,3);
+
     //ants
     addSettingsLabel(settingsLayout_,"antsLabel","Количество муравьев",styleLabel_);
     addSettingsSpinBox(settingsLayout_,"antsCount",1,MAX_ANT,10);
@@ -172,6 +176,7 @@ void Scene::initSettingsLayout()
     addSettingsDoubleSpinBox(settingsLayout_,"traceEvaporation",0,1,0.6);
     addSettingsLabel(settingsLayout_,"traceCoefLabel","Коеф. След",styleLabel_);
     addSettingsDoubleSpinBox(settingsLayout_,"traceCoef",0,1,0.5);
+
 
 
 }
@@ -223,6 +228,7 @@ void Scene::start()
     QComboBox *net = widget_->findChild<QComboBox*>("netValue");
     QComboBox *method = widget_->findChild<QComboBox*>("methodValue");
     QSpinBox *countAnt = widget_->findChild<QSpinBox*>("antsCount");
+    QSpinBox *threadsCount = widget_->findChild<QSpinBox*>("threadsCount");
     QDoubleSpinBox *traceMin = widget_->findChild<QDoubleSpinBox*>("traceMin");
     QDoubleSpinBox *traceMax = widget_->findChild<QDoubleSpinBox*>("traceMax");
     QDoubleSpinBox *traceEvaporation = widget_->findChild<QDoubleSpinBox*>("traceEvaporation");
@@ -240,6 +246,7 @@ void Scene::start()
     settings.insert(net->objectName(),net->currentText());
     settings.insert(method->objectName(),method->currentIndex());
     settings.insert(countAnt->objectName(),countAnt->value());
+    settings.insert(threadsCount->objectName(),threadsCount->value());
     settings.insert(traceMin->objectName(),traceMin->value());
     settings.insert(traceMax->objectName(),traceMax->value());
     settings.insert(traceEvaporation->objectName(),traceEvaporation->value());

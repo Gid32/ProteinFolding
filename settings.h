@@ -12,7 +12,7 @@
 
 #define PI 3.14159265
 
-#define MAX_ANT 40
+#define MAX_ANT 200
 
 #define H_FILL 0x0
 #define H_FOB 0x1
