@@ -8,35 +8,24 @@ Application::Application(QObject *parent) : QObject(parent)
 
     qRegisterMetaType<QVector<QVector3D>>();
     qRegisterMetaType<VECTORBYTE>("VECTORBYTE");
-    QObject::connect(core_, SIGNAL(hasBetterVariant(QVector<QVector3D>,int,QString)), scene_, SLOT(update(QVector<QVector3D>,int,QString)));
-    QObject::connect(core_, SIGNAL(proteinLoaded(VECTORBYTE)), scene_, SLOT(genericNodes(VECTORBYTE)));
-    QObject::connect(core_, SIGNAL(countConvolution(int)), scene_, SLOT(countConvolution(int)));
-    QObject::connect(scene_,SIGNAL(createdProtein(int)),core_,SLOT(loadProtein(int)));
+    qRegisterMetaType<SETTINGS>("SETTINGS");
+    qRegisterMetaType<QString>();
 
-    QObject::connect(scene_,SIGNAL(started(QString,int,int)),this,SLOT(coreStart(QString,int,int)));
-    QObject::connect(scene_,SIGNAL(stopped()),this,SLOT(coreStop()));
+    connect(core_, SIGNAL(hasBetterVariant(QVector<QVector3D>,int,QString)), scene_, SLOT(update(QVector<QVector3D>,int,QString)));
+    connect(core_, SIGNAL(countConvolution(int)), scene_, SLOT(countConvolution(int)));
 
+    ConvolutionFactory *factory = ConvolutionFactory::getFactory();
+    connect(scene_,SIGNAL(createdProtein(int)),factory,SLOT(createProtein(int)));
+    connect(factory, SIGNAL(createdProtein(VECTORBYTE)), scene_, SLOT(genericNodes(VECTORBYTE)));
 
-    isStart = false;
+    connect(scene_,SIGNAL(started(SETTINGS)),factory,SLOT(setSettings(SETTINGS)));
+    connect(factory,SIGNAL(ready(int)),core_,SLOT(start(int)));
+    connect(scene_,SIGNAL(stopped()),factory,SLOT(stop()));
+    connect(scene_,SIGNAL(stopped()),core_,SLOT(stop()));
+
+    connect(factory,SIGNAL(error(QString)),scene_,SLOT(getError(QString)));
 
 }
-
-void Application::coreStart(QString netName,int method, int countAnt)
-{
-    if(isStart)
-        return;
-    isStart = true;
-    core_->setSettings(netName,method,countAnt);
-    core_->start();
-}
-
-void Application::coreStop()
-{
-    core_->stop();
-    isStart = false;
-}
-
-
 
 void Application::start()
 {

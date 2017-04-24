@@ -10,6 +10,7 @@
 #include <QtCore/QObject>
 
 #include "convolution.h"
+#include "convolutionfactory.h"
 #include "ant.h"
 
 class Core:public QObject
@@ -23,27 +24,22 @@ signals:
 private:
     QTime startTime_;
     int bestResult_;
-    bool isProteinLoaded_;
     bool isBreak_;
     QVector<Ant*> ants_;
     QVector<Convolution*> allConvolutions_;
-    QVector<Convolution*> currentConvolutions_;
     QVector<Convolution*> tempConvolutions_;
     int countAntsReady_;
     void runAnts();
     void deleteAnts();
-    void createStartConvolutions();
     void createAnts(int count);
-    void clearVectorConvolution(QVector<Convolution*> *vect);
+    void clearVectorConvolution(QVector<Convolution *> *vect);
 public:
     explicit Core();
-    void setSettings(QString netName,int method,int count);
 public slots:
-    void loadProtein(int);
-    void start();
+    void start(int count);
     void stop();
     void antFinish();
-    void getConvolution(Convolution *, int i);
+    void getConvolution(Convolution *);
 };
 
 #endif // CORE_H

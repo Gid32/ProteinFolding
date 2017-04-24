@@ -2,6 +2,8 @@
 #define SETTINGS_H
 
 #include <QVector>
+#include <QDebug>
+#include <QMap>
 
 #define RADIUS_NODE 0.2f
 #define RADIUS_CONNECTION 0.05f
@@ -20,7 +22,7 @@
 
 typedef unsigned char BYTE;
 typedef QVector<BYTE> VECTORBYTE;
-
+typedef QMap<QString,QVariant> SETTINGS;
 
 #endif // SETTINGS_H
 

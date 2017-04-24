@@ -13,15 +13,12 @@ class Application : public QObject
 private:
     Core *core_;
     Scene *scene_;
-    bool isStart;
 public:
     explicit Application(QObject *parent = 0);
     void start();
 signals:
 
 public slots:
-    void coreStart(QString netName, int method, int countAnt);
-    void coreStop();
 };
 
 #endif // APPLICATION_H

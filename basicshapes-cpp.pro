@@ -27,7 +27,8 @@ SOURCES += main.cpp \
     $${SCENE_DIR}/scene.cpp \
     application.cpp \
     $${CORE_DIR}/convolution.cpp \
-    $${CORE_DIR}/ant.cpp
+    $${CORE_DIR}/ant.cpp \
+    $${CORE_DIR}/convolutionfactory.cpp
 
 HEADERS += \
     settings.h \
@@ -43,7 +44,8 @@ HEADERS += \
     $${SCENE_DIR}/scene.h \
     application.h \
     $${CORE_DIR}/convolution.h \
-    $${CORE_DIR}/ant.h
+    $${CORE_DIR}/ant.h \
+    $${CORE_DIR}/convolutionfactory.h
 
 FORMS +=
 

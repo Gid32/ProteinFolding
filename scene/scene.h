@@ -31,6 +31,7 @@
 #include <QComboBox>
 #include <QPushButton>
 #include <QSpinBox>
+#include <QDoubleSpinBox>
 
 #include <QThread>
 
@@ -47,12 +48,13 @@ public:
     void show();
     ~Scene();
 signals:
-    void started(QString,int,int);
+    void started(SETTINGS);
     void createdProtein(int);
     void stopped();
 public slots:
     void update(QVector<QVector3D> vectorCoords, int value, QString time);
     void genericNodes(VECTORBYTE protein);
+    void getError(QString error);
     void reDraw();
     void start();
     void stop();
@@ -66,28 +68,15 @@ private:
     Qt3DRender::QCamera *cameraEntity_;
     QHBoxLayout *mainLayout_;
     QVBoxLayout *settingsLayout_;
+    QVBoxLayout *resultLayout_;
     QWidget *mainContainer_;
+    QString styleLabel_;
+    QString styleLabelValue_;
+    QString styleButtonRed_;
+    QString styleButtonGreen_;
+    SETTINGS settings;
     int width_;
     int height_;
-
-    QLabel *settingsLabel_;
-    QLabel *settingsGenericLabel_;
-    QSpinBox *settingsGenericCount_;
-    QPushButton *settingsGenericStart_;
-    QLabel *settingsNetChangesLabel_;
-    QLabel *settingsSelectMethodLabel_;
-    QLabel *settingsRateLabel_;
-    QLabel *settingsRate_;
-    QLabel *settingsTimeBest_;
-    QLabel *settingsTimeBestLabel_;
-    QLabel *settingsCountConvolutionLabel_;
-    QLabel *settingsCountConvolution_;
-    QLabel *settingsSelectCountAntLabel_;
-    QComboBox *settingsNetChanges_;
-    QComboBox *settingsSelectMethod_;
-    QSpinBox *settingsSelectCountAnt_;
-    QPushButton *settingsStartApplication_;
-    QPushButton *settingsStopApplication_;
 
     QTimer *timerUpdate_;
 
@@ -100,20 +89,15 @@ private:
     void initCamera();
     void initMainContainer();
     void initSettingsLayout();
+    void initResultLayout();
 
-    void initSettingsLabel();
-    void initSettingsGenericConvolution();
-    void initSettingsNetChanges();
-    void initSettingsSelectMethod();
-    void initSettingsCountAnt();
-    void initSettingsRate();
-    void initSettingsStartStopApplication();
-    void initSettingsCountConvolution();
-    void initSettingsTimeBest();
-
+    void addSettingsLabel(QVBoxLayout *layout, QString name, QString title, QString style);
+    void addSettingsComboBox(QVBoxLayout *layout,QString name, QStringList list);
+    void addSettingsSpinBox(QVBoxLayout *layout, QString name, int min, int max, int defValue);
+    void addSettingsDoubleSpinBox(QVBoxLayout *layout, QString name, int min, int max, double defValue);
+    QPushButton *addSettingsPushButton(QVBoxLayout *layout, QString name, QString title, QString style);
 
     void clear();
-    void test();
 };
 
 #endif // Scene_H

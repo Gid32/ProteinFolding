@@ -5,22 +5,17 @@
 #include <QThread>
 #include <QDebug>
 #include "settings.h"
-#include "convolution.h"
+#include "convolutionfactory.h"
 
 class Ant : public QThread
 {
     Q_OBJECT
 private:
-    Convolution *convolution_;
 public:
     explicit Ant();
     void run();
-    void setConvolution(Convolution *convolution);
 signals:
-    void convolutionCreated(Convolution*,int);
-    void test(int);
-
-
+    void convolutionCreated(Convolution*);
 public slots:
 };
 
