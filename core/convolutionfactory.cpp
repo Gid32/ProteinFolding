@@ -135,14 +135,14 @@ int ConvolutionFactory::probabilistic(Convolution *convolution,QVector<QVector3D
     if(possible.size()==1)
         return 0;
 
-    int turnNumber = convolution->history_.size();
+    int turnNumber = convolution->history_.size();//текущий номер поворота начало с 0
 
-    for(int i=0;i<possible.size();i++)
+    for(int i=0;i<possible.size();i++)//проходим по всем возможным поворотам
     {
         double localCount = 0;
-        if(convolution->history_.size()!=0)
-            localCount += (1.0-traceCoef_)*getWeights(convolution,possible.at(i),protein_.at(turnNumber-1),currentDirection);
-        localCount += traceCoef_*trace_[turnNumber][turns.at(i)];
+        if(convolution->history_.size()!=0)//если это первый поворот то мы не можем учитывать соседей потому что их нет
+            localCount += (1.0-traceCoef_)*getWeights(convolution,possible.at(i),protein_.at(turnNumber),currentDirection);//получаем веса
+        localCount += traceCoef_*trace_[turnNumber][turns.at(i)];//след
         count+=localCount;
         chances.push_back(count);
     }

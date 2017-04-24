@@ -146,18 +146,18 @@ void Scene::initSettingsLayout()
 
     //generic protein
     addSettingsLabel(settingsLayout_,"genericLabel","Генерация свертки",styleLabel_);
-    addSettingsSpinBox(settingsLayout_,"genericCount",3,1000,25);
+    addSettingsSpinBox(settingsLayout_,"genericCount",3,1000,45);
     QPushButton * genericButton = addSettingsPushButton(settingsLayout_,"genericButton","Сгенерировать",styleButtonGreen_);
     connect(genericButton,SIGNAL(clicked()),this,SLOT(createProtein()));
 
     //net
     addSettingsLabel(settingsLayout_,"netLabel","Выбрать сетку",styleLabel_);
-    addSettingsComboBox(settingsLayout_,"netValue", NetFactory::getInstance()->getStringList());
+    addSettingsComboBox(settingsLayout_,"netValue", NetFactory::getInstance()->getStringList(),1);
 
     //method
     addSettingsLabel(settingsLayout_,"methodLabel","Выбрать метод",styleLabel_);
     QString str ="рэндом,безвероятностный,вероятностный";
-    addSettingsComboBox(settingsLayout_,"methodValue", str.split(","));
+    addSettingsComboBox(settingsLayout_,"methodValue", str.split(","),2);
 
     //ants
     addSettingsLabel(settingsLayout_,"antsLabel","Количество муравьев",styleLabel_);
@@ -165,11 +165,11 @@ void Scene::initSettingsLayout()
 
     //trace
     addSettingsLabel(settingsLayout_,"traceMinLabel","След. Мин.",styleLabel_);
-    addSettingsDoubleSpinBox(settingsLayout_,"traceMin",0,100,0.1);
+    addSettingsDoubleSpinBox(settingsLayout_,"traceMin",0,100,0.2);
     addSettingsLabel(settingsLayout_,"traceMaxLabel","След. Макс.",styleLabel_);
-    addSettingsDoubleSpinBox(settingsLayout_,"traceMax",0,100,4);
+    addSettingsDoubleSpinBox(settingsLayout_,"traceMax",0,100,3);
     addSettingsLabel(settingsLayout_,"traceEvaporationLabel","След. Испарение",styleLabel_);
-    addSettingsDoubleSpinBox(settingsLayout_,"traceEvaporation",0,1,0.85);
+    addSettingsDoubleSpinBox(settingsLayout_,"traceEvaporation",0,1,0.6);
     addSettingsLabel(settingsLayout_,"traceCoefLabel","Коеф. След",styleLabel_);
     addSettingsDoubleSpinBox(settingsLayout_,"traceCoef",0,1,0.5);
 
@@ -204,17 +204,17 @@ void Scene::initResultLayout()
     //weights
     addSettingsLabel(resultLayout_,"weights","Веса:",styleLabelValue_);
     addSettingsLabel(resultLayout_,"weightsFOBFOBLabel","FOB -> FOB",styleLabel_);
-    addSettingsDoubleSpinBox(resultLayout_,"weightsFOBFOB",0,1,1);
+    addSettingsDoubleSpinBox(resultLayout_,"weightsFOBFOB",0,1,0.6);
     addSettingsLabel(resultLayout_,"weightsFOBFILLabel","FOB -> FIL",styleLabel_);
-    addSettingsDoubleSpinBox(resultLayout_,"weightsFOBFIL",0,1,0);
+    addSettingsDoubleSpinBox(resultLayout_,"weightsFOBFIL",0,1,0.15);
     addSettingsLabel(resultLayout_,"weightsFOBFREEabel","FOB -> FREE",styleLabel_);
-    addSettingsDoubleSpinBox(resultLayout_,"weightsFOBFREE",0,1,0);
+    addSettingsDoubleSpinBox(resultLayout_,"weightsFOBFREE",0,1,0.25);
     addSettingsLabel(resultLayout_,"weightsFILFOBLabel","FIL -> FOB",styleLabel_);
-    addSettingsDoubleSpinBox(resultLayout_,"weightsFILFOB",0,1,1);
+    addSettingsDoubleSpinBox(resultLayout_,"weightsFILFOB",0,1,0.2);
     addSettingsLabel(resultLayout_,"weightsFILFILLabel","FIL -> FIL",styleLabel_);
-    addSettingsDoubleSpinBox(resultLayout_,"weightsFILFIL",0,1,0);
+    addSettingsDoubleSpinBox(resultLayout_,"weightsFILFIL",0,1,0.4);
     addSettingsLabel(resultLayout_,"weightsFILFREEabel","FIL -> FREE",styleLabel_);
-    addSettingsDoubleSpinBox(resultLayout_,"weightsFILFREE",0,1,0);
+    addSettingsDoubleSpinBox(resultLayout_,"weightsFILFREE",0,1,0.4);
 }
 
 
@@ -290,11 +290,12 @@ void Scene::addSettingsLabel(QVBoxLayout *layout,QString name, QString title, QS
    layout->addWidget(label);
 }
 
-void Scene::addSettingsComboBox(QVBoxLayout *layout,QString name, QStringList list)
+void Scene::addSettingsComboBox(QVBoxLayout *layout,QString name, QStringList list, int defValue)
 {
     QComboBox *box = new QComboBox(widget_);
     box->setObjectName(name);
     box->addItems(list);
+    box->setCurrentIndex(defValue);
 
     layout->addWidget(box);
 }

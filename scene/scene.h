@@ -92,7 +92,7 @@ private:
     void initResultLayout();
 
     void addSettingsLabel(QVBoxLayout *layout, QString name, QString title, QString style);
-    void addSettingsComboBox(QVBoxLayout *layout,QString name, QStringList list);
+    void addSettingsComboBox(QVBoxLayout *layout, QString name, QStringList list, int defValue);
     void addSettingsSpinBox(QVBoxLayout *layout, QString name, int min, int max, int defValue);
     void addSettingsDoubleSpinBox(QVBoxLayout *layout, QString name, int min, int max, double defValue);
     QPushButton *addSettingsPushButton(QVBoxLayout *layout, QString name, QString title, QString style);
