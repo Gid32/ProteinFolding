@@ -52,14 +52,25 @@ void Scene::genericNodes(VECTORBYTE protein)
     }
 }
 
-void Scene::reDraw()
+void Scene::reDrawBetter()
 {
     if(!hasVariantToUpdate_)
         return;
     hasVariantToUpdate_ = false;
 
     for(int i=1;i<nodes.size();i++)//0 нод не трогаем
-         nodes.at(i)->changeLocation(vectorCoords.at(i-1));
+         nodes.at(i)->changeLocation(betterVariant.at(i-1));
+}
+
+void Scene::reDraw()
+{
+   //qDebug()<<drawAll_<<hasVariant_;
+   if(!drawAll_ || !hasVariant_)
+       return;
+   //qDebug()<<"hasVar";
+   hasVariant_ = false;
+   for(int i=1;i<nodes.size();i++)//0 нод не трогаем
+       nodes.at(i)->changeLocation(variant.at(i-1));
 }
 
 Scene::Scene(const char* title, int width, int height)
@@ -95,15 +106,18 @@ Scene::Scene(const char* title, int width, int height)
 
 
     hasVariantToUpdate_ = false;
+    drawAll_ = true;
+    hasVariant_ = false;
 
     timerUpdate_ = new QTimer(this);
     QObject::connect(timerUpdate_, SIGNAL(timeout()), this, SLOT(reDraw()));
+    QObject::connect(timerUpdate_, SIGNAL(timeout()), this, SLOT(reDrawBetter()));
 
 }
 
 void Scene::update(QVector<QVector3D> vectorCoords, int value, QString time)
 {
-    this->vectorCoords = vectorCoords;
+    betterVariant = vectorCoords;
     QLabel *rating = widget_->findChild<QLabel*>("rating");
     QLabel *timeBest = widget_->findChild<QLabel*>("timeBest");
     if(rating)
@@ -111,6 +125,23 @@ void Scene::update(QVector<QVector3D> vectorCoords, int value, QString time)
     if(timeBest)
         timeBest->setText("Время: "+time);
     hasVariantToUpdate_ = true;
+}
+
+void Scene::onlyBetter(bool checked)
+{
+    if(checked)
+    {
+        drawAll_ = false;
+        hasVariantToUpdate_ = true;
+    }
+    else
+        drawAll_ = true;
+}
+
+void Scene::hasVariant(QVector<QVector3D> vectorCoords)
+{
+   variant = vectorCoords;
+   hasVariant_ = true;
 }
 
 void Scene::countConvolution(int count)
@@ -176,9 +207,6 @@ void Scene::initSettingsLayout()
     addSettingsDoubleSpinBox(settingsLayout_,"traceEvaporation",0,1,0.6);
     addSettingsLabel(settingsLayout_,"traceCoefLabel","Коеф. След",styleLabel_);
     addSettingsDoubleSpinBox(settingsLayout_,"traceCoef",0,1,0.5);
-
-
-
 }
 
 void Scene::initResultLayout()
@@ -205,6 +233,10 @@ void Scene::initResultLayout()
 
     //error
     addSettingsLabel(resultLayout_,"error","",styleLabelValue_);
+
+    //only better
+    QCheckBox *box = addSettingsCheckBox(resultLayout_,"onlyBetter","показывать только лучший");
+    connect(box,SIGNAL(clicked(bool)),this,SLOT(onlyBetter(bool)));
 
     //weights
     addSettingsLabel(resultLayout_,"weights","Веса:",styleLabelValue_);
@@ -337,6 +369,14 @@ QPushButton *Scene::addSettingsPushButton(QVBoxLayout *layout,QString name, QStr
     layout->addWidget(button);
 
     return button;
+}
+
+QCheckBox *Scene::addSettingsCheckBox(QVBoxLayout *layout,QString name, QString title)
+{
+    QCheckBox *box = new QCheckBox(title,widget_);
+    box->setObjectName(name);
+    layout->addWidget(box);
+    return box;
 }
 
 Scene::~Scene()

@@ -21,6 +21,7 @@ void Core::start(SETTINGS settings)
 {
     int countAnt = settings.value("antsCount").toInt();
     int countThread = settings.value("threadsCount").toInt();
+    allConvolutions_ = 0;
     createAnts(countAnt,countThread);
     isBreak_ = false;
     bestResult_ = 0;
@@ -69,22 +70,23 @@ void Core::antFinish()
         if(!isBreak_)
             runAnts();
     }
+    emit countConvolution(allConvolutions_);
 }
 
 void Core::getConvolution(Convolution *convolution)
 {
     int result = ConvolutionFactory::getFactory()->getResult(convolution);
-    allConvolutions_.push_back(convolution);
+    allConvolutions_++;
     tempConvolutions_.push_back(convolution);
+    QVector<QVector3D> vectorCoords = ConvolutionFactory::getFactory()->getVectorCoords(convolution);
     if(result > bestResult_)
     {
         bestResult_ = result;
-        QVector<QVector3D> vectorCoords = ConvolutionFactory::getFactory()->getVectorCoords(convolution);
         QTime time = QTime(0,0,0,0).addMSecs(startTime_.elapsed());
         QString timeStr = time.toString("hh:mm:ss.zzz");
         emit hasBetterVariant(vectorCoords,bestResult_,timeStr);
     }
-    emit countConvolution(allConvolutions_.size());
+    emit hasVariant(vectorCoords);
 }
 
 void Core::stop()

@@ -12,6 +12,7 @@ Application::Application(QObject *parent) : QObject(parent)
     qRegisterMetaType<QString>();
 
     connect(core_, SIGNAL(hasBetterVariant(QVector<QVector3D>,int,QString)), scene_, SLOT(update(QVector<QVector3D>,int,QString)));
+    connect(core_, SIGNAL(hasVariant(QVector<QVector3D>)), scene_, SLOT(hasVariant(QVector<QVector3D>)));
     connect(core_, SIGNAL(countConvolution(int)), scene_, SLOT(countConvolution(int)));
 
     ConvolutionFactory *factory = ConvolutionFactory::getFactory();

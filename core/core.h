@@ -18,6 +18,7 @@ class Core:public QObject
   Q_OBJECT
 signals:
     void hasBetterVariant(QVector<QVector3D> vectorCoords,int,QString time);
+    void hasVariant(QVector<QVector3D> vectorCoords);
     void proteinLoaded(VECTORBYTE protein);
     void countConvolution(int);
     void stopped();
@@ -26,7 +27,7 @@ private:
     int bestResult_;
     bool isBreak_;
     QVector<Ant*> ants_;
-    QVector<Convolution*> allConvolutions_;
+    int allConvolutions_;
     QVector<Convolution*> tempConvolutions_;
     int countAntsReady_;
     void runAnts();

@@ -32,6 +32,7 @@
 #include <QPushButton>
 #include <QSpinBox>
 #include <QDoubleSpinBox>
+#include <QCheckBox>
 
 #include <QThread>
 
@@ -52,10 +53,13 @@ signals:
     void createdProtein(int);
     void stopped();
 public slots:
+    void onlyBetter(bool checked);
     void update(QVector<QVector3D> vectorCoords, int value, QString time);
+    void hasVariant(QVector<QVector3D> vectorCoords);
     void genericNodes(VECTORBYTE protein);
     void getError(QString error);
     void reDraw();
+    void reDrawBetter();
     void start();
     void stop();
     void countConvolution(int count);
@@ -81,7 +85,10 @@ private:
     QTimer *timerUpdate_;
 
     bool hasVariantToUpdate_;
-    QVector<QVector3D> vectorCoords;
+    bool drawAll_;
+    bool hasVariant_;
+    QVector<QVector3D> betterVariant;
+    QVector<QVector3D> variant;
     QVector<Node*> nodes;
 
     void setColor(QColor color);
@@ -96,6 +103,7 @@ private:
     void addSettingsSpinBox(QVBoxLayout *layout, QString name, int min, int max, int defValue);
     void addSettingsDoubleSpinBox(QVBoxLayout *layout, QString name, int min, int max, double defValue);
     QPushButton *addSettingsPushButton(QVBoxLayout *layout, QString name, QString title, QString style);
+    QCheckBox *addSettingsCheckBox(QVBoxLayout *layout,QString name, QString title);
 
     void clear();
 };
