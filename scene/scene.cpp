@@ -122,7 +122,7 @@ void Scene::update(QVector<QVector3D> vectorCoords, int value, QString time)
     QLabel *rating = widget_->findChild<QLabel*>("rating");
     QLabel *timeBest = widget_->findChild<QLabel*>("timeBest");
     if(rating)
-        rating->setText("Рейтинг: "+QString::number(value));
+        rating->setText("Рейтинг: "+QString::number(value/2));
     if(timeBest)
         timeBest->setText("Время: "+time);
     hasVariantToUpdate_ = true;

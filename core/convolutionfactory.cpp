@@ -131,29 +131,40 @@ double ConvolutionFactory::getWeights(Convolution *convolution, QVector3D coord,
 
 int ConvolutionFactory::probabilistic(Convolution *convolution,QVector<QVector3D> possible, QVector<int> turns,int currentDirection)
 {
-    QVector<double> chances;
-    double count = 0;
     if(possible.size()==1)
         return 0;
 
     int turnNumber = convolution->history_.size();//текущий номер поворота начало с 0
 
-    for(int i=0;i<possible.size();i++)//проходим по всем возможным поворотам
+    //baraban
+    double sumEvrist = 0;
+    double sumTrace = 0;
+    QVector<double> chances;
+    QVector<double> weights;//для того чтобы не пересчитывать каждый раз соседей, должно ускорить
+    for(int i=0;i<possible.size();i++)
     {
-        double localCount = 0;
-        if(convolution->history_.size()!=0)//если это первый поворот то мы не можем учитывать соседей потому что их нет
-            localCount += (1.0-traceCoef_)*getWeights(convolution,possible.at(i),protein_.at(turnNumber),currentDirection);//получаем веса
-        localCount += traceCoef_*trace_[turnNumber][turns.at(i)];//след
-        count+=localCount;
-        chances.push_back(count);
+       double weight = getWeights(convolution,possible.at(i),protein_.at(turnNumber),currentDirection);//получаем веса
+       sumEvrist += weight;
+       sumTrace += trace_[turnNumber][turns.at(i)];//получаем следы
+       weights.push_back(weight);
+    }
+    for(int i=0;i<possible.size();i++)
+    {
+        double trace = (trace_[turnNumber][turns.at(i)]/sumTrace)*traceCoef_;
+        double evrist = (weights.at(i)/sumEvrist)*(1-traceCoef_);
+        double chance = (trace+evrist);
+        chances.push_back(chance);
     }
 
-    int n = qrand()%((int)(count+1));
+    double val = ((double) qrand()/(RAND_MAX));
+    double summ = 0;
     for(int i=0;i<chances.size();i++)
     {
-        if(n<=chances.at(i))
+        summ += chances.at(i);
+        if (summ >= val)
             return i;
     }
+    //baraban end
     return 0;
 }
 
