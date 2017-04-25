@@ -53,6 +53,7 @@ signals:
     void started(SETTINGS);
     void createdProtein(int);
     void stopped();
+    void loadedProtein(QByteArray);
 public slots:
     void onlyBetter(bool checked);
     void update(QVector<QVector3D> vectorCoords, int value, QString time);

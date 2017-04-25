@@ -29,6 +29,14 @@ void ConvolutionFactory::createProtein(int count)
     emit createdProtein(protein_);
 }
 
+void ConvolutionFactory::loadProtein(QByteArray protein)
+{
+    protein_.clear();
+    for(int i=0;i<protein.size();i++)
+        protein_.push_back(protein.at(i));
+    emit createdProtein(protein_);
+}
+
 void ConvolutionFactory::createTrace()
 {
     traceM_ = count_ - 1;

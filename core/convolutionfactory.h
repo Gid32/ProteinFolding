@@ -21,12 +21,6 @@ private:
     int traceN_;
     double traceCoef_;
     double weights_[2][4];
-//    double weightsFOBFOB_;
-//    double weightsFOBFIL_;
-//    double weightsFOBFREE_;
-//    double weightsFILFOB_;
-//    double weightsFILFIL_;
-//    double weightsFILFREE_;
     double **trace_;
 
     VECTORBYTE protein_;
@@ -52,6 +46,7 @@ signals:
     void createdProtein(VECTORBYTE);
     void error(QString);
 public slots:
+    void loadProtein(QByteArray protein);
     void createProtein(int count);
     void setSettings(SETTINGS settings);
     void stop();

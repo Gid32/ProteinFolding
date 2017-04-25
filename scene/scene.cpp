@@ -167,6 +167,7 @@ void Scene::loadFromFileProtein()
     file.open(QIODevice::ReadOnly);
     QByteArray array = file.readAll();
     file.close();
+    emit loadedProtein(array);
 }
 
 void Scene::countConvolution(int count)
@@ -209,6 +210,10 @@ void Scene::initSettingsLayout()
     //save
     QPushButton * saveButton = addSettingsPushButton(settingsLayout_,"saveButton","Сохранить",styleButtonGreen_);
     connect(saveButton,SIGNAL(clicked()),this,SLOT(saveToFileProtein()));
+
+    //load
+    QPushButton * loadButton = addSettingsPushButton(settingsLayout_,"loadButton","Загрузить",styleButtonGreen_);
+    connect(loadButton,SIGNAL(clicked()),this,SLOT(loadFromFileProtein()));
 
     //net
     addSettingsLabel(settingsLayout_,"netLabel","Выбрать сетку",styleLabel_);

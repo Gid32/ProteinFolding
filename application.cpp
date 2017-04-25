@@ -18,6 +18,7 @@ Application::Application(QObject *parent) : QObject(parent)
     ConvolutionFactory *factory = ConvolutionFactory::getFactory();
     connect(scene_,SIGNAL(createdProtein(int)),factory,SLOT(createProtein(int)));
     connect(factory, SIGNAL(createdProtein(VECTORBYTE)), scene_, SLOT(genericNodes(VECTORBYTE)));
+    connect(scene_,SIGNAL(loadedProtein(QByteArray)),factory,SLOT(loadProtein(QByteArray)));
 
     connect(scene_,SIGNAL(started(SETTINGS)),factory,SLOT(setSettings(SETTINGS)));
     connect(factory,SIGNAL(ready(SETTINGS)),core_,SLOT(start(SETTINGS)));
