@@ -51,7 +51,7 @@ public:
     ~Scene();
 signals:
     void started(SETTINGS);
-    void createdProtein(int);
+    void createdProtein(int,double);
     void stopped();
     void loadedProtein(QByteArray);
 public slots:

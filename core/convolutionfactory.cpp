@@ -13,10 +13,13 @@ ConvolutionFactory* ConvolutionFactory::getFactory()
     return instance;
 }
 
-void ConvolutionFactory::createProtein(int count)
+void ConvolutionFactory::createProtein(int count, double coef)
 {
+
     protein_.clear();
     count_ = count;
+    int countFob = 0;
+    int currentCountFob = 0;
     QTime time = QTime::currentTime();
     qsrand((uint)time.msec());
     for(int i=0;i<count_;i++)
