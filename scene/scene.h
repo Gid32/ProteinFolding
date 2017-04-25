@@ -39,7 +39,7 @@
 
 #include "node.h"
 #include "connection.h"
-#include "netfactory.h"
+#include "settingsform.h"
 
 class Scene : public QObject
 {
@@ -68,21 +68,22 @@ public slots:
     void createProtein();
     void saveToFileProtein();
     void loadFromFileProtein();
+    void setSettings();
 private:
+    SettingsForm *settingsForm;
     const char* title_;
     Qt3DExtras::Qt3DWindow* view_;
     Qt3DCore::QEntity* rootEntity_;
     QWidget* widget_;
     Qt3DRender::QCamera *cameraEntity_;
     QHBoxLayout *mainLayout_;
-    QVBoxLayout *settingsLayout_;
     QVBoxLayout *resultLayout_;
     QWidget *mainContainer_;
     QString styleLabel_;
     QString styleLabelValue_;
     QString styleButtonRed_;
     QString styleButtonGreen_;
-    SETTINGS settings;
+    QString styleButtonBlue_;
     int width_;
     int height_;
 
@@ -100,7 +101,6 @@ private:
     void initLight();
     void initCamera();
     void initMainContainer();
-    void initSettingsLayout();
     void initResultLayout();
 
     void addSettingsLabel(QVBoxLayout *layout, QString name, QString title, QString style);

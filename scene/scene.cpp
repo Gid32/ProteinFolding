@@ -88,6 +88,7 @@ Scene::Scene(const char* title, int width, int height)
     styleLabelValue_ = "color:#DC143C;font-size:15px;";
     styleButtonGreen_ = "color:white;background-color:green;font-size:15px";
     styleButtonRed_ = "color:white;background-color:#DC143C;font-size:15px";
+    styleButtonBlue_ = "color:white;background-color:#00BFFF;font-size:12px";
 
     mainLayout_ = new QHBoxLayout(widget_);
     mainLayout_->setMargin(0);
@@ -97,7 +98,6 @@ Scene::Scene(const char* title, int width, int height)
     setColor(QColor(255,255,255));
 
     initMainContainer();
-    initSettingsLayout();
     initResultLayout();
 
     Qt3DInput::QInputAspect *input = new Qt3DInput::QInputAspect;
@@ -111,6 +111,8 @@ Scene::Scene(const char* title, int width, int height)
     timerUpdate_ = new QTimer(this);
     QObject::connect(timerUpdate_, SIGNAL(timeout()), this, SLOT(reDraw()));
     QObject::connect(timerUpdate_, SIGNAL(timeout()), this, SLOT(reDrawBetter()));
+
+    settingsForm = new SettingsForm();
 
 }
 
@@ -193,55 +195,6 @@ void Scene::initMainContainer()
     mainLayout_->addWidget(mainContainer_,1);
 }
 
-void Scene::initSettingsLayout()
-{
-    settingsLayout_ = new QVBoxLayout();
-    settingsLayout_->setMargin(5);
-    settingsLayout_->setAlignment(Qt::AlignTop);
-
-    mainLayout_->addLayout(settingsLayout_);
-
-    //generic protein
-    addSettingsLabel(settingsLayout_,"genericLabel","Генерация свертки",styleLabel_);
-    addSettingsSpinBox(settingsLayout_,"genericCount",3,1000,45);
-    QPushButton * genericButton = addSettingsPushButton(settingsLayout_,"genericButton","Сгенерировать",styleButtonGreen_);
-    connect(genericButton,SIGNAL(clicked()),this,SLOT(createProtein()));
-
-    //save
-    QPushButton * saveButton = addSettingsPushButton(settingsLayout_,"saveButton","Сохранить",styleButtonGreen_);
-    connect(saveButton,SIGNAL(clicked()),this,SLOT(saveToFileProtein()));
-
-    //load
-    QPushButton * loadButton = addSettingsPushButton(settingsLayout_,"loadButton","Загрузить",styleButtonGreen_);
-    connect(loadButton,SIGNAL(clicked()),this,SLOT(loadFromFileProtein()));
-
-    //net
-    addSettingsLabel(settingsLayout_,"netLabel","Выбрать сетку",styleLabel_);
-    addSettingsComboBox(settingsLayout_,"netValue", NetFactory::getInstance()->getStringList(),1);
-
-    //method
-    addSettingsLabel(settingsLayout_,"methodLabel","Выбрать метод",styleLabel_);
-    QString str ="рэндом,безвероятностный,вероятностный";
-    addSettingsComboBox(settingsLayout_,"methodValue", str.split(","),2);
-
-    //threads
-    addSettingsLabel(settingsLayout_,"threadsLabel","Количество потоков",styleLabel_);
-    addSettingsSpinBox(settingsLayout_,"threadsCount",1,MAX_ANT,3);
-
-    //ants
-    addSettingsLabel(settingsLayout_,"antsLabel","Количество муравьев",styleLabel_);
-    addSettingsSpinBox(settingsLayout_,"antsCount",1,MAX_ANT,10);
-
-    //trace
-    addSettingsLabel(settingsLayout_,"traceMinLabel","След. Мин.",styleLabel_);
-    addSettingsDoubleSpinBox(settingsLayout_,"traceMin",0,100,0.2);
-    addSettingsLabel(settingsLayout_,"traceMaxLabel","След. Макс.",styleLabel_);
-    addSettingsDoubleSpinBox(settingsLayout_,"traceMax",0,100,3);
-    addSettingsLabel(settingsLayout_,"traceEvaporationLabel","След. Испарение",styleLabel_);
-    addSettingsDoubleSpinBox(settingsLayout_,"traceEvaporation",0,1,0.6);
-    addSettingsLabel(settingsLayout_,"traceCoefLabel","Коеф. След",styleLabel_);
-    addSettingsDoubleSpinBox(settingsLayout_,"traceCoef",0,1,0.5);
-}
 
 void Scene::initResultLayout()
 {
@@ -249,6 +202,24 @@ void Scene::initResultLayout()
     resultLayout_->setMargin(5);
     resultLayout_->setAlignment(Qt::AlignTop);
     mainLayout_->addLayout(resultLayout_);
+
+    //settings
+    QPushButton * settingsButton = addSettingsPushButton(resultLayout_,"settingsButton","Настройки",styleButtonBlue_);
+    connect(settingsButton,SIGNAL(clicked()),this,SLOT(setSettings()));
+
+    //generic protein
+    addSettingsLabel(resultLayout_,"genericLabel","Генерация свертки",styleLabel_);
+    addSettingsSpinBox(resultLayout_,"genericCount",3,1000,45);
+    QPushButton * genericButton = addSettingsPushButton(resultLayout_,"genericButton","Сгенерировать",styleButtonBlue_);
+    connect(genericButton,SIGNAL(clicked()),this,SLOT(createProtein()));
+
+    //save
+    QPushButton * saveButton = addSettingsPushButton(resultLayout_,"saveButton","Сохранить",styleButtonBlue_);
+    connect(saveButton,SIGNAL(clicked()),this,SLOT(saveToFileProtein()));
+
+    //load
+    QPushButton * loadButton = addSettingsPushButton(resultLayout_,"loadButton","Загрузить",styleButtonBlue_);
+    connect(loadButton,SIGNAL(clicked()),this,SLOT(loadFromFileProtein()));
 
     //start stop
     QPushButton *start = addSettingsPushButton(resultLayout_,"startButton","Старт",styleButtonGreen_);
@@ -271,64 +242,16 @@ void Scene::initResultLayout()
     //only better
     QCheckBox *box = addSettingsCheckBox(resultLayout_,"onlyBetter","показывать только лучший");
     connect(box,SIGNAL(clicked(bool)),this,SLOT(onlyBetter(bool)));
-
-    //weights
-    addSettingsLabel(resultLayout_,"weights","Веса:",styleLabelValue_);
-    addSettingsLabel(resultLayout_,"weightsFOBFOBLabel","FOB -> FOB",styleLabel_);
-    addSettingsDoubleSpinBox(resultLayout_,"weightsFOBFOB",0,1,0.6);
-    addSettingsLabel(resultLayout_,"weightsFOBFILLabel","FOB -> FIL",styleLabel_);
-    addSettingsDoubleSpinBox(resultLayout_,"weightsFOBFIL",0,1,0.15);
-    addSettingsLabel(resultLayout_,"weightsFOBFREEabel","FOB -> FREE",styleLabel_);
-    addSettingsDoubleSpinBox(resultLayout_,"weightsFOBFREE",0,1,0.25);
-    addSettingsLabel(resultLayout_,"weightsFILFOBLabel","FIL -> FOB",styleLabel_);
-    addSettingsDoubleSpinBox(resultLayout_,"weightsFILFOB",0,1,0.2);
-    addSettingsLabel(resultLayout_,"weightsFILFILLabel","FIL -> FIL",styleLabel_);
-    addSettingsDoubleSpinBox(resultLayout_,"weightsFILFIL",0,1,0.4);
-    addSettingsLabel(resultLayout_,"weightsFILFREEabel","FIL -> FREE",styleLabel_);
-    addSettingsDoubleSpinBox(resultLayout_,"weightsFILFREE",0,1,0.4);
 }
 
 
 void Scene::start()
 {
-    QComboBox *net = widget_->findChild<QComboBox*>("netValue");
-    QComboBox *method = widget_->findChild<QComboBox*>("methodValue");
-    QSpinBox *countAnt = widget_->findChild<QSpinBox*>("antsCount");
-    QSpinBox *threadsCount = widget_->findChild<QSpinBox*>("threadsCount");
-    QDoubleSpinBox *traceMin = widget_->findChild<QDoubleSpinBox*>("traceMin");
-    QDoubleSpinBox *traceMax = widget_->findChild<QDoubleSpinBox*>("traceMax");
-    QDoubleSpinBox *traceEvaporation = widget_->findChild<QDoubleSpinBox*>("traceEvaporation");
-    QDoubleSpinBox *traceCoef = widget_->findChild<QDoubleSpinBox*>("traceCoef");
-
-    QDoubleSpinBox *weightsFOBFOB = widget_->findChild<QDoubleSpinBox*>("weightsFOBFOB");
-    QDoubleSpinBox *weightsFOBFIL = widget_->findChild<QDoubleSpinBox*>("weightsFOBFIL");
-    QDoubleSpinBox *weightsFOBFREE = widget_->findChild<QDoubleSpinBox*>("weightsFOBFREE");
-    QDoubleSpinBox *weightsFILFOB = widget_->findChild<QDoubleSpinBox*>("weightsFILFOB");
-    QDoubleSpinBox *weightsFILFIL = widget_->findChild<QDoubleSpinBox*>("weightsFILFIL");
-    QDoubleSpinBox *weightsFILFREE = widget_->findChild<QDoubleSpinBox*>("weightsFILFREE");
-
-
-    settings.clear();
-    settings.insert(net->objectName(),net->currentText());
-    settings.insert(method->objectName(),method->currentIndex());
-    settings.insert(countAnt->objectName(),countAnt->value());
-    settings.insert(threadsCount->objectName(),threadsCount->value());
-    settings.insert(traceMin->objectName(),traceMin->value());
-    settings.insert(traceMax->objectName(),traceMax->value());
-    settings.insert(traceEvaporation->objectName(),traceEvaporation->value());
-    settings.insert(traceCoef->objectName(),traceCoef->value());
-    settings.insert(weightsFOBFOB->objectName(),weightsFOBFOB->value());
-    settings.insert(weightsFOBFIL->objectName(),weightsFOBFIL->value());
-    settings.insert(weightsFOBFREE->objectName(),weightsFOBFREE->value());
-    settings.insert(weightsFILFOB->objectName(),weightsFILFOB->value());
-    settings.insert(weightsFILFIL->objectName(),weightsFILFIL->value());
-    settings.insert(weightsFILFREE->objectName(),weightsFILFREE->value());
-
     timerUpdate_->start(1000);
     QLabel *errorLabel = widget_->findChild<QLabel*>("error");
     errorLabel->setText("");
 
-    emit started(settings);
+    emit started(settingsForm->getSettings());
 }
 
 void Scene::stop()
@@ -351,6 +274,11 @@ void Scene::show()
 {
     widget_->show();
     widget_->resize(width_, height_);
+}
+
+void Scene::setSettings()
+{
+    settingsForm->show();
 }
 
 

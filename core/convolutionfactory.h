@@ -6,6 +6,7 @@
 #include "settings.h"
 #include "netfactory.h"
 #include "convolution.h"
+#include <QtCore/qmath.h>
 
 class ConvolutionFactory : public QObject
 {
@@ -22,6 +23,7 @@ private:
     double traceCoef_;
     double weights_[2][4];
     double **trace_;
+    int elitizm_;
 
     VECTORBYTE protein_;
     bool isStarted_;
@@ -31,6 +33,10 @@ private:
     int getCount(Convolution *convolution,QVector3D coord, QVector3D blockCoordPrev, QVector3D blockCoordNext,int currentDirection);
     double getWeights(Convolution *convolution, QVector3D coord, BYTE currentAm,int currentDirection);
     static ConvolutionFactory* instance;
+
+    void evoparationMMAS();
+    void evoparationEXP();
+    void evoparationONLY();
 
     explicit ConvolutionFactory(QObject *parent = 0);
     void clearTrace();

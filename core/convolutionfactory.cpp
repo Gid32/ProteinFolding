@@ -89,6 +89,8 @@ void ConvolutionFactory::setSettings(SETTINGS settings)
     weights_[H_FILL][FILL_AREA] = settings.value("weightsFILFREE").toDouble();
     weights_[H_FILL][BLOCK_AREA] = settings.value("weightsFILFREE").toDouble();
 
+    elitizm_ = settings.value("elitizm").toInt();
+
     clearTrace();
     createTrace();
 
@@ -278,6 +280,21 @@ void ConvolutionFactory::changeTrace(QVector<Convolution*> convolutions)
     }
 
     //evaporation
+    switch(elitizm_)
+    {
+    case 0: evoparationMMAS();
+        break;
+    case 1: evoparationEXP();
+        break;
+    case 2: evoparationONLY();
+        break;
+    default: evoparationMMAS();
+    }
+
+}
+
+void ConvolutionFactory::evoparationMMAS()
+{
     for(int i=0;i<traceM_;i++)
         for(int j=0;j<traceN_;j++)
         {
@@ -287,14 +304,18 @@ void ConvolutionFactory::changeTrace(QVector<Convolution*> convolutions)
             else if(trace_[i][j] < traceMin_)
                 trace_[i][j] = traceMin_;
         }
-
-//    for(int i=0;i<traceM_;i++)
-//    {
-//        QString str = "";
-//        for(int j=0;j<traceN_;j++)
-//            str.append(QString::number(trace_[i][j])+" ");
-//        qDebug()<<str;
-//    }
-
 }
 
+void ConvolutionFactory::evoparationEXP()
+{
+    for(int i=0;i<traceM_;i++)
+        for(int j=0;j<traceN_;j++)
+             trace_[i][j] *= qExp(-traceEvaporation_*trace_[i][j]);
+}
+
+void ConvolutionFactory::evoparationONLY()
+{
+    for(int i=0;i<traceM_;i++)
+        for(int j=0;j<traceN_;j++)
+            trace_[i][j] *= traceEvaporation_;
+}
