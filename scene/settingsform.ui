@@ -8,6 +8,14 @@
   <property name="enabled">
    <bool>true</bool>
   </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>395</width>
+    <height>369</height>
+   </rect>
+  </property>
   <property name="minimumSize">
    <size>
     <width>395</width>
@@ -29,9 +37,9 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>10</x>
      <y>330</y>
-     <width>341</width>
+     <width>371</width>
      <height>32</height>
     </rect>
    </property>
@@ -47,7 +55,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>191</width>
+     <width>181</width>
      <height>81</height>
     </rect>
    </property>
@@ -59,7 +67,7 @@
      <rect>
       <x>60</x>
       <y>50</y>
-      <width>121</width>
+      <width>111</width>
       <height>22</height>
      </rect>
     </property>
@@ -82,23 +90,22 @@
      <rect>
       <x>60</x>
       <y>20</y>
-      <width>121</width>
+      <width>111</width>
       <height>22</height>
      </rect>
     </property>
+    <property name="contextMenuPolicy">
+     <enum>Qt::PreventContextMenu</enum>
+    </property>
     <property name="toolTip">
-     <string>фівфів
-фівфівф</string>
+     <string/>
     </property>
     <property name="editable">
      <bool>false</bool>
     </property>
-    <property name="currentText">
-     <string>МЕТОД 1</string>
-    </property>
     <item>
      <property name="text">
-      <string>МЕТОД 1</string>
+      <string>ОМК</string>
      </property>
     </item>
    </widget>
@@ -120,22 +127,28 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>170</y>
-     <width>371</width>
-     <height>151</height>
+     <y>100</y>
+     <width>181</width>
+     <height>221</height>
     </rect>
    </property>
    <property name="title">
-    <string>Веса</string>
+    <string>Эвристические коэфициенты</string>
    </property>
    <widget class="QDoubleSpinBox" name="weightsFILFREE">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>130</x>
       <y>80</y>
-      <width>62</width>
+      <width>41</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="maximum">
+     <double>1.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.050000000000000</double>
     </property>
     <property name="value">
      <double>0.400000000000000</double>
@@ -144,8 +157,8 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>10</y>
+      <x>90</x>
+      <y>20</y>
       <width>21</width>
       <height>16</height>
      </rect>
@@ -157,11 +170,17 @@
    <widget class="QDoubleSpinBox" name="weightsFOBFOB">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>30</x>
       <y>40</y>
-      <width>62</width>
+      <width>41</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="maximum">
+     <double>1.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.050000000000000</double>
     </property>
     <property name="value">
      <double>0.600000000000000</double>
@@ -183,8 +202,8 @@
    <widget class="QLabel" name="hydroFobLabel_2">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>10</y>
+      <x>40</x>
+      <y>20</y>
       <width>16</width>
       <height>16</height>
      </rect>
@@ -196,11 +215,17 @@
    <widget class="QDoubleSpinBox" name="weightsFILFIL">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>80</x>
       <y>80</y>
-      <width>62</width>
+      <width>41</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="maximum">
+     <double>1.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.050000000000000</double>
     </property>
     <property name="value">
      <double>0.400000000000000</double>
@@ -209,11 +234,17 @@
    <widget class="QDoubleSpinBox" name="weightsFOBFREE">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>130</x>
       <y>40</y>
-      <width>62</width>
+      <width>41</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="maximum">
+     <double>1.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.050000000000000</double>
     </property>
     <property name="value">
      <double>0.250000000000000</double>
@@ -222,11 +253,17 @@
    <widget class="QDoubleSpinBox" name="weightsFILFOB">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>30</x>
       <y>80</y>
-      <width>62</width>
+      <width>41</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="maximum">
+     <double>1.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.050000000000000</double>
     </property>
     <property name="value">
      <double>0.200000000000000</double>
@@ -235,11 +272,17 @@
    <widget class="QDoubleSpinBox" name="weightsFOBFIL">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>80</x>
       <y>40</y>
-      <width>62</width>
+      <width>41</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="maximum">
+     <double>1.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.050000000000000</double>
     </property>
     <property name="value">
      <double>0.150000000000000</double>
@@ -248,8 +291,8 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>10</y>
+      <x>140</x>
+      <y>20</y>
       <width>21</width>
       <height>16</height>
      </rect>
@@ -271,51 +314,13 @@
      <string>P</string>
     </property>
    </widget>
-   <widget class="QLabel" name="elitismLabel">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>120</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Элитарность</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="elitism">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>116</y>
-      <width>131</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>MMAS</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Экспоненциальный</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Без ограничений</string>
-     </property>
-    </item>
-   </widget>
   </widget>
   <widget class="QGroupBox" name="ants">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>90</y>
-     <width>191</width>
+     <x>200</x>
+     <y>10</y>
+     <width>181</width>
      <height>81</height>
     </rect>
    </property>
@@ -387,10 +392,10 @@
   <widget class="QGroupBox" name="traces">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>10</y>
-     <width>171</width>
-     <height>161</height>
+     <x>200</x>
+     <y>100</y>
+     <width>181</width>
+     <height>221</height>
     </rect>
    </property>
    <property name="title">
@@ -400,39 +405,26 @@
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>130</y>
+      <y>30</y>
       <width>62</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="maximum">
+     <double>1.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.050000000000000</double>
     </property>
     <property name="value">
      <double>0.500000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="traceMax">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>60</y>
-      <width>62</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <double>0.000000000000000</double>
-    </property>
-    <property name="singleStep">
-     <double>0.100000000000000</double>
-    </property>
-    <property name="value">
-     <double>3.000000000000000</double>
     </property>
    </widget>
    <widget class="QLabel" name="traceCoefLabel">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>120</y>
+      <y>20</y>
       <width>81</width>
       <height>31</height>
      </rect>
@@ -444,24 +436,11 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="traceMaxLabel">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>60</y>
-      <width>61</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Максимум</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="traceEvoparationLabel">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>90</y>
+      <y>60</y>
       <width>61</width>
       <height>16</height>
      </rect>
@@ -474,36 +453,114 @@
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>90</y>
+      <y>60</y>
       <width>62</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="maximum">
+     <double>1.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.050000000000000</double>
     </property>
     <property name="value">
      <double>0.600000000000000</double>
     </property>
    </widget>
-   <widget class="QLabel" name="traceMinLabel">
+   <widget class="QLabel" name="elitismLabel">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>30</y>
+      <y>90</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Ограничение элитарности</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="elitism">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>90</y>
+      <width>71</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>none</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>MMAS</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>EXP</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="traceMaxLabel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>160</y>
       <width>61</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>Минимум</string>
+     <string>Максимум</string>
     </property>
    </widget>
-   <widget class="QDoubleSpinBox" name="traceMin">
+   <widget class="QDoubleSpinBox" name="traceMax">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>30</y>
+      <y>160</y>
       <width>62</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+    <property name="minimum">
+     <double>0.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.100000000000000</double>
+    </property>
+    <property name="value">
+     <double>3.000000000000000</double>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="traceMin">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>130</y>
+      <width>62</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
     </property>
     <property name="minimum">
      <double>0.000000000000000</double>
@@ -513,6 +570,19 @@
     </property>
     <property name="value">
      <double>0.200000000000000</double>
+    </property>
+   </widget>
+   <widget class="QLabel" name="traceMinLabel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>130</y>
+      <width>61</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Минимум</string>
     </property>
    </widget>
   </widget>
