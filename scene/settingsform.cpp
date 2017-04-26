@@ -18,7 +18,7 @@ SettingsForm::~SettingsForm()
 void SettingsForm::changeElitizm(int index)
 {
     bool enabled = false;
-    if(index == 0)
+    if(index == 1)
         enabled = true;
     ui->traceMin->setEnabled(enabled);
     ui->traceMax->setEnabled(enabled);
