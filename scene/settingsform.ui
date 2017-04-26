@@ -404,7 +404,7 @@
    <widget class="QDoubleSpinBox" name="traceCoef">
     <property name="geometry">
      <rect>
-      <x>90</x>
+      <x>100</x>
       <y>30</y>
       <width>62</width>
       <height>22</height>
@@ -423,7 +423,7 @@
    <widget class="QLabel" name="traceCoefLabel">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>20</x>
       <y>20</y>
       <width>81</width>
       <height>31</height>
@@ -439,7 +439,7 @@
    <widget class="QLabel" name="traceEvoparationLabel">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>20</x>
       <y>60</y>
       <width>61</width>
       <height>16</height>
@@ -452,7 +452,7 @@
    <widget class="QDoubleSpinBox" name="traceEvoparation">
     <property name="geometry">
      <rect>
-      <x>90</x>
+      <x>100</x>
       <y>60</y>
       <width>62</width>
       <height>22</height>
@@ -471,7 +471,7 @@
    <widget class="QLabel" name="elitismLabel">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>20</x>
       <y>90</y>
       <width>81</width>
       <height>31</height>
@@ -487,9 +487,9 @@
    <widget class="QComboBox" name="elitism">
     <property name="geometry">
      <rect>
-      <x>90</x>
+      <x>100</x>
       <y>90</y>
-      <width>71</width>
+      <width>61</width>
       <height>22</height>
      </rect>
     </property>
@@ -512,7 +512,7 @@
    <widget class="QLabel" name="traceMaxLabel">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>20</x>
       <y>160</y>
       <width>61</width>
       <height>16</height>
@@ -528,7 +528,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>90</x>
+      <x>100</x>
       <y>160</y>
       <width>62</width>
       <height>22</height>
@@ -553,7 +553,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>90</x>
+      <x>100</x>
       <y>130</y>
       <width>62</width>
       <height>22</height>
@@ -575,7 +575,7 @@
    <widget class="QLabel" name="traceMinLabel">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>20</x>
       <y>130</y>
       <width>61</width>
       <height>16</height>
