@@ -37,6 +37,7 @@ void ConvolutionFactory::loadProtein(QByteArray protein)
     protein_.clear();
     for(int i=0;i<protein.size();i++)
         protein_.push_back(protein.at(i));
+    count_ = protein_.size();
     emit createdProtein(protein_);
 }
 
@@ -159,12 +160,12 @@ int ConvolutionFactory::probabilistic(Convolution *convolution,QVector<QVector3D
         chances.push_back(chance);
     }
 
-    double val = ((double) qrand()/(RAND_MAX));
+    double dice = ((double) qrand()/(RAND_MAX));
     double summ = 0;
     for(int i=0;i<chances.size();i++)
     {
         summ += chances.at(i);
-        if (summ >= val)
+        if (summ >= dice)
             return i;
     }
     //baraban end

@@ -210,7 +210,7 @@ void Scene::initResultLayout()
     //generic protein
     addSettingsLabel(resultLayout_,"genericLabel","Генерация свертки",styleLabel_);
     addSettingsSpinBox(resultLayout_,"genericCount",3,1000,45);
-    addSettingsLabel(resultLayout_,"genericCoefLabel","Коеффициент H/P",styleLabel_);
+    addSettingsLabel(resultLayout_,"genericCoefLabel","Соотношение H/P",styleLabel_);
     addSettingsDoubleSpinBox(resultLayout_,"genericCoef",0,1,1);
     QPushButton * genericButton = addSettingsPushButton(resultLayout_,"genericButton","Сгенерировать",styleButtonBlue_);
     connect(genericButton,SIGNAL(clicked()),this,SLOT(createProtein()));
