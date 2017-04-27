@@ -145,32 +145,6 @@ void Scene::hasVariant(QVector<QVector3D> vectorCoords)
    hasVariant_ = true;
 }
 
-void Scene::saveToFileProtein()
-{
-    QString filename = QFileDialog::getSaveFileName();
-    if(filename.isEmpty())
-        return;
-    QFile file(filename);
-    file.open(QIODevice::WriteOnly);
-    char *data = new char[protein_.size()];
-    for(int i = 0;i < protein_.size();i++)
-       data[i] = protein_.at(i);
-    file.write(data,protein_.size());
-    delete data;
-    file.close();
-}
-
-void Scene::loadFromFileProtein()
-{
-    QString filename = QFileDialog::getOpenFileName();
-    if(filename.isEmpty())
-        return;
-    QFile file(filename);
-    file.open(QIODevice::ReadOnly);
-    QByteArray array = file.readAll();
-    file.close();
-    emit loadedProtein(array);
-}
 
 void Scene::countConvolution(int count)
 {
@@ -206,22 +180,6 @@ void Scene::initResultLayout()
     //settings
     QPushButton * settingsButton = addSettingsPushButton(resultLayout_,"settingsButton","Настройки",styleButtonBlue_);
     connect(settingsButton,SIGNAL(clicked()),this,SLOT(setSettings()));
-
-    //generic protein
-    addSettingsLabel(resultLayout_,"genericLabel","Генерация свертки",styleLabel_);
-    addSettingsSpinBox(resultLayout_,"genericCount",3,1000,45);
-    addSettingsLabel(resultLayout_,"genericCoefLabel","Соотношение H/P",styleLabel_);
-    addSettingsDoubleSpinBox(resultLayout_,"genericCoef",0,1,1);
-    QPushButton * genericButton = addSettingsPushButton(resultLayout_,"genericButton","Сгенерировать",styleButtonBlue_);
-    connect(genericButton,SIGNAL(clicked()),this,SLOT(createProtein()));
-
-    //save
-    QPushButton * saveButton = addSettingsPushButton(resultLayout_,"saveButton","Сохранить",styleButtonBlue_);
-    connect(saveButton,SIGNAL(clicked()),this,SLOT(saveToFileProtein()));
-
-    //load
-    QPushButton * loadButton = addSettingsPushButton(resultLayout_,"loadButton","Загрузить",styleButtonBlue_);
-    connect(loadButton,SIGNAL(clicked()),this,SLOT(loadFromFileProtein()));
 
     //start stop
     QPushButton *start = addSettingsPushButton(resultLayout_,"startButton","Старт",styleButtonGreen_);
@@ -265,14 +223,6 @@ void Scene::stop()
     emit stopped();
 }
 
-
-void Scene::createProtein()
-{
-    QSpinBox *genericCount = widget_->findChild<QSpinBox*>("genericCount");
-    QDoubleSpinBox *genericCoef = widget_->findChild<QDoubleSpinBox*>("genericCoef");
-    emit createdProtein(genericCount->value(),genericCoef->value());
-}
-
 void Scene::show()
 {
     widget_->show();
@@ -282,6 +232,11 @@ void Scene::show()
 void Scene::setSettings()
 {
     settingsForm->show();
+}
+
+SettingsForm *Scene::getSettingsForm()
+{
+    return settingsForm;
 }
 
 

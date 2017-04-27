@@ -77,6 +77,11 @@ void Core::getConvolution(Convolution *convolution)
 {
     int result = ConvolutionFactory::getFactory()->getResult(convolution);
     allConvolutions_++;
+    if(allConvolutions_ % 1000==0)
+    {
+        QTime time = QTime(0,0,0,0).addMSecs(startTime_.elapsed());
+        qDebug()<<time;
+    }
     tempConvolutions_.push_back(convolution);
     QVector<QVector3D> vectorCoords = ConvolutionFactory::getFactory()->getVectorCoords(convolution);
     if(result > bestResult_)

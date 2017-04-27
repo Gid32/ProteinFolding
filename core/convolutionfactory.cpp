@@ -13,21 +13,40 @@ ConvolutionFactory* ConvolutionFactory::getFactory()
     return instance;
 }
 
-void ConvolutionFactory::createProtein(int count, double coef)
+void ConvolutionFactory::createProtein(int count, double percent)
 {
-
     protein_.clear();
     count_ = count;
-    int countFob = 0;
+
+    int countFob = count*percent/100;
+    int countFil = count - countFob;
     int currentCountFob = 0;
+    int currentCountFil = 0;
+
     QTime time = QTime::currentTime();
     qsrand((uint)time.msec());
     for(int i=0;i<count_;i++)
     {
-        if(qrand()%2)
-            protein_.push_back(H_FOB);
-        else
+        if(currentCountFob == countFob)
+        {
             protein_.push_back(H_FILL);
+            continue;
+        }
+        else if(currentCountFil == countFil)
+        {
+            protein_.push_back(H_FOB);
+            continue;
+        }
+        if(qrand()%2==0)
+        {
+            protein_.push_back(H_FILL);
+            currentCountFil++;
+        }
+        else
+        {
+            protein_.push_back(H_FOB);
+            currentCountFob++;
+        }
     }
     emit createdProtein(protein_);
 }

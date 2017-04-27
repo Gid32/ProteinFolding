@@ -53,7 +53,7 @@ signals:
     void error(QString);
 public slots:
     void loadProtein(QByteArray protein);
-    void createProtein(int count, double coef);
+    void createProtein(int count, double percent);
     void setSettings(SETTINGS settings);
     void stop();
 };

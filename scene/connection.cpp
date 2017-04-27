@@ -6,8 +6,8 @@ Connection::Connection(Qt3DCore::QEntity *parent, QVector3D vect)
     mesh = new Qt3DExtras::QCylinderMesh();
     mesh->setRadius(RADIUS_CONNECTION);
     mesh->setLength(LENGTH_CONNECTION);
-    mesh->setRings(10);
-    mesh->setSlices(10);
+    mesh->setRings(5);
+    mesh->setSlices(5);
 
     transform= new Qt3DCore::QTransform();
     transform->setScale(1.0f);

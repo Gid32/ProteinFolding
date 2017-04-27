@@ -5,36 +5,6 @@
 #include <QObject>
 #include <QGuiApplication>
 
-#include <Qt3DRender/qcamera.h>
-#include <Qt3DCore/qentity.h>
-#include <Qt3DRender/qcameralens.h>
-
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QCommandLinkButton>
-#include <QtGui/QScreen>
-
-#include <Qt3DInput/QInputAspect>
-#include <Qt3DExtras/qt3dwindow.h>
-
-#include <Qt3DRender/qrenderaspect.h>
-#include <Qt3DExtras/qforwardrenderer.h>
-
-
-#include <Qt3DRender/qsceneloader.h>
-#include <Qt3DRender/qpointlight.h>
-#include <Qt3DExtras/qfirstpersoncameracontroller.h>
-
-#include <QLabel>
-#include <QComboBox>
-#include <QPushButton>
-#include <QSpinBox>
-#include <QDoubleSpinBox>
-#include <QCheckBox>
-#include <QFileDialog>
-
 #include <QThread>
 
 #include "node.h"
@@ -48,12 +18,11 @@ class Scene : public QObject
 public:
     explicit Scene(const char *title, int width, int height);
     void show();
+    SettingsForm *getSettingsForm();
     ~Scene();
 signals:
     void started(SETTINGS);
-    void createdProtein(int,double);
     void stopped();
-    void loadedProtein(QByteArray);
 public slots:
     void onlyBetter(bool checked);
     void update(QVector<QVector3D> vectorCoords, int value, QString time);
@@ -65,9 +34,6 @@ public slots:
     void start();
     void stop();
     void countConvolution(int count);
-    void createProtein();
-    void saveToFileProtein();
-    void loadFromFileProtein();
     void setSettings();
 private:
     SettingsForm *settingsForm;

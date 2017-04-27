@@ -1,22 +1,22 @@
 #include "node.h"
 #include <QtCore/QDebug>
 
-Node::Node(Qt3DCore::QEntity *parent, BYTE hFob, QVector3D vect, Node *prevNode)
+Node::Node(Qt3DCore::QEntity *parent, BYTE hFob, QVector3D vect, Node *prevNode, float radius)
 {
 
     this->parent = parent;
     QColor color = QColor(0,0,255,255);
     if(hFob == H_FOB)
         color = QColor(255,0,0,255);
-    if(!prevNode && hFob == H_FILL)
-        color = QColor(0,200,255,255);
-    if(!prevNode && hFob == H_FOB)
-        color = QColor(255,0,100,255);
+//    if(!prevNode && hFob == H_FILL)
+//        color = QColor(0,200,255,255);
+//    if(!prevNode && hFob == H_FOB)
+//        color = QColor(255,0,100,255);
 
     mesh = new Qt3DExtras::QSphereMesh();
-    mesh->setRings(30);
-    mesh->setSlices(30);
-    mesh->setRadius(RADIUS_NODE);
+    mesh->setRings(8);
+    mesh->setSlices(8);
+    mesh->setRadius(radius);
 
     transform = new Qt3DCore::QTransform();
     transform->setScale(1.0f);
