@@ -8,10 +8,10 @@ Node::Node(Qt3DCore::QEntity *parent, BYTE hFob, QVector3D vect, Node *prevNode,
     QColor color = QColor(0,0,255,255);
     if(hFob == H_FOB)
         color = QColor(255,0,0,255);
-//    if(!prevNode && hFob == H_FILL)
-//        color = QColor(0,200,255,255);
-//    if(!prevNode && hFob == H_FOB)
-//        color = QColor(255,0,100,255);
+    if(!prevNode && hFob == H_FILL)
+        color = QColor(0,200,255,255);
+    if(!prevNode && hFob == H_FOB)
+        color = QColor(255,0,100,255);
 
     mesh = new Qt3DExtras::QSphereMesh();
     mesh->setRings(8);

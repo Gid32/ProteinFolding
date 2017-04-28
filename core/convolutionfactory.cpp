@@ -262,6 +262,16 @@ Convolution* ConvolutionFactory::getConvolution()
     return currentConv;
 }
 
+Convolution* ConvolutionFactory::localSearch(Convolution* convolution)
+{
+    for(int i=1;i<protein_.size();i++)
+    {
+
+    }
+
+    return convolution;
+}
+
 int ConvolutionFactory::getResult(Convolution *convolution)
 {
    int result = 0;

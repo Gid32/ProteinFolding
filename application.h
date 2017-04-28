@@ -4,6 +4,7 @@
 #include <QObject>
 #include "core.h"
 #include "scene.h"
+#include "mainwindow.h"
 
 #include <QThread>
 
@@ -12,7 +13,7 @@ class Application : public QObject
     Q_OBJECT
 private:
     Core *core_;
-    Scene *scene_;
+    MainWindow *mainWindow_;
 public:
     explicit Application(QObject *parent = 0);
     void start();

@@ -7,10 +7,10 @@ SettingsForm::SettingsForm(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    view_ = new Qt3DExtras::Qt3DWindow();
+    Qt3DExtras::Qt3DWindow *view_ = new Qt3DExtras::Qt3DWindow();
     rootEntity_ = new Qt3DCore::QEntity();
     view_->setRootEntity(rootEntity_);
-    mainLayout_ = new QHBoxLayout(ui->proteinWidget);
+    QHBoxLayout *mainLayout_ = new QHBoxLayout(ui->proteinWidget);
     mainLayout_->setMargin(0);
 
     //camera
@@ -126,10 +126,16 @@ void SettingsForm::getProtein(VECTORBYTE protein)
     float distance = 0.05;
     int countInRow = 24;
     QVector3D start = QVector3D(-0.57,0.38,0);
+    Node *prev = nullptr;
     for (int i = 0; i < protein_.size(); ++i)
     {
         float x = start.x()+i%countInRow*distance;
         float y = start.y()-(distance*(i/countInRow));
-        nodes.push_back(new Node(rootEntity_,protein_.at(i),QVector3D(x,y,0),nullptr,0.02));
+        nodes.push_back(new Node(rootEntity_,protein_.at(i),QVector3D(0,0,0),prev,0.02));
+        if(i>0)
+        {
+            nodes.at(i)->changeLocation(QVector3D(x,y,0));
+            prev = nodes.at(i);
+        }
     }
 }

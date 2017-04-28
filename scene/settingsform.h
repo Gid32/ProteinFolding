@@ -57,9 +57,7 @@ public slots:
     void createProtein();
     void getProtein(VECTORBYTE protein);
 private:
-    Qt3DExtras::Qt3DWindow* view_;
     Qt3DCore::QEntity* rootEntity_;
-    QHBoxLayout *mainLayout_;
     QVector<Node*> nodes;
     VECTORBYTE protein_;
     Ui::SettingsForm *ui;

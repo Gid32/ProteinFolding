@@ -24,12 +24,12 @@ SOURCES += main.cpp \
     $${SCENE_DIR}/connection.cpp \
     $${SCENE_DIR}/node.cpp \
     $${CORE_DIR}/core.cpp \
-    $${SCENE_DIR}/scene.cpp \
     application.cpp \
     $${CORE_DIR}/convolution.cpp \
     $${CORE_DIR}/ant.cpp \
     $${CORE_DIR}/convolutionfactory.cpp \
-    $${SCENE_DIR}/settingsform.cpp
+    $${SCENE_DIR}/settingsform.cpp \
+    $${SCENE_DIR}/mainwindow.cpp
 
 HEADERS += \
     settings.h \
@@ -42,15 +42,16 @@ HEADERS += \
     $${CORE_DIR}/core.h \
     $${SCENE_DIR}/connection.h \
     $${SCENE_DIR}/node.h \
-    $${SCENE_DIR}/scene.h \
     application.h \
     $${CORE_DIR}/convolution.h \
     $${CORE_DIR}/ant.h \
     $${CORE_DIR}/convolutionfactory.h \
-    $${SCENE_DIR}/settingsform.h
+    $${SCENE_DIR}/settingsform.h \
+    $${SCENE_DIR}/mainwindow.h
 
 FORMS += \
-    scene/settingsform.ui
+    $${SCENE_DIR}/settingsform.ui \
+    $${SCENE_DIR}/mainwindow.ui
 
 
 

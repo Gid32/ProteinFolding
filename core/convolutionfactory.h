@@ -34,6 +34,8 @@ private:
     double getWeights(Convolution *convolution, QVector3D coord, BYTE currentAm,int currentDirection);
     static ConvolutionFactory* instance;
 
+    Convolution* localSearch(Convolution*convolution);
+
     void evoparationMMAS();
     void evoparationEXP();
     void evoparationONLY();
