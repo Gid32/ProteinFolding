@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "settingsform.h"
+#include "convolutionfactory.h"
 #include <QTimer>
 
 namespace Ui {
@@ -25,12 +26,14 @@ public slots:
     void setSettings();
     void start();
     void stop();
-    void countConvolution(int count);
+    void countConvolution(int count,int rating);
     void getError(QString error);
-    void hasBetterVariant(QVector<QVector3D> vectorCoords, int value, QString time);
-    void hasVariant(QVector<QVector3D> vectorCoords);
+    void hasBetterVariant(Convolution convolution, QString time);
+    void hasVariant(Convolution convolution);
     void reDraw();
     void onlyBetter(bool checked);
+    void showConnection(bool checked);
+    void showGraph(bool checked);
 private:
     Ui::MainWindow *ui;
     Qt3DCore::QEntity* rootEntity_;
@@ -38,10 +41,12 @@ private:
     QTimer *timer_;
 
     bool hasBetterVariant_;
+    bool showConnection_;
     bool hasVariant_;
     bool drawAll_;
-    QVector<QVector3D> betterVariant_;
-    QVector<QVector3D> variant_;
+    Convolution betterVariant_;
+    Convolution variant_;
+    QVector<Connection*> currentConnections;
 
     QVector<Node*> nodes_;
     VECTORBYTE protein_;

@@ -11,9 +11,9 @@ Application::Application(QObject *parent) : QObject(parent)
     qRegisterMetaType<SETTINGS>("SETTINGS");
     qRegisterMetaType<QString>();
 
-    connect(core_, SIGNAL(hasBetterVariant(QVector<QVector3D>,int,QString)), mainWindow_, SLOT(hasBetterVariant(QVector<QVector3D>,int,QString)));
-    connect(core_, SIGNAL(hasVariant(QVector<QVector3D>)), mainWindow_, SLOT(hasVariant(QVector<QVector3D>)));
-    connect(core_, SIGNAL(countConvolution(int)), mainWindow_, SLOT(countConvolution(int)));
+    connect(core_, SIGNAL(hasBetterVariant(Convolution,QString)), mainWindow_, SLOT(hasBetterVariant(Convolution,QString)));
+    connect(core_, SIGNAL(hasVariant(Convolution)), mainWindow_, SLOT(hasVariant(Convolution)));
+    connect(core_, SIGNAL(countConvolution(int,int)), mainWindow_, SLOT(countConvolution(int,int)));
 
     ConvolutionFactory *factory = ConvolutionFactory::getFactory();
     connect(mainWindow_->getSettingsForm(),SIGNAL(createdProtein(int,double)),factory,SLOT(createProtein(int,double)));

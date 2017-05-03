@@ -1,5 +1,10 @@
 #include "convolution.h"
 
+Convolution::Convolution()
+{
+    result_ = -1;
+}
+
 QString Convolution::coordToQString(QVector3D coord)
 {
     QString str = "";

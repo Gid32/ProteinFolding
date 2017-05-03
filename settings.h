@@ -1,7 +1,7 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include <QVector>
+#include <QVector3D>
 #include <QDebug>
 #include <QMap>
 
@@ -17,10 +17,25 @@
 #define FILL_AREA 0x2
 #define BLOCK_AREA 0x3
 
+#define H_FILL_COLOR QColor(0,0,255,255)
+#define H_FOB_COLOR QColor(255,0,0,255)
+#define H_FOB_COLOR_FIRST QColor(255,0,100,255)
+#define H_FILL_COLOR_FIRST QColor(0,200,255,255)
+#define DEFAULT_COLOR_CONNECTION QColor(QRgb(0x928327))
 
 typedef unsigned char BYTE;
 typedef QVector<BYTE> VECTORBYTE;
 typedef QMap<QString,QVariant> SETTINGS;
+
+struct CONNECTION
+{
+    QVector3D first;
+    QVector3D second;
+    CONNECTION(QVector3D first,QVector3D second):first(first),second(second){}
+    CONNECTION(){}
+};
+
+typedef QVector<CONNECTION> CONNECTIONS;
 
 #endif // SETTINGS_H
 

@@ -7,45 +7,18 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    Qt3DExtras::Qt3DWindow *view_ = new Qt3DExtras::Qt3DWindow();
-    rootEntity_ = new Qt3DCore::QEntity();
-    view_->setRootEntity(rootEntity_);
-    QHBoxLayout *mainLayout_ = new QHBoxLayout(ui->widget);
-    mainLayout_->setMargin(0);
-
-    //camera
-    Qt3DRender::QCamera *cameraEntity_ = view_->camera();
-    cameraEntity_->lens()->setPerspectiveProjection(45.0f, 16.0f/9.0f, 0.1f, 1000.0f);
-    cameraEntity_->setPosition(QVector3D(0, 0, 15.0f));
-    cameraEntity_->setUpVector(QVector3D(0, 1, 0));
-    cameraEntity_->setViewCenter(QVector3D(0, 0, 0));
-    Qt3DExtras::QFirstPersonCameraController *camController = new Qt3DExtras::QFirstPersonCameraController(rootEntity_);
-    camController->setCamera(cameraEntity_);
-    //light
-    Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity_);
-    Qt3DRender::QPointLight *light = new Qt3DRender::QPointLight(lightEntity);
-    light->setColor("white");
-    light->setIntensity(3);
-    lightEntity->addComponent(light);
-    Qt3DCore::QTransform *lightTransform = new Qt3DCore::QTransform(lightEntity);
-    lightTransform->setTranslation(cameraEntity_->position());
-    lightEntity->addComponent(lightTransform);
-    //color
-    view_->defaultFrameGraph()->setClearColor(QColor(255,255,255));
-    //mainconatainer
-    QWidget *mainContainer_ = QWidget::createWindowContainer(view_);
-    mainLayout_->addWidget(mainContainer_,1);
-
-    Qt3DInput::QInputAspect *input = new Qt3DInput::QInputAspect;
-    view_->registerAspect(input);
+    rootEntity_ = SettingsForm::initWidget(ui->widget,QColor(240,240,240),true,15.0f);
 
     settingsForm_ = new SettingsForm();
     timer_ = new QTimer;
-
+    showConnection_ = false;
+    drawAll_ = true;
     connect(ui->settingsButton,SIGNAL(clicked(bool)),this,SLOT(setSettings()));
     connect(ui->startButton,SIGNAL(clicked(bool)),this,SLOT(start()));
     connect(ui->stopButton,SIGNAL(clicked(bool)),this,SLOT(stop()));
     connect(ui->onlyBetter,SIGNAL(clicked(bool)),this,SLOT(onlyBetter(bool)));
+    connect(ui->showConnection,SIGNAL(clicked(bool)),this,SLOT(showConnection(bool)));
+    connect(ui->showGraph,SIGNAL(clicked(bool)),this,SLOT(showGraph(bool)));
     connect(timer_,SIGNAL(timeout()),this,SLOT(reDraw()));
 }
 
@@ -76,8 +49,10 @@ SettingsForm *MainWindow::getSettingsForm()
 
 void MainWindow::start()
 {
-    timer_->start(1000);
+    timer_->start(1500);
     ui->error->setText("");
+    hasBetterVariant_ = false;
+    hasVariant_ = false;
     emit started(settingsForm_->getSettings());
 }
 
@@ -88,10 +63,13 @@ void MainWindow::stop()
     emit stopped();
 }
 
-void MainWindow::countConvolution(int count)
+void MainWindow::countConvolution(int count, int rating)
 {
     ui->countConvolution->setText("Количество сверток: "+QString::number(count));
     ui->countConvolution->resize(ui->countConvolution->sizeHint());
+    double avarageRating = (rating/2)/count;
+    ui->avarageRating->setText("Средний рейтинг: "+QString::number(avarageRating));
+    ui->avarageRating->resize(ui->avarageRating->sizeHint());
 }
 
 void MainWindow::getError(QString error)
@@ -100,10 +78,10 @@ void MainWindow::getError(QString error)
    ui->error->resize(ui->error->sizeHint());
 }
 
-void MainWindow::hasBetterVariant(QVector<QVector3D> vectorCoords, int value, QString time)
+void MainWindow::hasBetterVariant(Convolution convolution, QString time)
 {
-    betterVariant_ = vectorCoords;
-    ui->rating->setText("Рейтинг: "+QString::number(value/2));
+    betterVariant_ = convolution;
+    ui->rating->setText("Рейтинг: "+QString::number(convolution.result_/2));
     ui->bestTime->setText("Время: "+time);
     ui->bestTime->resize(ui->bestTime->sizeHint());
     ui->rating->resize(ui->rating->sizeHint());
@@ -111,36 +89,65 @@ void MainWindow::hasBetterVariant(QVector<QVector3D> vectorCoords, int value, QS
 }
 
 
-void MainWindow::hasVariant(QVector<QVector3D> vectorCoords)
+void MainWindow::hasVariant(Convolution convolution)
 {
-   variant_ = vectorCoords;
+   variant_ = convolution;
    hasVariant_ = true;
 }
 
 void MainWindow::reDraw()
 {
-   QVector<QVector3D> variant;
+   if(!hasBetterVariant_ && !hasVariant_)
+       return;
+   Convolution variant;
    if(drawAll_ && hasVariant_)
       variant = variant_;
-   if(hasBetterVariant_)
+   else if(hasBetterVariant_)
       variant = betterVariant_;
-   if(variant.empty())
+   if(variant.result_==-1)
        return;
    hasVariant_ = false;
    hasBetterVariant_ = false;
+   QVector<QVector3D> vectorCoords = ConvolutionFactory::getFactory()->getVectorCoords(&variant);
    for(int i=1;i<nodes_.size();i++)//0 нод не трогаем
-       nodes_.at(i)->changeLocation(variant.at(i-1));
+       nodes_.at(i)->changeLocation(vectorCoords.at(i-1));
+
+   //связи
+   for(int i=0;i<currentConnections.size();i++)
+       delete currentConnections.at(i);
+   currentConnections.clear();
+   if(!showConnection_)
+       return;
+   for(int i=0;i<variant.connections_.size();i++)
+   {
+       Connection *connection = new Connection(rootEntity_,QVector3D(0,0,0));
+       connection->changeLocation(variant.connections_.at(i).second,variant.connections_.at(i).first);
+       connection->changeColor(QColor(255,0,0,40));
+       currentConnections.push_back(connection);
+   }
+}
+
+void MainWindow::showConnection(bool checked)
+{
+    showConnection_ = checked;
+    hasVariant_ = true;
+    hasBetterVariant_ = true;
+    reDraw();
 }
 
 void MainWindow::onlyBetter(bool checked)
 {
+    drawAll_ = !checked;
+    hasBetterVariant_ = checked;
+    reDraw();
+}
+
+void MainWindow::showGraph(bool checked)
+{
     if(checked)
-    {
-        drawAll_ = false;
-        hasBetterVariant_ = true;
-    }
+        connect(timer_,SIGNAL(timeout()),this,SLOT(reDraw()));
     else
-        drawAll_ = true;
+        disconnect(timer_,SIGNAL(timeout()),this,SLOT(reDraw()));
 }
 
 

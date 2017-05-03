@@ -26,9 +26,10 @@ private:
     Qt3DCore::QEntity *parent;
     Connection *connection;
 public:
+    BYTE hFob;
     Node *prevNode;
     Qt3DCore::QTransform *transform;
-    explicit Node(Qt3DCore::QEntity *parent, BYTE hFob, QVector3D vect, Node *prevNode, float radius = RADIUS_NODE);
+    explicit Node(Qt3DCore::QEntity *parent, BYTE hFob, QVector3D vect, Node *prevNode, float radius = RADIUS_NODE, float connectionRadius = RADIUS_CONNECTION, float connectionLength = LENGTH_CONNECTION);
     ~Node();
     void changeLocation(QVector3D coords);
 };

@@ -30,7 +30,7 @@ private:
 
     bool getNext(Convolution *convolution, int currentDirection, QVector3D currentCoords, QVector3D &coords, int &direction,int &turn);
     int probabilistic(Convolution *convolution, QVector<QVector3D> possible, QVector<int> turns, int currentDirection);
-    int getCount(Convolution *convolution,QVector3D coord, QVector3D blockCoordPrev, QVector3D blockCoordNext,int currentDirection);
+    int getCount(Convolution *convolution, QVector3D coord, QVector3D blockCoordPrev, QVector3D blockCoordNext, int currentDirection);
     double getWeights(Convolution *convolution, QVector3D coord, BYTE currentAm,int currentDirection);
     static ConvolutionFactory* instance;
 

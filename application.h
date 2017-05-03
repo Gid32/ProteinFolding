@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include "core.h"
-#include "scene.h"
 #include "mainwindow.h"
 
 #include <QThread>

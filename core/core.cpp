@@ -11,8 +11,8 @@ Core::Core()
 
 void Core::clearVectorConvolution(QVector<Convolution*> *vect)
 {
-//    for(int i=0;i<vect->size();i++)
-//        delete vect->at(i);
+    for(int i=0;i<vect->size();i++)
+        delete vect->at(i);
     vect->clear();
 }
 
@@ -22,6 +22,7 @@ void Core::start(SETTINGS settings)
     int countAnt = settings.value("antsCount").toInt();
     int countThread = settings.value("threadsCount").toInt();
     allConvolutions_ = 0;
+    allResult_ = 0;
     createAnts(countAnt,countThread);
     isBreak_ = false;
     bestResult_ = 0;
@@ -69,29 +70,26 @@ void Core::antFinish()
         clearVectorConvolution(&tempConvolutions_);
         if(!isBreak_)
             runAnts();
+        emit countConvolution(allConvolutions_, allResult_);
     }
-    emit countConvolution(allConvolutions_);
 }
 
 void Core::getConvolution(Convolution *convolution)
 {
     int result = ConvolutionFactory::getFactory()->getResult(convolution);
+    convolution->result_ = result;
     allConvolutions_++;
-    if(allConvolutions_ % 1000==0)
-    {
-        QTime time = QTime(0,0,0,0).addMSecs(startTime_.elapsed());
-        qDebug()<<time;
-    }
+    allResult_ += result;
     tempConvolutions_.push_back(convolution);
-    QVector<QVector3D> vectorCoords = ConvolutionFactory::getFactory()->getVectorCoords(convolution);
     if(result > bestResult_)
     {
         bestResult_ = result;
         QTime time = QTime(0,0,0,0).addMSecs(startTime_.elapsed());
         QString timeStr = time.toString("hh:mm:ss.zzz");
-        emit hasBetterVariant(vectorCoords,bestResult_,timeStr);
+        emit hasBetterVariant(*convolution,timeStr);
     }
-    emit hasVariant(vectorCoords);
+
+    emit hasVariant(*convolution);
 }
 
 void Core::stop()

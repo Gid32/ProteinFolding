@@ -27,11 +27,14 @@ struct Convolution
 {
     QMap<QString,BYTE> area_;
     QVector<History> history_;
+    int result_;
+    QVector<CONNECTION> connections_;
 
     QString coordToQString(QVector3D coord);
     void setValueByCoord(QVector3D coord, BYTE value);
     BYTE getValueByCoord(QVector3D coord);
     bool isHydroFobByCoord(QVector3D coord);
+    Convolution();
 };
 
 #endif // CONVOLUTION_H

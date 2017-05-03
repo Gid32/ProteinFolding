@@ -126,7 +126,7 @@ void ConvolutionFactory::stop()
    isStarted_ = false;
 }
 
-int ConvolutionFactory::getCount(Convolution *convolution,QVector3D coord,QVector3D blockCoordPrev,QVector3D blockCoordNext,int currentDirection)
+int ConvolutionFactory::getCount(Convolution *convolution, QVector3D coord, QVector3D blockCoordPrev, QVector3D blockCoordNext, int currentDirection)
 {
     int count = 0;
     for(int i=0;i<=net_->getMaxTurn();i++)
@@ -134,7 +134,11 @@ int ConvolutionFactory::getCount(Convolution *convolution,QVector3D coord,QVecto
         int direction = net_->turnToDirection(currentDirection,i);
         QVector3D testCoord = net_->getDirectionCoord(direction,coord);
         if(testCoord != blockCoordPrev && testCoord != blockCoordNext)
-            count += convolution->isHydroFobByCoord(testCoord);
+           if(convolution->isHydroFobByCoord(testCoord))
+           {
+               count++;
+               convolution->connections_.push_back(CONNECTION(net_->getCoords(coord),net_->getCoords(testCoord)));
+           }
     }
     return count;
 }
@@ -301,11 +305,11 @@ QVector<QVector3D> ConvolutionFactory::getVectorCoords(Convolution *convolution)
 
 void ConvolutionFactory::changeTrace(QVector<Convolution*> convolutions)
 {
-    int minresult = getResult(convolutions.at(0));
+    int minresult = convolutions.at(0)->result_;
     int maxresult = minresult;
     for(int i=1;i<convolutions.size();i++)
     {
-        int result = getResult(convolutions.at(i));
+        int result = convolutions.at(i)->result_;
         if(minresult < result)
             minresult = result;
         else if(maxresult > result)
@@ -318,7 +322,7 @@ void ConvolutionFactory::changeTrace(QVector<Convolution*> convolutions)
     for(int i=0;i<convolutions.size();i++)
     {
         QVector<History> history = convolutions.at(i)->history_;
-        double result = (double)(getResult(convolutions.at(i))-minresult)/del;
+        double result = (double)(convolutions.at(i)->result_-minresult)/del;
         for(int j=0;j<history.size();j++)
             trace_[j][history.at(j).turn-1] += result;
     }

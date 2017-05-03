@@ -1,17 +1,22 @@
 #include "node.h"
 #include <QtCore/QDebug>
 
-Node::Node(Qt3DCore::QEntity *parent, BYTE hFob, QVector3D vect, Node *prevNode, float radius)
+Node::Node(Qt3DCore::QEntity *parent, BYTE hFob, QVector3D vect, Node *prevNode, float radius, float connectionRadius, float connectionLength)
 {
 
     this->parent = parent;
-    QColor color = QColor(0,0,255,255);
-    if(hFob == H_FOB)
-        color = QColor(255,0,0,255);
+    this->hFob = hFob;
+    QColor color;
+
     if(!prevNode && hFob == H_FILL)
-        color = QColor(0,200,255,255);
-    if(!prevNode && hFob == H_FOB)
-        color = QColor(255,0,100,255);
+        color = H_FILL_COLOR_FIRST;
+    else if(!prevNode && hFob == H_FOB)
+        color = H_FOB_COLOR_FIRST;
+    else if(hFob == H_FOB)
+        color = H_FOB_COLOR;
+    else
+        color = H_FILL_COLOR;
+
 
     mesh = new Qt3DExtras::QSphereMesh();
     mesh->setRings(8);
@@ -32,7 +37,7 @@ Node::Node(Qt3DCore::QEntity *parent, BYTE hFob, QVector3D vect, Node *prevNode,
 
     this->prevNode = prevNode;
     if(prevNode)
-        connection = new Connection(parent,vect);
+        connection = new Connection(parent,vect,connectionRadius,connectionLength);
     else
         connection = nullptr;
 
@@ -50,8 +55,8 @@ Node::~Node()
 
 void Node::changeLocation(QVector3D coords)
 {
-    this->transform->setTranslation(coords);
-    if(this->connection)
-        this->connection->changeLocation(prevNode->transform->translation(),coords);
+    transform->setTranslation(coords);
+    if(connection)
+        connection->changeLocation(prevNode->transform->translation(),coords);
 }
 

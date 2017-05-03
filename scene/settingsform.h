@@ -46,7 +46,7 @@ public:
     explicit SettingsForm(QWidget *parent = 0);
     ~SettingsForm();
     SETTINGS getSettings();
-
+    static Qt3DCore::QEntity *initWidget(QWidget *widget, QColor color, bool control, float cameraZ);
 signals:
     void createdProtein(int,double);
     void loadedProtein(QByteArray);
