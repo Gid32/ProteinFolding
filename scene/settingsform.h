@@ -46,7 +46,7 @@ public:
     explicit SettingsForm(QWidget *parent = 0);
     ~SettingsForm();
     SETTINGS getSettings();
-    static Qt3DCore::QEntity *initWidget(QWidget *widget, QColor color, bool control, float cameraZ);
+    static Qt3DCore::QEntity *initWidget(QWidget *widget, Qt3DExtras::Qt3DWindow *view, QColor color, bool control, float cameraZ);
 signals:
     void createdProtein(int,double);
     void loadedProtein(QByteArray);
@@ -58,6 +58,7 @@ public slots:
     void getProtein(VECTORBYTE protein);
 private:
     Qt3DCore::QEntity* rootEntity_;
+    Qt3DExtras::Qt3DWindow *view_;
     QVector<Node*> nodes;
     VECTORBYTE protein_;
     Ui::SettingsForm *ui;

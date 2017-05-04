@@ -1,9 +1,8 @@
 #include "settingsform.h"
 #include "ui_settingsform.h"
 
-Qt3DCore::QEntity* SettingsForm::initWidget(QWidget *widget, QColor color,bool control, float cameraZ)
+Qt3DCore::QEntity* SettingsForm::initWidget(QWidget *widget,Qt3DExtras::Qt3DWindow *view, QColor color,bool control, float cameraZ)
 {
-    Qt3DExtras::Qt3DWindow *view = new Qt3DExtras::Qt3DWindow();
     Qt3DCore::QEntity* rootEntity = new Qt3DCore::QEntity();
     view->setRootEntity(rootEntity);
     QHBoxLayout *mainLayout = new QHBoxLayout(widget);
@@ -11,7 +10,7 @@ Qt3DCore::QEntity* SettingsForm::initWidget(QWidget *widget, QColor color,bool c
 
     //camera
     Qt3DRender::QCamera *cameraEntity = view->camera();
-    cameraEntity->lens()->setPerspectiveProjection(45.0f, 16.0f/9.0f, 0.1f, 1000.0f);
+    cameraEntity->lens()->setPerspectiveProjection(45.0f, 4.0f/3.0f, 0.1f, 1000.0f);
     cameraEntity->setPosition(QVector3D(0, 0, cameraZ));
     cameraEntity->setUpVector(QVector3D(0, 1, 0));
     cameraEntity->setViewCenter(QVector3D(0, 0, 0));
@@ -46,7 +45,23 @@ SettingsForm::SettingsForm(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    rootEntity_ = initWidget(ui->proteinWidget,QColor(240,240,240),false,1.0f);
+    view_ = new Qt3DExtras::Qt3DWindow();
+    rootEntity_ = initWidget(ui->proteinWidget,view_,QColor(240,240,240),false,1.0f);
+
+    double arr[][2] = {0.60,0.20,0.15,0.40,0.25,0.40};
+    QString arrName[][2] = {"weightsFOBFOB","weightsFILFOB","weightsFOBFIL","weightsFILFIL","weightsFOBFREE","weightsFILFREE"};
+    for(int i=0;i<3;i++)
+        for(int j=0;j<2;j++)
+        {
+            ui->tableWidget->setColumnWidth(i,45);
+            ui->tableWidget->setRowHeight(j,25);
+            QDoubleSpinBox *box = new QDoubleSpinBox(ui->tableWidget);
+            box->setRange(0,1);
+            box->setSingleStep(0.1);
+            box->setValue(arr[i][j]);
+            box->setObjectName(arrName[i][j]);
+            ui->tableWidget->setCellWidget(j,i,box);
+        }
 
     ui->netValue->addItems(NetFactory::getInstance()->getStringList());
     connect(ui->elitism,SIGNAL(currentIndexChanged(int)),this,SLOT(changeElitizm(int)));
@@ -54,6 +69,7 @@ SettingsForm::SettingsForm(QWidget *parent) :
     connect(ui->genericButton,SIGNAL(clicked()),this,SLOT(createProtein()));
     connect(ui->saveButton,SIGNAL(clicked()),this,SLOT(saveToFileProtein()));
     connect(ui->loadButton,SIGNAL(clicked()),this,SLOT(loadFromFileProtein()));
+
 }
 
 SettingsForm::~SettingsForm()
@@ -81,12 +97,12 @@ SETTINGS SettingsForm::getSettings()
     settings.insert(ui->traceMax->objectName(),ui->traceMax->value());
     settings.insert(ui->traceEvoparation->objectName(),ui->traceEvoparation->value());
     settings.insert(ui->traceCoef->objectName(),ui->traceCoef->value());
-    settings.insert(ui->weightsFOBFOB->objectName(),ui->weightsFOBFOB->value());
-    settings.insert(ui->weightsFOBFIL->objectName(),ui->weightsFOBFIL->value());
-    settings.insert(ui->weightsFOBFREE->objectName(),ui->weightsFOBFREE->value());
-    settings.insert(ui->weightsFILFOB->objectName(),ui->weightsFILFOB->value());
-    settings.insert(ui->weightsFILFIL->objectName(),ui->weightsFILFIL->value());
-    settings.insert(ui->weightsFILFREE->objectName(),ui->weightsFILFREE->value());
+    for(int i=0;i<3;i++)
+        for(int j=0;j<2;j++)
+        {
+            QDoubleSpinBox *box = static_cast<QDoubleSpinBox*>(ui->tableWidget->cellWidget(j,i));
+            settings.insert(box->objectName(),box->value());
+        }
     settings.insert(ui->elitism->objectName(),ui->elitism->currentIndex());
 
     return settings;
@@ -94,27 +110,64 @@ SETTINGS SettingsForm::getSettings()
 
 void SettingsForm::saveToFileProtein()
 {
-    QString filename = QFileDialog::getSaveFileName();
+    QString selfilter = tr("protein (*.protein)");
+    QString filename = QFileDialog::getSaveFileName(
+            this,
+            "Сохранение Протеина",
+            "",
+            tr("protein (*.protein);;proteinN (*.proteinN);;proteinS (*.proteinS)"),
+            &selfilter
+    );
     if(filename.isEmpty())
         return;
     QFile file(filename);
-    file.open(QIODevice::WriteOnly);
-    char *data = new char[protein_.size()];
-    for(int i = 0;i < protein_.size();i++)
-       data[i] = protein_.at(i);
-    file.write(data,protein_.size());
-    delete data;
+    if(!file.open(QIODevice::WriteOnly))
+        return;
+    QString fileExt = QFileInfo(filename).suffix();
+    QTextStream out(&file);
+    if(fileExt == "protein")
+        for(int i = 0;i < protein_.size();i++)
+           out<<protein_.at(i);
+    else if(fileExt == "proteinN")
+        for(int i = 0;i < protein_.size();i++)
+           out<<static_cast<int>(protein_.at(i));
+    else if(fileExt == "proteinS")
+        for(int i = 0;i < protein_.size();i++)
+            if(protein_.at(i) == H_FILL)
+                out<<"P";
+            else
+                out<<"H";
     file.close();
 }
 
 void SettingsForm::loadFromFileProtein()
 {
-    QString filename = QFileDialog::getOpenFileName();
-    if(filename.isEmpty())
+    QString selfilter = tr("protein (*.protein)");
+    QString fileName = QFileDialog::getOpenFileName(
+            this,
+            "Загрузка Протеина",
+            "",
+            tr("protein (*.protein);;proteinN (*.proteinN);;proteinS (*.proteinS)"),
+            &selfilter
+    );
+    if(fileName.isEmpty())
         return;
-    QFile file(filename);
+    QFile file(fileName);
+    QString fileExt = QFileInfo(fileName).suffix();
     file.open(QIODevice::ReadOnly);
-    QByteArray array = file.readAll();
+    QByteArray array;
+    QTextStream in(&file);
+    QString str = in.readAll();
+    if(fileExt == "protein")
+        array = file.readAll();
+    else
+    {
+        for(int i = 0;i<str.size();i++)
+            if(str.at(i)=="1" || str.at(i)=="H" || str.at(i)=="Н")
+                array.append(H_FOB);
+            else
+                array.append((char)H_FILL);
+    }
     file.close();
     emit loadedProtein(array);
 }
@@ -131,9 +184,13 @@ void SettingsForm::getProtein(VECTORBYTE protein)
         delete nodes.at(i);
     nodes.clear();
 
-    float distance = 0.05f;
-    int countInRow = 22;
-    QVector3D start = QVector3D(-0.57f,0.38f,0);
+    float startX = -0.40f;
+    float startY = 0.40f;
+    float distance = abs(startX*2)/sqrt(protein_.size());
+    float radius = distance/3;
+    float connectionRadius = radius/5;
+    int countInRow = abs(startX*2)/distance;
+    QVector3D start = QVector3D(startX+radius,startY-radius,0);
     Node *prev = nullptr;
     for (int i = 0; i < protein_.size(); ++i)
     {
@@ -142,10 +199,11 @@ void SettingsForm::getProtein(VECTORBYTE protein)
         if((i/countInRow)%2==0)
             x = start.x()+i%countInRow*distance;
         else
-            x = start.x()+(countInRow-(i%countInRow))*distance;
-        nodes.push_back(new Node(rootEntity_,protein_.at(i),QVector3D(x,y,0),prev,0.021f,0.005f,0.09f));
+            x = start.x()+(countInRow-(i%countInRow+1))*distance;
+        nodes.push_back(new Node(rootEntity_,protein_.at(i),QVector3D(x,y,0),prev,radius,connectionRadius,distance));
         if(i>0)
             nodes.at(i)->changeLocation(QVector3D(x,y,0));
          prev = nodes.at(i);
     }
+    ui->genericCount->setValue(protein_.size());
 }

@@ -17,10 +17,7 @@
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <property name="spacing">
-     <number>0</number>
-    </property>
+   <layout class="QGridLayout" name="gridLayout">
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -33,10 +30,10 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    <item>
+    <item row="0" column="0">
      <widget class="QWidget" name="widget" native="true"/>
     </item>
-    <item>
+    <item row="0" column="1">
      <widget class="QWidget" name="verticalWidget" native="true">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="spacing">
@@ -74,170 +71,123 @@
          <property name="flat">
           <bool>false</bool>
          </property>
-         <widget class="QPushButton" name="stopButton">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>70</y>
-            <width>151</width>
-            <height>26</height>
-           </rect>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">color:white;background-color:#DC143C;font-size:15px</string>
-          </property>
-          <property name="text">
-           <string>Стоп</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="startButton">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>40</y>
-            <width>151</width>
-            <height>26</height>
-           </rect>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">color:white;background-color:green;font-size:15px</string>
-          </property>
-          <property name="text">
-           <string>Старт</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="settingsButton">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>10</y>
-            <width>151</width>
-            <height>23</height>
-           </rect>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">color:white;background-color:#00BFFF;font-size:12px</string>
-          </property>
-          <property name="text">
-           <string>Настройки</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="countConvolution">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>210</y>
-            <width>151</width>
-            <height>21</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>count</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="error">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>110</y>
-            <width>161</width>
-            <height>21</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>error</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="rating">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>230</y>
-            <width>151</width>
-            <height>21</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>rating</string>
-          </property>
-          <property name="scaledContents">
-           <bool>true</bool>
-          </property>
-         </widget>
-         <widget class="QLabel" name="bestTime">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>270</y>
-            <width>151</width>
-            <height>16</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>time</string>
-          </property>
-          <property name="scaledContents">
-           <bool>true</bool>
-          </property>
-         </widget>
-         <widget class="QCheckBox" name="onlyBetter">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>130</y>
-            <width>161</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Показать только лучший</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="avarageRating">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>250</y>
-            <width>151</width>
-            <height>21</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>averageRaiting</string>
-          </property>
-         </widget>
-         <widget class="QCheckBox" name="showConnection">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>150</y>
-            <width>161</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Показать связи</string>
-          </property>
-         </widget>
-         <widget class="QCheckBox" name="showGraph">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>170</y>
-            <width>161</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Показывать результаты</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-          <property name="tristate">
-           <bool>false</bool>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QPushButton" name="settingsButton">
+            <property name="styleSheet">
+             <string notr="true">color:white;background-color:#00BFFF;font-size:12px</string>
+            </property>
+            <property name="text">
+             <string>Настройки</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="startButton">
+            <property name="styleSheet">
+             <string notr="true">color:white;background-color:green;font-size:15px</string>
+            </property>
+            <property name="text">
+             <string>Старт</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="stopButton">
+            <property name="styleSheet">
+             <string notr="true">color:white;background-color:#DC143C;font-size:15px</string>
+            </property>
+            <property name="text">
+             <string>Стоп</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="error">
+            <property name="text">
+             <string>error</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="onlyBetter">
+            <property name="text">
+             <string>Показать только лучший</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="showConnection">
+            <property name="text">
+             <string>Показать связи</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="showGraph">
+            <property name="text">
+             <string>Показывать результаты</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+            <property name="tristate">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="cameraBack">
+            <property name="styleSheet">
+             <string notr="true">color:white;background-color:#00BFFF;font-size:12px</string>
+            </property>
+            <property name="text">
+             <string>Вернуть Камеру</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="proteinLength">
+            <property name="text">
+             <string>длина</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="countConvolution">
+            <property name="text">
+             <string>count</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="rating">
+            <property name="text">
+             <string>rating</string>
+            </property>
+            <property name="scaledContents">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="avarageRating">
+            <property name="text">
+             <string>averageRaiting</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="bestTime">
+            <property name="text">
+             <string>time</string>
+            </property>
+            <property name="scaledContents">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>

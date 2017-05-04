@@ -46,10 +46,11 @@ void Core::createAnts(int countAnt, int countThreads)
         Ant *ant = new Ant();
         if(i==0)
             ant->setCount(countConvInAnt+(countAnt%countThreads));
-        ant->setCount(countConvInAnt);
+        else
+            ant->setCount(countConvInAnt);
         connect(ant,SIGNAL(finished()),this,SLOT(antFinish()));
         connect(ant,SIGNAL(convolutionCreated(Convolution*)),this,SLOT(getConvolution(Convolution*)));
-        connect(this,SIGNAL(stopped()),ant,SLOT(quit()));
+        connect(this,SIGNAL(stopped()),ant,SLOT(terminate()));
         ants_.push_back(ant);
     }
 }

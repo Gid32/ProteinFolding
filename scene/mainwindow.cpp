@@ -6,8 +6,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    rootEntity_ = SettingsForm::initWidget(ui->widget,QColor(240,240,240),true,15.0f);
+    view_ = new Qt3DExtras::Qt3DWindow();
+    rootEntity_ = SettingsForm::initWidget(ui->widget,view_,QColor(240,240,240),true,15.0f);
 
     settingsForm_ = new SettingsForm();
     timer_ = new QTimer;
@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->showConnection,SIGNAL(clicked(bool)),this,SLOT(showConnection(bool)));
     connect(ui->showGraph,SIGNAL(clicked(bool)),this,SLOT(showGraph(bool)));
     connect(timer_,SIGNAL(timeout()),this,SLOT(reDraw()));
+    connect(ui->cameraBack,SIGNAL(clicked(bool)),this,SLOT(cameraBack()));
 }
 
 void MainWindow::createProtein(VECTORBYTE protein)
@@ -35,6 +36,8 @@ void MainWindow::createProtein(VECTORBYTE protein)
         nodes_.push_back(new Node(rootEntity_,protein.at(i),QVector3D(0, 0, 0),node));
         node = nodes_.last();
     }
+    ui->proteinLength->setText("длина свертки: "+QString::number(protein_.size()));
+    ui->proteinLength->resize(ui->proteinLength->sizeHint());
 }
 
 void MainWindow::setSettings()
@@ -148,6 +151,12 @@ void MainWindow::showGraph(bool checked)
         connect(timer_,SIGNAL(timeout()),this,SLOT(reDraw()));
     else
         disconnect(timer_,SIGNAL(timeout()),this,SLOT(reDraw()));
+}
+
+void MainWindow::cameraBack()
+{
+    view_->camera()->setPosition(QVector3D(0.0f,0.0f,20.0f));
+    view_->camera()->setViewCenter(QVector3D(0.0f,0.0f,0.0f));
 }
 
 

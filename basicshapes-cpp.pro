@@ -53,6 +53,9 @@ FORMS += \
     $${SCENE_DIR}/settingsform.ui \
     $${SCENE_DIR}/mainwindow.ui
 
+RESOURCES += \
+    scene/resources.qrc
+
 
 
 
