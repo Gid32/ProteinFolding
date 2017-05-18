@@ -36,9 +36,12 @@ private:
 
     Convolution* localSearch(Convolution*convolution);
 
-    void evoparationMMAS();
-    void evoparationEXP();
-    void evoparationONLY();
+    void setTrace(QVector<Convolution*> convolutions);
+    void setTraceMMAS(QVector<Convolution*> convolutions);
+
+    void evaporateTraceMMAS();
+    void evaporateTraceEXP();
+    void evaporateTrace();
 
     explicit ConvolutionFactory(QObject *parent = 0);
     void clearTrace();

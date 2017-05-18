@@ -305,6 +305,64 @@ QVector<QVector3D> ConvolutionFactory::getVectorCoords(Convolution *convolution)
 
 void ConvolutionFactory::changeTrace(QVector<Convolution*> convolutions)
 {
+
+    //evaporation
+    switch(elitizm_)
+    {
+//    case 0: evoparationMMAS();
+//        break;
+        case 1:
+        {
+            setTrace(convolutions);
+            evaporateTraceEXP();
+            break;
+        }
+        case 2:
+        {
+            setTrace(convolutions);
+            evaporateTrace();
+            break;
+        }
+        default:
+        {
+            setTraceMMAS(convolutions);
+            evaporateTraceMMAS();
+        }
+    }
+
+}
+
+void ConvolutionFactory::setTraceMMAS(QVector<Convolution*> convolutions)
+{
+    int indexMaxResult = 0;
+    int minResult = convolutions.at(0)->result_;
+    int maxResult = minResult;
+
+    for(int i=1;i<convolutions.size();i++)
+    {
+        int result = convolutions.at(i)->result_;
+        if(minResult < result)
+            minResult = result;
+        else if(maxResult > result)
+        {
+            maxResult = result;
+            indexMaxResult = i;
+        }
+    }
+
+    int del = maxResult-minResult;
+    if(del == 0)
+        del = 1;
+
+    QVector<History> history = convolutions.at(indexMaxResult)->history_;
+    double result = (double)(convolutions.at(indexMaxResult)->result_-minResult)/del;
+    for(int j=0;j<history.size();j++)
+        trace_[j][history.at(j).turn-1] += result;
+}
+
+
+void ConvolutionFactory::setTrace(QVector<Convolution*> convolutions)
+{
     int minresult = convolutions.at(0)->result_;
     int maxresult = minresult;
     for(int i=1;i<convolutions.size();i++)
@@ -326,22 +384,10 @@ void ConvolutionFactory::changeTrace(QVector<Convolution*> convolutions)
         for(int j=0;j<history.size();j++)
             trace_[j][history.at(j).turn-1] += result;
     }
-
-    //evaporation
-    switch(elitizm_)
-    {
-    case 0: evoparationMMAS();
-        break;
-    case 1: evoparationEXP();
-        break;
-    case 2: evoparationONLY();
-        break;
-    default: evoparationMMAS();
-    }
-
 }
 
-void ConvolutionFactory::evoparationMMAS()
+
+void ConvolutionFactory::evaporateTraceMMAS()
 {
     for(int i=0;i<traceM_;i++)
         for(int j=0;j<traceN_;j++)
@@ -354,16 +400,17 @@ void ConvolutionFactory::evoparationMMAS()
         }
 }
 
-void ConvolutionFactory::evoparationEXP()
+void ConvolutionFactory::evaporateTraceEXP()
 {
     for(int i=0;i<traceM_;i++)
         for(int j=0;j<traceN_;j++)
              trace_[i][j] *= qExp(-traceEvaporation_*trace_[i][j]);
 }
 
-void ConvolutionFactory::evoparationONLY()
+void ConvolutionFactory::evaporateTrace()
 {
     for(int i=0;i<traceM_;i++)
         for(int j=0;j<traceN_;j++)
             trace_[i][j] *= traceEvaporation_;
 }
+
