@@ -64,17 +64,31 @@ SettingsForm::SettingsForm(QWidget *parent) :
         }
 
     ui->netValue->addItems(NetFactory::getInstance()->getStringList());
+    ui->netValue->setCurrentIndex(1);
     connect(ui->elitism,SIGNAL(currentIndexChanged(int)),this,SLOT(changeElitizm(int)));
 
     connect(ui->genericButton,SIGNAL(clicked()),this,SLOT(createProtein()));
     connect(ui->saveButton,SIGNAL(clicked()),this,SLOT(saveToFileProtein()));
     connect(ui->loadButton,SIGNAL(clicked()),this,SLOT(loadFromFileProtein()));
+    connect(ui->exit,SIGNAL(currentIndexChanged(int)),this,SLOT(exitVariant(int)));
+
+    ui->countExit->setEnabled(false);
+    ui->timeExit->setEnabled(true);
 
 }
 
 SettingsForm::~SettingsForm()
 {
     delete ui;
+}
+
+void SettingsForm::exitVariant(int variant)
+{
+    bool flag = false;
+    if(variant==2)
+        flag = true;
+    ui->countExit->setEnabled(flag);
+    ui->timeExit->setEnabled(!flag);
 }
 
 void SettingsForm::changeElitizm(int index)
@@ -104,6 +118,9 @@ SETTINGS SettingsForm::getSettings()
             settings.insert(box->objectName(),box->value());
         }
     settings.insert(ui->elitism->objectName(),ui->elitism->currentIndex());
+    settings.insert(ui->exit->objectName(),ui->exit->currentIndex());
+    settings.insert(ui->timeExit->objectName(),ui->timeExit->time());
+    settings.insert(ui->countExit->objectName(),ui->countExit->value());
 
     return settings;
 }

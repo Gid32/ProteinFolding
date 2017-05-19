@@ -51,6 +51,7 @@ signals:
     void createdProtein(int,double);
     void loadedProtein(QByteArray);
 public slots:
+    void exitVariant(int variant);
     void changeElitizm(int index);
     void saveToFileProtein();
     void loadFromFileProtein();

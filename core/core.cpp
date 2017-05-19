@@ -19,6 +19,9 @@ void Core::clearVectorConvolution(QVector<Convolution*> *vect)
 
 void Core::start(SETTINGS settings)
 {
+    exit_ = settings.value("exit").toInt();
+    timeExit_ = settings.value("timeExit").toTime();
+    countExit_ = settings.value("countExit").toInt();
     int countAnt = settings.value("antsCount").toInt();
     int countThread = settings.value("threadsCount").toInt();
     allConvolutions_ = 0;
@@ -27,6 +30,8 @@ void Core::start(SETTINGS settings)
     isBreak_ = false;
     bestResult_ = 0;
     startTime_.start();
+    timeWithoutBetter_.start();
+    countWithoutBetter_ = 0;
     runAnts();
 }
 
@@ -50,7 +55,7 @@ void Core::createAnts(int countAnt, int countThreads)
             ant->setCount(countConvInAnt);
         connect(ant,SIGNAL(finished()),this,SLOT(antFinish()));
         connect(ant,SIGNAL(convolutionCreated(Convolution*)),this,SLOT(getConvolution(Convolution*)));
-        connect(this,SIGNAL(stopped()),ant,SLOT(terminate()));
+        //connect(this,SIGNAL(stopped()),ant,SLOT(terminate()));
         ants_.push_back(ant);
     }
 }
@@ -62,6 +67,28 @@ void Core::runAnts()
          ants_[i]->start();
 }
 
+bool Core::isExit()
+{
+    if(exit_==0)
+    {
+        QTime time = QTime(0,0,0,0).addMSecs(startTime_.elapsed());
+        if(timeExit_<=time)
+            return true;
+    }
+    else if(exit_==1)
+    {
+        QTime time = QTime(0,0,0,0).addMSecs(timeWithoutBetter_.elapsed());
+        if(timeExit_<=time)
+            return true;
+    }
+    else
+    {
+        if(countWithoutBetter_>countExit_)
+            return true;
+    }
+    return false;
+}
+
 void Core::antFinish()
 {
     countAntsReady_++;
@@ -69,27 +96,30 @@ void Core::antFinish()
     {
         ConvolutionFactory::getFactory()->changeTrace(tempConvolutions_);
         clearVectorConvolution(&tempConvolutions_);
+        if(isExit())
+            stop();
         if(!isBreak_)
             runAnts();
+        countWithoutBetter_++;
         emit countConvolution(allConvolutions_, allResult_);
     }
 }
 
 void Core::getConvolution(Convolution *convolution)
 {
-    int result = ConvolutionFactory::getFactory()->getResult(convolution);
-    convolution->result_ = result;
     allConvolutions_++;
-    allResult_ += result;
+    allResult_ += convolution->result_;
     tempConvolutions_.push_back(convolution);
-    if(result > bestResult_)
+    if(convolution->result_ > bestResult_)
     {
-        bestResult_ = result;
+        bestResult_ = convolution->result_;
         QTime time = QTime(0,0,0,0).addMSecs(startTime_.elapsed());
         QString timeStr = time.toString("hh:mm:ss.zzz");
+        timeWithoutBetter_.start();
+        countWithoutBetter_ = 0;
         emit hasBetterVariant(*convolution,timeStr);
+        return;
     }
-
     emit hasVariant(*convolution);
 }
 

@@ -24,8 +24,13 @@ signals:
     void stopped();
 private:
     QTime startTime_;
+    QTime timeWithoutBetter_;
     int bestResult_;
     bool isBreak_;
+    int exit_;
+    QTime timeExit_;
+    int countExit_;
+    int countWithoutBetter_;
     QVector<Ant*> ants_;
     int allConvolutions_;
     int allResult_;
@@ -35,6 +40,7 @@ private:
     void deleteAnts();
     void createAnts(int countAnt, int countThreads);
     void clearVectorConvolution(QVector<Convolution *> *vect);
+    bool isExit();
 public:
     explicit Core();
 public slots:

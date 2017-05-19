@@ -16,6 +16,7 @@ void Ant::run()
     for (int i = 0; i < count_; ++i)
     {
         Convolution *convolution = ConvolutionFactory::getFactory()->getConvolution();
-        emit convolutionCreated(convolution);
+        if(convolution)
+            emit convolutionCreated(convolution);
     }
 }
