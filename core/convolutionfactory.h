@@ -35,7 +35,7 @@ private:
     double getWeights(Convolution *convolution, QVector3D coord, BYTE currentAm,int currentDirection);
     static ConvolutionFactory* instance;
 
-    Convolution* localSearch(Convolution*convolution);
+    Convolution* localSearch(Convolution*inConvolution);
 
     void setTrace(QVector<Convolution*> convolutions);
     void setTraceMMAS(QVector<Convolution*> convolutions);
