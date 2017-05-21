@@ -23,7 +23,8 @@ private:
     double traceCoef_;
     double weights_[2][4];
     double **trace_;
-    int elitizm_;
+    int convergence_;
+    int antCount_;
 
     VECTORBYTE protein_;
     bool isStarted_;

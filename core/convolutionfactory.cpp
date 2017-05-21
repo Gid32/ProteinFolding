@@ -112,7 +112,8 @@ void ConvolutionFactory::setSettings(SETTINGS settings)
     weights_[H_FILL][FILL_AREA] = settings.value("weightsFILFREE").toDouble();
     weights_[H_FILL][BLOCK_AREA] = settings.value("weightsFILFREE").toDouble();
 
-    elitizm_ = settings.value("elitizm").toInt();
+    convergence_ = settings.value("elitizm").toInt();
+    antCount_ = settings.value("antsCount").toInt();
 
     clearTrace();
     createTrace();
@@ -378,10 +379,8 @@ void ConvolutionFactory::changeTrace(QVector<Convolution*> convolutions)
 {
 
     //evaporation
-    switch(elitizm_)
+    switch(convergence_)
     {
-//    case 0: evoparationMMAS();
-//        break;
         case 1:
         {
             setTrace(convolutions);
@@ -475,7 +474,7 @@ void ConvolutionFactory::evaporateTraceEXP()
 {
     for(int i=0;i<traceM_;i++)
         for(int j=0;j<traceN_;j++)
-             trace_[i][j] *= qExp(-traceEvaporation_*trace_[i][j]);
+             trace_[i][j] *= qExp(-trace_[i][j] /(10 * traceEvaporation_ * antCount_));
 }
 
 void ConvolutionFactory::evaporateTrace()
