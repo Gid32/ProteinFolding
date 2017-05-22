@@ -259,7 +259,9 @@ Convolution* ConvolutionFactory::getConvolution()
         currentCoords = newCoords;
         currentTurnNumber++;
     }
-    return localSearch(currentConv);
+    currentConv->result_ = getResult(currentConv);
+    //return localSearch(currentConv);
+    return currentConv;
 }
 
 Convolution* ConvolutionFactory::localSearch(Convolution* inConvolution)
@@ -278,9 +280,9 @@ Convolution* ConvolutionFactory::localSearch(Convolution* inConvolution)
     convolution->result_ = getResult(inConvolution);
     Convolution *finalConv = new Convolution(*convolution);
 
-    while (finalResult != getResult(finalConv))
-    {
-        finalResult = getResult(convolution);
+  //  while (finalResult != finalConv->result_)
+  //  {
+        finalResult = finalConv->result_;
         for(int i=0;i<convolution->history_.size();i++)
         {
             int currentDirection = 0;
@@ -353,8 +355,7 @@ Convolution* ConvolutionFactory::localSearch(Convolution* inConvolution)
         }
         delete convolution;
         convolution = new Convolution(*finalConv);
-        convolution->result_ = getResult(finalConv);
-    }
+    //}
     return finalConv;
 }
 
@@ -393,7 +394,7 @@ void ConvolutionFactory::changeTrace(QVector<Convolution*> convolutions)
     {
         case 1:
         {
-            setTrace(convolutions);
+            setTraceMMAS(convolutions);
             evaporateTraceEXP();
             break;
         }
