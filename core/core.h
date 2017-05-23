@@ -21,7 +21,8 @@ signals:
     void hasVariant(Convolution);
     void proteinLoaded(VECTORBYTE protein);
     void countConvolution(int,int);
-    void stopped();
+    void changeStatus(int);
+    void factoryStopped();
 private:
     QTime startTime_;
     QTime timeWithoutBetter_;

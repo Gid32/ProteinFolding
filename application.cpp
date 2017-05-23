@@ -23,10 +23,12 @@ Application::Application(QObject *parent) : QObject(parent)
 
     connect(mainWindow_,SIGNAL(started(SETTINGS)),factory,SLOT(setSettings(SETTINGS)));
     connect(factory,SIGNAL(ready(SETTINGS)),core_,SLOT(start(SETTINGS)));
-    connect(core_,SIGNAL(stopped()),factory,SLOT(stop()));
+    connect(core_,SIGNAL(factoryStopped()),factory,SLOT(stop()));
     connect(mainWindow_,SIGNAL(stopped()),core_,SLOT(stop()));
 
     connect(factory,SIGNAL(error(QString)),mainWindow_,SLOT(getError(QString)));
+
+    connect(core_,SIGNAL(changeStatus(int)),mainWindow_,SLOT(changeStatus(int)));
 
 }
 

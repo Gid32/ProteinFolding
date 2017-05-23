@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->showGraph,SIGNAL(clicked(bool)),this,SLOT(showGraph(bool)));
     connect(timer_,SIGNAL(timeout()),this,SLOT(reDraw()));
     connect(ui->cameraBack,SIGNAL(clicked(bool)),this,SLOT(cameraBack()));
+
+    status_ = -1;
 }
 
 void MainWindow::createProtein(VECTORBYTE protein)
@@ -38,6 +40,25 @@ void MainWindow::createProtein(VECTORBYTE protein)
     }
     ui->proteinLength->setText("длина свертки: "+QString::number(protein_.size()));
     ui->proteinLength->resize(ui->proteinLength->sizeHint());
+}
+
+void MainWindow::changeStatus(int status)
+{
+    status_ = status;
+    switch (status_)
+    {
+    case -1:ui->status->setText("Ожидание");
+        break;
+    case 0:ui->status->setText("Остановлено");
+        break;
+    case 1:ui->status->setText("Работает");
+        break;
+    case 10:ui->status->setText("Выполнено");
+        break;
+    default:
+        break;
+    }
+
 }
 
 void MainWindow::setSettings()

@@ -35,6 +35,7 @@ public slots:
     void showConnection(bool checked);
     void showGraph(bool checked);
     void cameraBack();
+    void changeStatus(int status);
 private:
     Ui::MainWindow *ui;
     Qt3DCore::QEntity* rootEntity_;
@@ -42,6 +43,7 @@ private:
     SettingsForm *settingsForm_;
     QTimer *timer_;
 
+    int status_;
     bool hasBetterVariant_;
     bool showConnection_;
     bool hasVariant_;

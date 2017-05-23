@@ -19,6 +19,7 @@ void Core::clearVectorConvolution(QVector<Convolution*> *vect)
 
 void Core::start(SETTINGS settings)
 {
+    emit changeStatus(1);
     exit_ = settings.value("exit").toInt();
     timeExit_ = settings.value("timeExit").toTime();
     countExit_ = settings.value("countExit").toInt();
@@ -96,12 +97,20 @@ void Core::antFinish()
     {
         ConvolutionFactory::getFactory()->changeTrace(tempConvolutions_);
         clearVectorConvolution(&tempConvolutions_);
-        if(isExit())
+        bool done = isExit();
+        if(done)
             stop();
+        countWithoutBetter_++;
         if(!isBreak_)
             runAnts();
-        countWithoutBetter_++;
-        emit countConvolution(allConvolutions_, allResult_);
+        else
+        {
+            if(done)
+                emit changeStatus(10);
+            else
+                emit changeStatus(0);
+        }
+
     }
 }
 
@@ -120,11 +129,12 @@ void Core::getConvolution(Convolution *convolution)
         emit hasBetterVariant(*convolution,timeStr);
         return;
     }
+    emit countConvolution(allConvolutions_, allResult_);
     emit hasVariant(*convolution);
 }
 
 void Core::stop()
 {
     isBreak_ = true;
-    emit stopped();
+    emit factoryStopped();
 }
