@@ -78,7 +78,38 @@
              <string notr="true">color:white;background-color:#00BFFF;font-size:12px</string>
             </property>
             <property name="text">
-             <string>Настройки</string>
+             <string>Добавить запуск</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="countLaunches">
+            <property name="text">
+             <string>Количество запусков:0</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="fullCounLaunch">
+            <property name="text">
+             <string>Количество всех запусков: 0</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="addProtein">
+            <property name="styleSheet">
+             <string notr="true">color:white;background-color:#00BFFF;font-size:12px</string>
+            </property>
+            <property name="text">
+             <string>Добавить протеин</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="countProtein">
+            <property name="text">
+             <string>Количество протеинов:0</string>
             </property>
            </widget>
           </item>
@@ -103,16 +134,23 @@
            </widget>
           </item>
           <item>
+           <widget class="QLabel" name="currentLaunch">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QLabel" name="status">
             <property name="text">
-             <string>Стоп</string>
+             <string/>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="error">
             <property name="text">
-             <string>error</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -156,21 +194,21 @@
           <item>
            <widget class="QLabel" name="proteinLength">
             <property name="text">
-             <string>длина</string>
+             <string/>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="countConvolution">
             <property name="text">
-             <string>count</string>
+             <string/>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="rating">
             <property name="text">
-             <string>rating</string>
+             <string/>
             </property>
             <property name="scaledContents">
              <bool>true</bool>
@@ -180,14 +218,14 @@
           <item>
            <widget class="QLabel" name="avarageRating">
             <property name="text">
-             <string>averageRaiting</string>
+             <string/>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="bestTime">
             <property name="text">
-             <string>time</string>
+             <string/>
             </property>
             <property name="scaledContents">
              <bool>true</bool>

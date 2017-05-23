@@ -29,7 +29,8 @@ SOURCES += main.cpp \
     $${CORE_DIR}/ant.cpp \
     $${CORE_DIR}/convolutionfactory.cpp \
     $${SCENE_DIR}/settingsform.cpp \
-    $${SCENE_DIR}/mainwindow.cpp
+    $${SCENE_DIR}/mainwindow.cpp \
+    $${SCENE_DIR}/proteinForm.cpp
 
 HEADERS += \
     settings.h \
@@ -47,11 +48,13 @@ HEADERS += \
     $${CORE_DIR}/ant.h \
     $${CORE_DIR}/convolutionfactory.h \
     $${SCENE_DIR}/settingsform.h \
-    $${SCENE_DIR}/mainwindow.h
+    $${SCENE_DIR}/mainwindow.h \
+    $${SCENE_DIR}/proteinForm.h
 
 FORMS += \
     $${SCENE_DIR}/settingsform.ui \
-    $${SCENE_DIR}/mainwindow.ui
+    $${SCENE_DIR}/mainwindow.ui \
+    $${SCENE_DIR}/proteinForm.ui
 
 RESOURCES += \
     scene/resources.qrc

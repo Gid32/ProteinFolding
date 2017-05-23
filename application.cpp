@@ -16,10 +16,10 @@ Application::Application(QObject *parent) : QObject(parent)
     connect(core_, SIGNAL(countConvolution(int,int)), mainWindow_, SLOT(countConvolution(int,int)));
 
     ConvolutionFactory *factory = ConvolutionFactory::getFactory();
-    connect(mainWindow_->getSettingsForm(),SIGNAL(createdProtein(int,double)),factory,SLOT(createProtein(int,double)));
-    connect(mainWindow_->getSettingsForm(),SIGNAL(loadedProtein(QByteArray)),factory,SLOT(loadProtein(QByteArray)));
-    connect(factory, SIGNAL(createdProtein(VECTORBYTE)), mainWindow_,SLOT(createProtein(VECTORBYTE)));
-    connect(factory, SIGNAL(createdProtein(VECTORBYTE)), mainWindow_->getSettingsForm(),SLOT(getProtein(VECTORBYTE)));
+    connect(mainWindow_->getProteinForm(),SIGNAL(createdProtein(int,double)),factory,SLOT(createProtein(int,double)));
+    connect(mainWindow_->getProteinForm(),SIGNAL(loadedProtein(QByteArray)),factory,SLOT(loadProtein(QByteArray)));
+    //connect(factory, SIGNAL(createdProtein(VECTORBYTE)), mainWindow_,SLOT(createProtein(VECTORBYTE)));
+    connect(factory, SIGNAL(createdProtein(VECTORBYTE)), mainWindow_->getProteinForm(),SLOT(getProtein(VECTORBYTE)));
 
     connect(mainWindow_,SIGNAL(started(SETTINGS)),factory,SLOT(setSettings(SETTINGS)));
     connect(factory,SIGNAL(ready(SETTINGS)),core_,SLOT(start(SETTINGS)));

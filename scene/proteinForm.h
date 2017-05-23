@@ -1,5 +1,5 @@
-#ifndef SETTINGSFORM_H
-#define SETTINGSFORM_H
+#ifndef PROTEIN_H
+#define PROTEIN_H
 
 #include <QDialog>
 #include <QFileDialog>
@@ -30,28 +30,34 @@
 #include <QCheckBox>
 
 #include "settings.h"
-#include "netfactory.h"
 #include "node.h"
 
-
 namespace Ui {
-class SettingsForm;
+class ProteinForm;
 }
 
-class SettingsForm : public QDialog
+class ProteinForm : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit SettingsForm(QWidget *parent = 0);
-    ~SettingsForm();
-    SETTINGS getSettings();
+    explicit ProteinForm(QWidget *parent = 0);
+    ~ProteinForm();
+    static Qt3DCore::QEntity *initWidget(QWidget *widget, Qt3DExtras::Qt3DWindow *view, QColor color, bool control, float cameraZ);
+    VECTORBYTE protein_;
 signals:
+    void createdProtein(int,double);
+    void loadedProtein(QByteArray);
 public slots:
-    void exitVariant(int variant);
-    void changeElitizm(int index);
+    void saveToFileProtein();
+    void loadFromFileProtein();
+    void createProtein();
+    void getProtein(VECTORBYTE protein);
 private:
-    Ui::SettingsForm *ui;
+    Ui::ProteinForm *ui;
+    Qt3DCore::QEntity* rootEntity_;
+    Qt3DExtras::Qt3DWindow *view_;
+    QVector<Node*> nodes;
 };
 
-#endif // SETTINGSFORM_H
+#endif // PROTEIN_H

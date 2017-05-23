@@ -91,6 +91,8 @@ void ConvolutionFactory::setSettings(SETTINGS settings)
         emit error("уже работает");
         return;
     }
+    protein_ = qvariant_cast<VECTORBYTE>(settings.value("PROTEIN"));
+    count_ = protein_.size();
     if(protein_.isEmpty())
     {
         emit error("вначале сгенерируйте протеин");

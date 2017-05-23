@@ -7,13 +7,14 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     view_ = new Qt3DExtras::Qt3DWindow();
-    rootEntity_ = SettingsForm::initWidget(ui->widget,view_,QColor(240,240,240),true,15.0f);
+    rootEntity_ = ProteinForm::initWidget(ui->widget,view_,QColor(240,240,240),true,15.0f);
 
     settingsForm_ = new SettingsForm();
+    proteinForm_ = new ProteinForm();
     timer_ = new QTimer;
     showConnection_ = false;
     drawAll_ = true;
-    connect(ui->settingsButton,SIGNAL(clicked(bool)),this,SLOT(setSettings()));
+    connect(ui->settingsButton,SIGNAL(clicked(bool)),settingsForm_,SLOT(show()));
     connect(ui->startButton,SIGNAL(clicked(bool)),this,SLOT(start()));
     connect(ui->stopButton,SIGNAL(clicked(bool)),this,SLOT(stop()));
     connect(ui->onlyBetter,SIGNAL(clicked(bool)),this,SLOT(onlyBetter(bool)));
@@ -21,8 +22,31 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->showGraph,SIGNAL(clicked(bool)),this,SLOT(showGraph(bool)));
     connect(timer_,SIGNAL(timeout()),this,SLOT(reDraw()));
     connect(ui->cameraBack,SIGNAL(clicked(bool)),this,SLOT(cameraBack()));
-
+    connect(settingsForm_,SIGNAL(accepted()),this,SLOT(addLaunch()));
+    connect(ui->addProtein,SIGNAL(clicked(bool)),proteinForm_,SLOT(show()));
+    connect(proteinForm_,SIGNAL(accepted()),this,SLOT(addProtein()));
     status_ = -1;
+    currentLaunch_ = 0;
+    currentSubLaunch_ = 0;
+    countFullLaunches_ = 0;
+    currentProtein_ = 0;
+}
+
+void MainWindow::addLaunch()
+{
+    SETTINGS settings = settingsForm_->getSettings();
+    launches_.push_back(settings);
+    int count = settings.value("countLaunch").toInt();
+    countFullLaunches_+= count;
+    ui->countLaunches->setText("Количество запусков: "+QString::number(launches_.size()));
+    ui->fullCounLaunch->setText("Количество всех запусков: "+QString::number(countFullLaunches_));
+}
+
+void MainWindow::addProtein()
+{
+    VECTORBYTE protein = proteinForm_->protein_;
+    proteins_.push_back(protein);
+    ui->countProtein->setText("Количество протеинов "+QString::number(proteins_.size()));
 }
 
 void MainWindow::createProtein(VECTORBYTE protein)
@@ -55,15 +79,48 @@ void MainWindow::changeStatus(int status)
         break;
     case 10:ui->status->setText("Выполнено");
         break;
+    case 100:ui->status->setText("Выполнено всё");
+        break;
     default:
         break;
     }
 
-}
+    if(status_ == -1 || status_ == 10)
+    {
+        timer_->stop();
+        if(launches_.size() <= currentLaunch_)
+        {
+            currentProtein_++;
+            currentLaunch_ = 0;
+            currentSubLaunch_ = 0;
+        }
+        if(proteins_.size() <= currentProtein_)
+        {
+            changeStatus(100);
+            return;
+        }
+        SETTINGS settings = launches_.at(currentLaunch_);
+        SETTINGS::iterator protIt = settings.find("PROTEIN");
+        if(protIt == settings.end())
+            settings.insert("PROTEIN",QVariant::fromValue(proteins_.at(currentProtein_)));
+        else
+           settings["PROTEIN"] = QVariant::fromValue(proteins_.at(currentProtein_));
+        ui->status->setText("Создаем Протеин");
+        createProtein(proteins_.at(currentProtein_));
+        int count = settings.value("countLaunch").toInt();
+        ui->currentLaunch->setText("Текущий запуск: "+ QString::number(currentLaunch_+1)+
+                                   "\nСубзапуск: "+QString::number(currentSubLaunch_+1)+" из "+QString::number(count)+
+                                   "\nПротеин: "+QString::number(currentProtein_+1)+" из "+QString::number(proteins_.size()));
+        currentSubLaunch_++;
+        if(currentSubLaunch_ == count)
+        {
+            currentSubLaunch_ = 0;
+            currentLaunch_++;
+        }
+        timer_->start(1500);
+        emit started(settings);
+    }
 
-void MainWindow::setSettings()
-{
-    settingsForm_->show();
 }
 
 SettingsForm *MainWindow::getSettingsForm()
@@ -71,13 +128,32 @@ SettingsForm *MainWindow::getSettingsForm()
     return settingsForm_;
 }
 
+ProteinForm *MainWindow::getProteinForm()
+{
+    return proteinForm_;
+}
+
 void MainWindow::start()
 {
-    timer_->start(1500);
+    if(status_ == 1)
+    {
+        getError("уже работает");
+        return;
+    }
+    if(launches_.size()==0)
+    {
+        getError("Нет запусков");
+        return;
+    }
+    if(proteins_.size()==0)
+    {
+        getError("Нет протеинов");
+        return;
+    }
     ui->error->setText("");
     hasBetterVariant_ = false;
     hasVariant_ = false;
-    emit started(settingsForm_->getSettings());
+    changeStatus(-1);
 }
 
 void MainWindow::stop()
