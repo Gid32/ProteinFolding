@@ -192,6 +192,16 @@
            </widget>
           </item>
           <item>
+           <widget class="QPushButton" name="showResult">
+            <property name="styleSheet">
+             <string notr="true">color:white;background-color:#00BFFF;font-size:12px</string>
+            </property>
+            <property name="text">
+             <string>Показать результаты</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QLabel" name="proteinLength">
             <property name="text">
              <string/>

@@ -17,8 +17,8 @@ class Core:public QObject
 {
   Q_OBJECT
 signals:
-    void hasBetterVariant(Convolution,QString time);
-    void hasVariant(Convolution);
+    void hasBetterVariant(Convolution, QString);
+    void hasVariant(Convolution, QString);
     void proteinLoaded(VECTORBYTE protein);
     void countConvolution(int,int);
     void changeStatus(int);

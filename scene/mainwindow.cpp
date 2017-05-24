@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     settingsForm_ = new SettingsForm();
     proteinForm_ = new ProteinForm();
+    resultForm_ = new ResultForm();
     timer_ = new QTimer;
     showConnection_ = false;
     drawAll_ = true;
@@ -25,11 +26,18 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(settingsForm_,SIGNAL(accepted()),this,SLOT(addLaunch()));
     connect(ui->addProtein,SIGNAL(clicked(bool)),proteinForm_,SLOT(show()));
     connect(proteinForm_,SIGNAL(accepted()),this,SLOT(addProtein()));
+    connect(ui->showResult,SIGNAL(clicked(bool)),this,SLOT(showResult()));
     status_ = -1;
     currentLaunch_ = 0;
     currentSubLaunch_ = 0;
     countFullLaunches_ = 0;
     currentProtein_ = 0;
+}
+
+void MainWindow::showResult()
+{
+    resultForm_->load(results_,proteins_);
+    resultForm_->show();
 }
 
 void MainWindow::addLaunch()
@@ -66,6 +74,25 @@ void MainWindow::createProtein(VECTORBYTE protein)
     ui->proteinLength->resize(ui->proteinLength->sizeHint());
 }
 
+void MainWindow::startLaunch()
+{
+    timer_->stop();
+    SETTINGS settings = launches_.at(currentLaunch_);
+    SETTINGS::iterator protIt = settings.find("PROTEIN");
+    if(protIt == settings.end())
+        settings.insert("PROTEIN",QVariant::fromValue(proteins_.at(currentProtein_)));
+    else
+       settings["PROTEIN"] = QVariant::fromValue(proteins_.at(currentProtein_));
+    ui->status->setText("Создаем Протеин");
+    createProtein(proteins_.at(currentProtein_));
+    int count = settings.value("countLaunch").toInt();
+    ui->currentLaunch->setText("Текущий запуск: "+ QString::number(currentLaunch_+1)+
+                               "\nСубзапуск: "+QString::number(currentSubLaunch_+1)+" из "+QString::number(count)+
+                               "\nПротеин: "+QString::number(currentProtein_+1)+" из "+QString::number(proteins_.size()));
+    timer_->start(1500);
+    emit started(settings);
+}
+
 void MainWindow::changeStatus(int status)
 {
     status_ = status;
@@ -85,42 +112,41 @@ void MainWindow::changeStatus(int status)
         break;
     }
 
-    if(status_ == -1 || status_ == 10)
+    if(status_ == 10)
     {
-        timer_->stop();
-        if(launches_.size() <= currentLaunch_)
-        {
-            currentProtein_++;
-            currentLaunch_ = 0;
-            currentSubLaunch_ = 0;
-        }
-        if(proteins_.size() <= currentProtein_)
-        {
-            changeStatus(100);
-            return;
-        }
+        //save result
+        int currentLaunch = currentLaunch_;
+        if(launches_.size() <= currentLaunch)
+            currentLaunch --;
+        SubResult subResult;
+        subResult.save(betterVariant_,avarageRating_,timeWork_,timeBest_,countConvolution_);
+        results_[currentProtein_][currentLaunch].results.push_back(subResult);
+
         SETTINGS settings = launches_.at(currentLaunch_);
-        SETTINGS::iterator protIt = settings.find("PROTEIN");
-        if(protIt == settings.end())
-            settings.insert("PROTEIN",QVariant::fromValue(proteins_.at(currentProtein_)));
-        else
-           settings["PROTEIN"] = QVariant::fromValue(proteins_.at(currentProtein_));
-        ui->status->setText("Создаем Протеин");
-        createProtein(proteins_.at(currentProtein_));
         int count = settings.value("countLaunch").toInt();
-        ui->currentLaunch->setText("Текущий запуск: "+ QString::number(currentLaunch_+1)+
-                                   "\nСубзапуск: "+QString::number(currentSubLaunch_+1)+" из "+QString::number(count)+
-                                   "\nПротеин: "+QString::number(currentProtein_+1)+" из "+QString::number(proteins_.size()));
         currentSubLaunch_++;
         if(currentSubLaunch_ == count)
         {
             currentSubLaunch_ = 0;
             currentLaunch_++;
         }
-        timer_->start(1500);
-        emit started(settings);
-    }
+        if(launches_.size() == currentLaunch_)
+        {
+            currentProtein_++;
+            currentLaunch_ = 0;
+            currentSubLaunch_ = 0;
+        }
+        if(proteins_.size() == currentProtein_)
+        {
+            currentLaunch_ = 0;
+            currentSubLaunch_ = 0;
+            currentProtein_ = 0;
+            changeStatus(100);
+            return;
+        }
 
+        startLaunch();
+    }
 }
 
 SettingsForm *MainWindow::getSettingsForm()
@@ -153,7 +179,22 @@ void MainWindow::start()
     ui->error->setText("");
     hasBetterVariant_ = false;
     hasVariant_ = false;
-    changeStatus(-1);
+
+    results_.clear();
+    for(int i = 0; i < proteins_.size();i++)
+    {
+        QVector<Result> results;
+        for(int j=0;j<launches_.size();j++)
+        {
+            Result result;
+            SETTINGS settings = launches_.at(j);
+            result.settings = settings;
+            results.push_back(result);
+        }
+        results_.insert(i,results);
+    }
+
+    startLaunch();
 }
 
 void MainWindow::stop()
@@ -165,10 +206,11 @@ void MainWindow::stop()
 
 void MainWindow::countConvolution(int count, int rating)
 {
-    ui->countConvolution->setText("Количество сверток: "+QString::number(count));
+    countConvolution_ = count;
+    avarageRating_ = (rating/2)/countConvolution_;
+    ui->countConvolution->setText("Количество сверток: "+QString::number(countConvolution_));
     ui->countConvolution->resize(ui->countConvolution->sizeHint());
-    double avarageRating = (rating/2)/count;
-    ui->avarageRating->setText("Средний рейтинг: "+QString::number(avarageRating));
+    ui->avarageRating->setText("Средний рейтинг: "+QString::number(avarageRating_));
     ui->avarageRating->resize(ui->avarageRating->sizeHint());
 }
 
@@ -180,6 +222,7 @@ void MainWindow::getError(QString error)
 
 void MainWindow::hasBetterVariant(Convolution convolution, QString time)
 {
+    timeBest_ = time;
     betterVariant_ = convolution;
     ui->rating->setText("Рейтинг: "+QString::number(convolution.result_/2));
     ui->bestTime->setText("Время: "+time);
@@ -189,8 +232,9 @@ void MainWindow::hasBetterVariant(Convolution convolution, QString time)
 }
 
 
-void MainWindow::hasVariant(Convolution convolution)
+void MainWindow::hasVariant(Convolution convolution, QString time)
 {
+   timeWork_ = time;
    variant_ = convolution;
    hasVariant_ = true;
 }

@@ -119,18 +119,17 @@ void Core::getConvolution(Convolution *convolution)
     allConvolutions_++;
     allResult_ += convolution->result_;
     tempConvolutions_.push_back(convolution);
+    QTime time = QTime(0,0,0,0).addMSecs(startTime_.elapsed());
+    QString timeStr = time.toString("hh:mm:ss.zzz");
     if(convolution->result_ > bestResult_)
     {
         bestResult_ = convolution->result_;
-        QTime time = QTime(0,0,0,0).addMSecs(startTime_.elapsed());
-        QString timeStr = time.toString("hh:mm:ss.zzz");
         timeWithoutBetter_.start();
         countWithoutBetter_ = 0;
         emit hasBetterVariant(*convolution,timeStr);
-        return;
     }
     emit countConvolution(allConvolutions_, allResult_);
-    emit hasVariant(*convolution);
+    emit hasVariant(*convolution,timeStr);
 }
 
 void Core::stop()

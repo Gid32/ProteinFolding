@@ -12,13 +12,12 @@ Application::Application(QObject *parent) : QObject(parent)
     qRegisterMetaType<QString>();
 
     connect(core_, SIGNAL(hasBetterVariant(Convolution,QString)), mainWindow_, SLOT(hasBetterVariant(Convolution,QString)));
-    connect(core_, SIGNAL(hasVariant(Convolution)), mainWindow_, SLOT(hasVariant(Convolution)));
+    connect(core_, SIGNAL(hasVariant(Convolution,QString)), mainWindow_, SLOT(hasVariant(Convolution,QString)));
     connect(core_, SIGNAL(countConvolution(int,int)), mainWindow_, SLOT(countConvolution(int,int)));
 
     ConvolutionFactory *factory = ConvolutionFactory::getFactory();
     connect(mainWindow_->getProteinForm(),SIGNAL(createdProtein(int,double)),factory,SLOT(createProtein(int,double)));
     connect(mainWindow_->getProteinForm(),SIGNAL(loadedProtein(QByteArray)),factory,SLOT(loadProtein(QByteArray)));
-    //connect(factory, SIGNAL(createdProtein(VECTORBYTE)), mainWindow_,SLOT(createProtein(VECTORBYTE)));
     connect(factory, SIGNAL(createdProtein(VECTORBYTE)), mainWindow_->getProteinForm(),SLOT(getProtein(VECTORBYTE)));
 
     connect(mainWindow_,SIGNAL(started(SETTINGS)),factory,SLOT(setSettings(SETTINGS)));
