@@ -46,6 +46,7 @@ public:
     explicit SettingsForm(QWidget *parent = 0);
     ~SettingsForm();
     SETTINGS getSettings();
+    void loadSettings(SETTINGS settings);
 signals:
 public slots:
     void exitVariant(int variant);

@@ -80,3 +80,29 @@ SETTINGS SettingsForm::getSettings()
 
     return settings;
 }
+
+void SettingsForm::loadSettings(SETTINGS settings)
+{
+    ui->netValue->setCurrentText(settings.value(ui->netValue->objectName()).toString());
+    ui->methodValue->setCurrentIndex(settings.value(ui->methodValue->objectName()).toInt());
+    ui->antsCount->setValue(settings.value(ui->antsCount->objectName()).toInt());
+    ui->threadsCount->setValue(settings.value(ui->threadsCount->objectName()).toInt());
+    ui->traceMin->setValue(settings.value(ui->traceMin->objectName()).toDouble());
+    ui->traceMax->setValue(settings.value(ui->traceMax->objectName()).toDouble());
+    ui->traceEvoparation->setValue(settings.value(ui->traceEvoparation->objectName()).toDouble());
+    ui->traceCoef->setValue(settings.value(ui->traceCoef->objectName()).toDouble());
+
+    for(int i=0;i<3;i++)
+        for(int j=0;j<2;j++)
+        {
+            QDoubleSpinBox *box = static_cast<QDoubleSpinBox*>(ui->tableWidget->cellWidget(j,i));
+            box->setValue(settings.value(box->objectName()).toDouble());
+        }
+
+    ui->elitism->setCurrentIndex(settings.value(ui->elitism->objectName()).toInt());
+    ui->exit->setCurrentIndex(settings.value(ui->exit->objectName()).toInt());
+    ui->timeExit->setTime(settings.value(ui->timeExit->objectName()).toTime());
+    ui->countExit->setValue(settings.value(ui->countExit->objectName()).toInt());
+    ui->countLaunch->setValue(settings.value(ui->countLaunch->objectName()).toInt());
+
+}

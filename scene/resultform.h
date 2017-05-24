@@ -34,6 +34,7 @@
 #include "result.h"
 #include "convolutionfactory.h"
 #include "proteinForm.h"
+#include "settingsform.h"
 
 namespace Ui {
 class ResultForm;
@@ -52,10 +53,12 @@ public slots:
     void launchChange(int index);
     void subLaunchChange(int index);
     void showProtein();
+    void showSettings();
 private:
     Ui::ResultForm *ui;
     QMap<int,QVector<Result>> results_;
     QVector<VECTORBYTE> proteins_;
+    SettingsForm *settingsForm_;
 
     Qt3DCore::QEntity* rootEntity_;
     Qt3DExtras::Qt3DWindow *view_;

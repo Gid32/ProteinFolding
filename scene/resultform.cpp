@@ -9,10 +9,13 @@ ResultForm::ResultForm(QWidget *parent) :
     view_ = new Qt3DExtras::Qt3DWindow();
     rootEntity_ = ProteinForm::initWidget(ui->widget,view_,QColor(240,240,240),true,15.0f);
 
+    settingsForm_ = new SettingsForm();
+
     connect(ui->protein,SIGNAL(currentIndexChanged(int)),this,SLOT(proteinChange(int)));
     connect(ui->launchNumber,SIGNAL(currentIndexChanged(int)),this,SLOT(launchChange(int)));
     connect(ui->subLaunchNumber,SIGNAL(currentIndexChanged(int)),this,SLOT(subLaunchChange(int)));
     connect(ui->show,SIGNAL(clicked(bool)),this,SLOT(showProtein()));
+    connect(ui->showSettings,SIGNAL(clicked(bool)),this,SLOT(showSettings()));
 }
 
 ResultForm::~ResultForm()
@@ -136,4 +139,14 @@ void ResultForm::showProtein()
     QVector<QVector3D> vectorCoords = ConvolutionFactory::getFactory()->getVectorCoords(&subResult.convolution_);
     for(int i=1;i<nodes_.size();i++)//0 нод не трогаем
         nodes_.at(i)->changeLocation(vectorCoords.at(i-1));
+}
+
+void ResultForm::showSettings()
+{
+    int proteinIndex = ui->protein->currentIndex();
+    int launchIndex = ui->launchNumber->currentIndex();
+    QVector<Result> results = results_[proteinIndex];
+
+    settingsForm_->loadSettings(results.at(launchIndex).settings);
+    settingsForm_->show();
 }
