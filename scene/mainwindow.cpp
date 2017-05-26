@@ -207,7 +207,7 @@ void MainWindow::stop()
 void MainWindow::countConvolution(int count, int rating)
 {
     countConvolution_ = count;
-    avarageRating_ = (rating/2)/countConvolution_;
+    avarageRating_ = (rating)/countConvolution_;
     ui->countConvolution->setText("Количество сверток: "+QString::number(countConvolution_));
     ui->countConvolution->resize(ui->countConvolution->sizeHint());
     ui->avarageRating->setText("Средний рейтинг: "+QString::number(avarageRating_));
@@ -224,7 +224,7 @@ void MainWindow::hasBetterVariant(Convolution convolution, QString time)
 {
     timeBest_ = time;
     betterVariant_ = convolution;
-    ui->rating->setText("Рейтинг: "+QString::number(convolution.result_/2));
+    ui->rating->setText("Рейтинг: "+QString::number(convolution.result_));
     ui->bestTime->setText("Время: "+time);
     ui->bestTime->resize(ui->bestTime->sizeHint());
     ui->rating->resize(ui->rating->sizeHint());

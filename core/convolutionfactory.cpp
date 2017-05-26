@@ -377,7 +377,7 @@ int ConvolutionFactory::getResult(Convolution *convolution)
             result += getCount(convolution,coords,blockCoordPrev,blockCoordNext, convolution->history_[i].direction);
         blockCoordPrev = coords;
    }
-   return result;
+   return result/2;
 }
 
 QVector<QVector3D> ConvolutionFactory::getVectorCoords(Convolution *convolution)
