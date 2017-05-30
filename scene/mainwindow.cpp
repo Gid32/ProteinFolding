@@ -70,7 +70,7 @@ void MainWindow::createProtein(VECTORBYTE protein)
         nodes_.push_back(new Node(rootEntity_,protein.at(i),QVector3D(0, 0, 0),node));
         node = nodes_.last();
     }
-    ui->proteinLength->setText("длина свертки: "+QString::number(protein_.size()));
+    ui->proteinLength->setText("Длина молекулы: "+QString::number(protein_.size()));
     ui->proteinLength->resize(ui->proteinLength->sizeHint());
 }
 
