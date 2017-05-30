@@ -16,12 +16,22 @@ SubResult::SubResult(Convolution convolution,double averageRating,QString timeWo
 
 int SubResult::getTimeWork()
 {
-    return QTime(0,0,0,0).msecsTo(QTime::fromString(timeBest_,"hh:mm:ss.zzz"));
+    return QTime(0,0,0,0).msecsTo(QTime::fromString(timeWork_,"hh:mm:ss.zzz"));
 }
 
 int SubResult::getTimeBest()
 {
-    return QTime(0,0,0,0).msecsTo(QTime::fromString(timeWork_,"hh:mm:ss.zzz"));
+    return QTime(0,0,0,0).msecsTo(QTime::fromString(timeBest_,"hh:mm:ss.zzz"));
+}
+
+QString SubResult::getTimeWorkStr()
+{
+    return timeWork_;
+}
+
+QString SubResult::getTimeBestStr()
+{
+    return timeBest_;
 }
 
 int SubResult::getCountConvolution()
@@ -38,6 +48,43 @@ Convolution SubResult::getConvolution()
 {
     return convolution_;
 }
+
+void saveSuperLogHeader()
+{
+    QFile file("log.xls");
+    if (!file.open(QIODevice::Append | QIODevice::Text))
+        return;
+
+    QTextStream out(&file);
+    out << QString("№ протеина\tMMAS\EXP\t№ запуска\t№ подзапуска\tлучший результат\tсредний результат\tобщее время работы\tвремя нахождения лучшего результата\tколичество просмотренных сверток")<<"\n";
+
+    file.close();
+}
+
+void saveSuperLog(int proteinNumber, Result res, int subResIndex, int resIndex)
+{
+    QFile file("log.xls");
+    if (!file.open(QIODevice::Append | QIODevice::Text))
+        return;
+
+    SubResult subRes = res.getSubResults().at(subResIndex);
+    int bestRes = subRes.getConvolution().result_;
+    int mmasExp = res.settings.value("elitism").toInt();
+
+    QTextStream out(&file);
+    out << QString("%1\t%2\t%3\t%4\t%5\t%6\t%7\t%8\t%9").arg(proteinNumber+1)
+           .arg(mmasExp)
+           .arg(resIndex+1)
+           .arg(subResIndex+1)
+           .arg(bestRes)
+           .arg(subRes.getAverageRating())
+           .arg(subRes.getTimeWorkStr())
+           .arg(subRes.getTimeBestStr())
+           .arg(subRes.getCountConvolution())<<"\n";
+
+    file.close();
+}
+
 
 void SubResult::saveToLog(int index)
 {

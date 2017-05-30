@@ -21,6 +21,8 @@ public:
     void saveToLog(int index);
     int getTimeWork();
     int getTimeBest();
+    QString getTimeWorkStr();
+    QString getTimeBestStr();
     int getCountConvolution();
     double getAverageRating();
     Convolution getConvolution();
@@ -56,4 +58,6 @@ public:
 void saveToLogProteinHeader(int index,int length);
 void saveToLogProteinResult(QVector<Result> results);
 void getProteinResult(QVector<Result> results, int &alltime, int &allBestTime, double &averageResult, int &bestResult, int &countConv);
+void saveSuperLogHeader();
+void saveSuperLog(int proteinNumber, Result res, int subResIndex, int resIndex);
 #endif // RESULT_H

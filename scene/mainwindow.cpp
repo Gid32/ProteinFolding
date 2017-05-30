@@ -124,24 +124,18 @@ void MainWindow::changeStatus(int status)
         SETTINGS settings = launches_.at(currentLaunch_);
         int count = settings.value("countLaunch").toInt();
 
+        saveSuperLog(currentProtein_,results_[currentProtein_][currentLaunch],currentSubLaunch_,currentLaunch);
         currentSubLaunch_++;
-        subResult.saveToLog(currentSubLaunch_);
 
         if(currentSubLaunch_ == count)
         {
             currentSubLaunch_ = 0;
-            results_[currentProtein_][currentLaunch].saveToLog();
             currentLaunch_++;
-            if(launches_.size() != currentLaunch_)
-                results_[currentProtein_][currentLaunch].saveToLogHeader(currentLaunch_+1);
 
         }
         if(launches_.size() == currentLaunch_)
         {
-            saveToLogProteinResult(results_[currentProtein_]);
             currentProtein_++;
-            if(proteins_.size() != currentProtein_)
-                saveToLogProteinHeader(currentProtein_+1,proteins_.at(currentProtein_).size());
             currentLaunch_ = 0;
             currentSubLaunch_ = 0;
         }
@@ -202,8 +196,7 @@ void MainWindow::start()
         }
         results_.insert(i,results);
     }
-    saveToLogProteinHeader(currentProtein_+1,proteins_.at(currentProtein_).size());
-    results_[currentProtein_][currentLaunch_].saveToLogHeader(currentLaunch_+1);
+    saveSuperLogHeader();
     startLaunch();
 }
 
