@@ -42,37 +42,20 @@ void ResultForm::proteinChange(int proteinN)
 
     QVector<Result> results = results_[proteinN];
 
-    int alltime = 0;
-    int allBestTime = 0;
-
-    double averageResult = 0;
-    int bestResult = 0;
-    int allResult = 0;
-    int countSub = 0;
-    int countConv = 0;
-    ui->launchNumber->clear();
     for(int i=0;i<results.size();i++)
-    {
-        ui->launchNumber->addItem(QString::number(i+1)+" подзапусков:"+QString::number(results.at(i).results.size()),i);
-        for(int j=0;j<results.at(i).results.size();j++)
-        {
-            countSub++;
-            alltime += QTime(0,0,0,0).msecsTo(QTime::fromString(results.at(i).results.at(j).timeWork_,"hh:mm:ss.zzz"));
-            allBestTime += QTime(0,0,0,0).msecsTo(QTime::fromString(results.at(i).results.at(j).timeBest_,"hh:mm:ss.zzz"));
+        ui->launchNumber->addItem(QString::number(i+1)+" подзапусков:"+QString::number(results[i].getCountSub()),i);
 
-            int res = results.at(i).results.at(j).convolution_.result_;
-            if(res > bestResult)
-                bestResult = res;
-            allResult += res;
-            averageResult += results.at(i).results.at(j).averageRating_;
-            countConv += results.at(i).results.at(j).countConvolution_;
-        }
-    }
+    int alltime;
+    int allBestTime;
+    double averageResult;
+    int bestResult;
+    int countConv;
+    getProteinResult(results, alltime, allBestTime, averageResult, bestResult, countConv);
 
-    int msAverageTime = alltime/countSub;
-    int msAverageBestTime = allBestTime/countSub;
-    QTime averageTime = QTime(0,0,0,0).addMSecs(msAverageTime);
+    int msAverageBestTime = allBestTime/results.size();
     QTime averageBestTime = QTime(0,0,0,0).addMSecs(msAverageBestTime);
+    int msAverageTime = alltime/results.size();
+    QTime averageTime = QTime(0,0,0,0).addMSecs(msAverageTime);
 
     ui->allTime->setText(QTime(0,0,0,0).addMSecs(alltime).toString("hh:mm:ss.zzz"));
     ui->allTime->resize(ui->allTime->sizeHint());
@@ -93,11 +76,24 @@ void ResultForm::launchChange(int index)
     int proteinIndex = ui->protein->currentIndex();
     QVector<Result> results = results_[proteinIndex];
 
-    QVector<SubResult> subResults = results.at(index).results;
+    QVector<SubResult> subResults = results[index].getSubResults();
     for(int i=0;i<subResults.size();i++)
     {
-        ui->subLaunchNumber->addItem(QString::number(i+1)+" Результат: "+QString::number(subResults.at(i).convolution_.result_));
+        ui->subLaunchNumber->addItem(QString::number(i+1)+" Результат: "+QString::number(subResults[i].getConvolution().result_));
     }
+
+    ui->allTimeR->setText(results[index].getAllTime().toString("hh:mm:ss.zzz"));
+    ui->allTimeR->resize(ui->allTimeR->sizeHint());
+    ui->averageResultR->setText(QString::number(results[index].getAverageResult()));
+    ui->averageResultR->resize(ui->averageResultR->sizeHint());
+    ui->averageTimeR->setText(results[index].getAverageTime().toString("hh:mm:ss.zzz"));
+    ui->averageTimeR->resize(ui->averageTimeR->sizeHint());
+    ui->averageTimeBestR->setText(results[index].getAverageBestTime().toString("hh:mm:ss.zzz"));
+    ui->averageTimeBestR->resize(ui->averageTimeBestR->sizeHint());
+    ui->bestResultR->setText(QString::number(results[index].getBestResult()));
+    ui->bestResultR->resize(ui->bestResultR->sizeHint());
+    ui->countConvolutionR->setText(QString::number(results[index].getCountConv()));
+    ui->countConvolutionR->resize(ui->countConvolutionR->sizeHint());
 }
 
 void ResultForm::subLaunchChange(int index)
@@ -105,14 +101,14 @@ void ResultForm::subLaunchChange(int index)
     int proteinIndex = ui->protein->currentIndex();
     int launchIndex = ui->launchNumber->currentIndex();
     QVector<Result> results = results_[proteinIndex];
-    QVector<SubResult> subResults = results.at(launchIndex).results;
+    QVector<SubResult> subResults = results[launchIndex].getSubResults();
     SubResult subResult = subResults.at(index);
 
-    ui->subAverageResult->setText(QString::number(subResult.averageRating_));
+    ui->subAverageResult->setText(QString::number(subResult.getAverageRating()));
     ui->subAverageResult->resize(ui->subAverageResult->sizeHint());
-    ui->subBestResult->setText(QString::number(subResult.convolution_.result_));
+    ui->subBestResult->setText(QString::number(subResult.getConvolution().result_));
     ui->subBestResult->resize(ui->subBestResult->sizeHint());
-    ui->subCountConvolution->setText(QString::number(subResult.countConvolution_));
+    ui->subCountConvolution->setText(QString::number(subResult.getCountConvolution()));
     ui->subCountConvolution->resize(ui->subCountConvolution->sizeHint());
 }
 
@@ -133,10 +129,10 @@ void ResultForm::showProtein()
     int launchIndex = ui->launchNumber->currentIndex();
     int subLaunchIndex = ui->subLaunchNumber->currentIndex();
     QVector<Result> results = results_[proteinIndex];
-    QVector<SubResult> subResults = results.at(launchIndex).results;
+    QVector<SubResult> subResults = results[launchIndex].getSubResults();
     SubResult subResult = subResults.at(subLaunchIndex);
 
-    QVector<QVector3D> vectorCoords = ConvolutionFactory::getFactory()->getVectorCoords(&subResult.convolution_);
+    QVector<QVector3D> vectorCoords = ConvolutionFactory::getFactory()->getVectorCoords(&subResult.getConvolution());
     for(int i=1;i<nodes_.size();i++)//0 нод не трогаем
         nodes_.at(i)->changeLocation(vectorCoords.at(i-1));
 }

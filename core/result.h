@@ -4,30 +4,56 @@
 #include "convolution.h"
 #include "settings.h"
 
-struct SubResult
+#include <QFile>
+#include <QTextStream>
+
+class SubResult
 {
+private:
     Convolution convolution_;
     double averageRating_;
     QString timeWork_;
     QString timeBest_;
     int countConvolution_;
-    void save(Convolution convolution,double averageRating,QString timeWork,QString timeBest,int countConvolution)
-    {
-       convolution_ =  convolution;
-       averageRating_ = averageRating;
-       timeWork_ = timeWork;
-       timeBest_ = timeBest;
-       countConvolution_ = countConvolution;
-    }
+public:
+    SubResult();
+    SubResult(Convolution convolution,double averageRating,QString timeWork,QString timeBest,int countConvolution);
+    void saveToLog(int index);
+    int getTimeWork();
+    int getTimeBest();
+    int getCountConvolution();
+    double getAverageRating();
+    Convolution getConvolution();
 };
 
 class Result
 {
+private:
+    int alltime;
+    int allBestTime;
+    double averageResult;
+    int bestResult;
+    int countConv;
+    QVector<SubResult> results;
 public:
     Result();
-    QVector<SubResult> results;
     SETTINGS settings;
-private:
+    void addSubResult(SubResult subResult);
+    QTime getAverageTime() ;
+    QTime getAverageBestTime();
+    QTime getAllTime();
+    int getAverageTimeInt() ;
+    int getAverageBestTimeInt();
+    int getAllTimeInt();
+    double getAverageResult();
+    int getCountSub();
+    int getBestResult();
+    int getCountConv();
+    void saveToLog();
+    void saveToLogHeader(int index);
+    QVector<SubResult> getSubResults();
 };
-//резов(бест.свёртка\рейт(средн\макс)\время  работы\количество свёрток
+void saveToLogProteinHeader(int index,int length);
+void saveToLogProteinResult(QVector<Result> results);
+void getProteinResult(QVector<Result> results, int &alltime, int &allBestTime, double &averageResult, int &bestResult, int &countConv);
 #endif // RESULT_H
