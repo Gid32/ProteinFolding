@@ -46,15 +46,15 @@ void MainWindow::addLaunch()
     launches_.push_back(settings);
     int count = settings.value("countLaunch").toInt();
     countFullLaunches_+= count;
-    ui->countLaunches->setText("Количество запусков: "+QString::number(launches_.size()));
-    ui->fullCounLaunch->setText("Количество всех запусков: "+QString::number(countFullLaunches_));
+    ui->countLaunches->setText("Кількість наборів параметрів: "+QString::number(launches_.size()));
+    ui->fullCounLaunch->setText("Загальна кількість стартів: "+QString::number(countFullLaunches_));
 }
 
 void MainWindow::addProtein()
 {
     VECTORBYTE protein = proteinForm_->protein_;
     proteins_.push_back(protein);
-    ui->countProtein->setText("Количество протеинов "+QString::number(proteins_.size()));
+    ui->countProtein->setText("Кількість доданих протеїнів: "+QString::number(proteins_.size()));
 }
 
 void MainWindow::createProtein(VECTORBYTE protein)
@@ -70,7 +70,7 @@ void MainWindow::createProtein(VECTORBYTE protein)
         nodes_.push_back(new Node(rootEntity_,protein.at(i),QVector3D(0, 0, 0),node));
         node = nodes_.last();
     }
-    ui->proteinLength->setText("Длина молекулы: "+QString::number(protein_.size()));
+    ui->proteinLength->setText("Довжина молекули: "+QString::number(protein_.size()));
     ui->proteinLength->resize(ui->proteinLength->sizeHint());
 }
 
@@ -83,12 +83,12 @@ void MainWindow::startLaunch()
         settings.insert("PROTEIN",QVariant::fromValue(proteins_.at(currentProtein_)));
     else
        settings["PROTEIN"] = QVariant::fromValue(proteins_.at(currentProtein_));
-    ui->status->setText("Создаем Протеин");
+    ui->status->setText("Створюємо протеїн");
     createProtein(proteins_.at(currentProtein_));
     int count = settings.value("countLaunch").toInt();
-    ui->currentLaunch->setText("Текущий запуск: "+ QString::number(currentLaunch_+1)+
-                               "\nСубзапуск: "+QString::number(currentSubLaunch_+1)+" из "+QString::number(count)+
-                               "\nПротеин: "+QString::number(currentProtein_+1)+" из "+QString::number(proteins_.size()));
+    ui->currentLaunch->setText("Набір параметрів: "+ QString::number(currentLaunch_+1)+
+                               "\nСтарт: "+QString::number(currentSubLaunch_+1)+" из "+QString::number(count)+
+                               "\nПротеїн: "+QString::number(currentProtein_+1)+" из "+QString::number(proteins_.size()));
     timer_->start(1500);
     emit started(settings);
 }
@@ -98,15 +98,15 @@ void MainWindow::changeStatus(int status)
     status_ = status;
     switch (status_)
     {
-    case -1:ui->status->setText("Ожидание");
+    case -1:ui->status->setText("Очікування");
         break;
-    case 0:ui->status->setText("Остановлено");
+    case 0:ui->status->setText("Зупинено");
         break;
-    case 1:ui->status->setText("Работает");
+    case 1:ui->status->setText("Працює");
         break;
-    case 10:ui->status->setText("Выполнено");
+    case 10:ui->status->setText("Виконано");
         break;
-    case 100:ui->status->setText("Выполнено всё");
+    case 100:ui->status->setText("Виконано все");
         break;
     default:
         break;
@@ -166,17 +166,17 @@ void MainWindow::start()
 {
     if(status_ == 1)
     {
-        getError("уже работает");
+        getError("Вже запущено");
         return;
     }
     if(launches_.size()==0)
     {
-        getError("Нет запусков");
+        getError("Не визначені налаштування");
         return;
     }
     if(proteins_.size()==0)
     {
-        getError("Нет протеинов");
+        getError("не додані протеїни");
         return;
     }
     ui->error->setText("");
@@ -211,9 +211,9 @@ void MainWindow::countConvolution(int count, int rating)
 {
     countConvolution_ = count;
     avarageRating_ = (rating)/countConvolution_;
-    ui->countConvolution->setText("Количество сверток: "+QString::number(countConvolution_));
+    ui->countConvolution->setText("Кількість згорток: "+QString::number(countConvolution_));
     ui->countConvolution->resize(ui->countConvolution->sizeHint());
-    ui->avarageRating->setText("Средний рейтинг: "+QString::number(avarageRating_));
+    ui->avarageRating->setText("Середній рейтинг: "+QString::number(avarageRating_));
     ui->avarageRating->resize(ui->avarageRating->sizeHint());
 }
 
@@ -228,7 +228,7 @@ void MainWindow::hasBetterVariant(Convolution convolution, QString time)
     timeBest_ = time;
     betterVariant_ = convolution;
     ui->rating->setText("Рейтинг: "+QString::number(convolution.result_));
-    ui->bestTime->setText("Время: "+time);
+    ui->bestTime->setText("Час: "+time);
     ui->bestTime->resize(ui->bestTime->sizeHint());
     ui->rating->resize(ui->rating->sizeHint());
     hasBetterVariant_ = true;

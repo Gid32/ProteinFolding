@@ -62,7 +62,7 @@ void ProteinForm::saveToFileProtein()
     QString selfilter = tr("protein (*.protein)");
     QString filename = QFileDialog::getSaveFileName(
             this,
-            "Сохранение Протеина",
+            "Збереження протеїну",
             "",
             tr("protein (*.protein);;proteinN (*.proteinN);;proteinS (*.proteinS)"),
             &selfilter
@@ -91,10 +91,10 @@ void ProteinForm::saveToFileProtein()
 
 void ProteinForm::loadFromFileProtein()
 {
-    QString selfilter = tr("protein (*.protein)");
+    QString selfilter = tr("proteinN (*.proteinN)");
     QString fileName = QFileDialog::getOpenFileName(
             this,
-            "Загрузка Протеина",
+            "Звантаження протеїну",
             "",
             tr("protein (*.protein);;proteinN (*.proteinN);;proteinS (*.proteinS)"),
             &selfilter

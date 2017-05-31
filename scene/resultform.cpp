@@ -31,7 +31,7 @@ void ResultForm::load(QMap<int, QVector<Result> > results, QVector<VECTORBYTE> p
     ui->protein->clear();
 
     for(int i=0;i<proteins_.size();i++)
-        ui->protein->addItem(QString::number(i+1)+" длина:"+QString::number(proteins_.at(i).size()),i);
+        ui->protein->addItem(QString::number(i+1)+" довжина:"+QString::number(proteins_.at(i).size()),i);
 
 }
 
@@ -43,7 +43,7 @@ void ResultForm::proteinChange(int proteinN)
     QVector<Result> results = results_[proteinN];
 
     for(int i=0;i<results.size();i++)
-        ui->launchNumber->addItem(QString::number(i+1)+" подзапусков:"+QString::number(results[i].getCountSub()),i);
+        ui->launchNumber->addItem(QString::number(i+1)+" стартів:"+QString::number(results[i].getCountSub()),i);
 
     int alltime;
     int allBestTime;

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Результати роботи</string>
   </property>
   <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
@@ -43,7 +43,7 @@
     <item row="5" column="0">
      <widget class="QLabel" name="averageResultL">
       <property name="text">
-       <string>Средний рейтинг</string>
+       <string>Середній рейтинг</string>
       </property>
      </widget>
     </item>
@@ -57,7 +57,7 @@
     <item row="1" column="0">
      <widget class="QLabel" name="allTimeL">
       <property name="text">
-       <string>Время всех запусков</string>
+       <string>Загальний час роботи</string>
       </property>
      </widget>
     </item>
@@ -67,7 +67,7 @@
     <item row="2" column="0">
      <widget class="QLabel" name="averageTimeL">
       <property name="text">
-       <string>Среднее время запусков</string>
+       <string>Середній час роботи</string>
       </property>
      </widget>
     </item>
@@ -81,7 +81,7 @@
     <item row="0" column="0">
      <widget class="QLabel" name="proteinL">
       <property name="text">
-       <string>Протеин:</string>
+       <string>Протеїн:</string>
       </property>
      </widget>
     </item>
@@ -95,7 +95,7 @@
     <item row="3" column="0">
      <widget class="QLabel" name="averageTimeBestL">
       <property name="text">
-       <string>Среднее лучшее время</string>
+       <string>Середній час кращого</string>
       </property>
      </widget>
     </item>
@@ -109,14 +109,14 @@
     <item row="4" column="0">
      <widget class="QLabel" name="bestResultL">
       <property name="text">
-       <string>Лучший рейтинг</string>
+       <string>Кращий рейтинг</string>
       </property>
      </widget>
     </item>
     <item row="10" column="0">
      <widget class="QLabel" name="averageTimeL_2">
       <property name="text">
-       <string>Среднее время запусков</string>
+       <string>Середній час роботи</string>
       </property>
      </widget>
     </item>
@@ -130,28 +130,28 @@
     <item row="8" column="0">
      <widget class="QLabel" name="bestResultL_2">
       <property name="text">
-       <string>Лучший рейтинг</string>
+       <string>Кращий рейтинг</string>
       </property>
      </widget>
     </item>
     <item row="6" column="0">
      <widget class="QLabel" name="countConvolutionL">
       <property name="text">
-       <string>Количество сверток</string>
+       <string>Проаналізовано рішень</string>
       </property>
      </widget>
     </item>
     <item row="9" column="0">
      <widget class="QLabel" name="countConvolutionL_2">
       <property name="text">
-       <string>Количество сверток</string>
+       <string>Проаналізовано рішень</string>
       </property>
      </widget>
     </item>
     <item row="15" column="0">
      <widget class="QLabel" name="averageResultL_2">
       <property name="text">
-       <string>Средний рейтинг</string>
+       <string>Середній рейтинг</string>
       </property>
      </widget>
     </item>
@@ -165,7 +165,7 @@
     <item row="16" column="0">
      <widget class="QLabel" name="allTimeL_2">
       <property name="text">
-       <string>Время всех запусков</string>
+       <string>Час усіх запусків</string>
       </property>
      </widget>
     </item>
@@ -182,7 +182,7 @@
     <item row="7" column="0">
      <widget class="QLabel" name="launchNumberL">
       <property name="text">
-       <string>Номер запуска</string>
+       <string>Набір налаштувань</string>
       </property>
      </widget>
     </item>
@@ -202,21 +202,21 @@
        <string notr="true">color:white;background-color:#00BFFF;font-size:12px</string>
       </property>
       <property name="text">
-       <string>Показать настройки</string>
+       <string>Показати налаштування</string>
       </property>
      </widget>
     </item>
     <item row="20" column="0">
      <widget class="QLabel" name="subAverageResultL">
       <property name="text">
-       <string>Средний рейтинг СЗ</string>
+       <string>Середній рейтинг старту</string>
       </property>
      </widget>
     </item>
     <item row="19" column="0">
      <widget class="QLabel" name="subLaunchNumberL">
       <property name="text">
-       <string>Номер субЗапуска</string>
+       <string>Номер старту</string>
       </property>
      </widget>
     </item>
@@ -233,7 +233,7 @@
     <item row="21" column="0">
      <widget class="QLabel" name="subBestResultL">
       <property name="text">
-       <string>Лучший рейтинг СЗ</string>
+       <string>Кращий рейтинг старту</string>
       </property>
      </widget>
     </item>
@@ -247,7 +247,7 @@
     <item row="22" column="0">
      <widget class="QLabel" name="subCountConvolutionL">
       <property name="text">
-       <string>Количество сверток</string>
+       <string>Проаналізовано рішень</string>
       </property>
      </widget>
     </item>
@@ -278,14 +278,14 @@
        <string notr="true">color:white;background-color:#00BFFF;font-size:12px</string>
       </property>
       <property name="text">
-       <string>Показать свертку</string>
+       <string>Показати рішення</string>
       </property>
      </widget>
     </item>
     <item row="12" column="0">
      <widget class="QLabel" name="averageTimeBestL_2">
       <property name="text">
-       <string>Среднее лучшее время</string>
+       <string>Середній час кращого</string>
       </property>
      </widget>
     </item>

@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Настройки</string>
+   <string>Налаштування</string>
   </property>
   <property name="modal">
    <bool>false</bool>
@@ -50,13 +50,13 @@
    <item row="0" column="0" rowspan="2">
     <widget class="QGroupBox" name="methodS">
      <property name="title">
-      <string>Общие</string>
+      <string>Загальні</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="1" column="0">
        <widget class="QLabel" name="netLabel">
         <property name="text">
-         <string>Решетка</string>
+         <string>Гратка</string>
         </property>
        </widget>
       </item>
@@ -84,14 +84,14 @@
       <item row="0" column="0">
        <widget class="QLabel" name="methodLabel">
         <property name="text">
-         <string>Метод</string>
+         <string>Алгоритм</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="countL">
         <property name="text">
-         <string>Запуски:</string>
+         <string>Мультистарт</string>
         </property>
        </widget>
       </item>
@@ -111,13 +111,13 @@
    <item row="2" column="0" rowspan="3">
     <widget class="QGroupBox" name="traces">
      <property name="title">
-      <string>Следы</string>
+      <string>Феромонні сліди</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
       <item row="0" column="0">
        <widget class="QLabel" name="traceCoefLabel">
         <property name="text">
-         <string>Коеффициент стадности</string>
+         <string>Коефіцієнт стадності</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
@@ -140,7 +140,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="traceEvoparationLabel">
         <property name="text">
-         <string>Испарение</string>
+         <string>Випаровування</string>
         </property>
        </widget>
       </item>
@@ -160,7 +160,7 @@
       <item row="2" column="0">
        <widget class="QLabel" name="elitismLabel">
         <property name="text">
-         <string>Ограничение сходимости</string>
+         <string>Обмеження збіжності</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
@@ -192,7 +192,7 @@
       <item row="3" column="0">
        <widget class="QLabel" name="traceMinLabel">
         <property name="text">
-         <string>Минимум</string>
+         <string>Мінімум</string>
         </property>
        </widget>
       </item>
@@ -254,13 +254,13 @@
    <item row="0" column="1">
     <widget class="QGroupBox" name="ants">
      <property name="title">
-      <string>Муравьи</string>
+      <string>Мурахи</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_5">
       <item row="0" column="0">
        <widget class="QLabel" name="countThreadLabel">
         <property name="text">
-         <string>потоки</string>
+         <string>Потоки</string>
         </property>
        </widget>
       </item>
@@ -276,8 +276,11 @@
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="countAntLabel">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
         <property name="text">
-         <string>муравьи</string>
+         <string>Кількість мурах</string>
         </property>
        </widget>
       </item>
@@ -300,13 +303,13 @@
    <item row="1" column="1" rowspan="2">
     <widget class="QGroupBox" name="exitGroup">
      <property name="title">
-      <string>Условие выхода</string>
+      <string>Умова завершення</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
        <widget class="QLabel" name="exitLabel">
         <property name="text">
-         <string>Способ</string>
+         <string>Тип</string>
         </property>
        </widget>
       </item>
@@ -314,17 +317,17 @@
        <widget class="QComboBox" name="exit">
         <item>
          <property name="text">
-          <string>по времени</string>
+          <string>час від початку</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>по времени без улучшений</string>
+          <string>час без покращень</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>по шагам без улучшений</string>
+          <string>ітерації без покращень</string>
          </property>
         </item>
        </widget>
@@ -332,7 +335,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="countExitLabel">
         <property name="text">
-         <string>Количество</string>
+         <string>Кількість</string>
         </property>
        </widget>
       </item>
@@ -342,7 +345,7 @@
       <item row="2" column="0">
        <widget class="QLabel" name="timeExitLabel">
         <property name="text">
-         <string>Время</string>
+         <string>Час</string>
         </property>
        </widget>
       </item>
@@ -388,7 +391,7 @@
       </size>
      </property>
      <property name="title">
-      <string>Эвристические коэфициенты</string>
+      <string>Евристичні коєфіцієнти</string>
      </property>
      <widget class="QTableWidget" name="tableWidget">
       <property name="geometry">
