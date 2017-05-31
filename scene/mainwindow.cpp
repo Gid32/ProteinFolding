@@ -257,7 +257,14 @@ void MainWindow::reDraw()
    hasBetterVariant_ = false;
    QVector<QVector3D> vectorCoords = ConvolutionFactory::getFactory()->getVectorCoords(&variant);
    for(int i=1;i<nodes_.size();i++)//0 нод не трогаем
+   {
        nodes_.at(i)->changeLocation(vectorCoords.at(i-1));
+       if(variant.changeTurn == i)
+       {
+           nodes_.at(i)->changeColor(QColor("green"));
+           qDebug()<<i;
+       }
+   }
 
    //связи
    for(int i=0;i<currentConnections.size();i++)

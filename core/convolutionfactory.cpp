@@ -218,7 +218,9 @@ bool ConvolutionFactory::getNext(Convolution *convolution, int currentDirection,
     if(possible.empty())
         return false;
 
-    int n = probabilistic(convolution,possible,turns,currentDirection);
+    int n = 0;
+    if(convolution->history_.size() > 0)
+        n = probabilistic(convolution,possible,turns,currentDirection);
 
     coords = possible.at(n);
     turn = turns.at(n);
@@ -262,41 +264,33 @@ Convolution* ConvolutionFactory::getConvolution()
         currentTurnNumber++;
     }
     currentConv->result_ = getResult(currentConv);
-    //return localSearch(currentConv);
-    return currentConv;
+    return localSearch(currentConv);
+    //return currentConv;
 }
 
-Convolution* ConvolutionFactory::localSearch(Convolution* inConvolution)
+Convolution* ConvolutionFactory::localSearch(Convolution* convolution)
 {
-//    1)выбрать поворот который меняем ( n )
-//    2)скопировать повороты от n+1 до size в turns
-//    3)удалить историю из свертки от n до size
-//    4)получить список возможных поворотов (list) на повороте номер n
-//    5)создать list.size новых сверток
-//    6)заполнить n поворот в каждой созданной свертке соответствующим поворотом
-//    7)попробовать заполнить оставшиеся повороты в каждой свертке из turns
-//    8)если удалось 7) проверить результат
-    int finalResult = -1;
-
-    Convolution *convolution = new Convolution(*inConvolution);
-    convolution->result_ = getResult(inConvolution);
     Convolution *finalConv = new Convolution(*convolution);
+    Convolution *betterConv = new Convolution(*convolution);
+    delete convolution;
+    bool hasBetter = true;
 
-  //  while (finalResult != finalConv->result_)
-  //  {
-        finalResult = finalConv->result_;
-        for(int i=0;i<convolution->history_.size();i++)
+    while(hasBetter)
+    {
+        hasBetter = false;
+        for(int i=1;i<finalConv->history_.size();i++)
         {
             int currentDirection = 0;
             QVector3D currentCoords = QVector3D(0,0,0);
             Convolution *stepConv = new Convolution();
+            stepConv->setValueByCoord(currentCoords,protein_.at(0));
             //копируем повороты от 0 до i в stepConv
             for(int j=0;j<i;j++)
             {
-                stepConv->history_.push_back(History(convolution->history_.at(j).coords,convolution->history_.at(j).direction,convolution->history_.at(j).turn));
-                stepConv->setValueByCoord(convolution->history_.at(j).coords,protein_.at(j+1));
-                currentDirection = convolution->history_.at(j).direction;
-                currentCoords = convolution->history_.at(j).coords;
+                stepConv->history_.push_back(History(finalConv->history_.at(j).coords,finalConv->history_.at(j).direction,finalConv->history_.at(j).turn));
+                stepConv->setValueByCoord(finalConv->history_.at(j).coords,protein_.at(j+1));
+                currentDirection = finalConv->history_.at(j).direction;
+                currentCoords = finalConv->history_.at(j).coords;
             }
 
             //получаем список возможных переходов
@@ -320,9 +314,9 @@ Convolution* ConvolutionFactory::localSearch(Convolution* inConvolution)
                 currentCoords = turns.at(k).coords;
 
                 bool fail = false;
-                for(int j=i+1;j<convolution->history_.size();j++)
+                for(int j=i+1;j<finalConv->history_.size();j++)
                 {
-                    int turn = convolution->history_.at(j).turn;
+                    int turn = finalConv->history_.at(j).turn;
                     int direction = net_->turnToDirection(currentDirection,turn);
                     QVector3D coords = net_->getDirectionCoord(direction,currentCoords);
                     if(conv->getValueByCoord(coords)==FILL_AREA)
@@ -343,21 +337,26 @@ Convolution* ConvolutionFactory::localSearch(Convolution* inConvolution)
                 if(!fail)
                 {
                     conv->result_ = getResult(conv);
-                    if(conv->result_ > finalConv->result_)
+                    if(conv->result_ > betterConv->result_)
                     {
-                        delete finalConv;
-                        finalConv = new Convolution(*conv);
+                        delete betterConv;
+                        betterConv = new Convolution(*conv);
+                        hasBetter = true;
+                        betterConv->changeTurn = i;
                     }
                 }
 
                 delete conv;
             }
-
             delete stepConv;
         }
-        delete convolution;
-        convolution = new Convolution(*finalConv);
-    //}
+        if(hasBetter)
+        {
+            delete finalConv;
+            finalConv = new Convolution(*betterConv);
+        }
+    }
+    delete betterConv;
     return finalConv;
 }
 

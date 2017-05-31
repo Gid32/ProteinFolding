@@ -6,8 +6,6 @@ Node::Node(Qt3DCore::QEntity *parent, BYTE hFob, QVector3D vect, Node *prevNode,
 
     this->parent = parent;
     this->hFob = hFob;
-    QColor color;
-
     if(!prevNode && hFob == H_FILL)
         color = H_FILL_COLOR_FIRST;
     else if(!prevNode && hFob == H_FOB)
@@ -58,5 +56,15 @@ void Node::changeLocation(QVector3D coords)
     transform->setTranslation(coords);
     if(connection)
         connection->changeLocation(prevNode->transform->translation(),coords);
+    changeColor(color);
+}
+
+void Node::changeColor(QColor color)
+{
+    sphera->removeComponent(material);
+    delete material;
+    material = new Qt3DExtras::QPhongMaterial();
+    material->setDiffuse(color);
+    sphera->addComponent(material);
 }
 

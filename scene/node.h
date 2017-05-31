@@ -25,6 +25,7 @@ private:
     Qt3DExtras::QPhongMaterial *material;
     Qt3DCore::QEntity *parent;
     Connection *connection;
+    QColor color;
 public:
     BYTE hFob;
     Node *prevNode;
@@ -32,6 +33,7 @@ public:
     explicit Node(Qt3DCore::QEntity *parent, BYTE hFob, QVector3D vect, Node *prevNode, float radius = RADIUS_NODE, float connectionRadius = RADIUS_CONNECTION, float connectionLength = LENGTH_CONNECTION);
     ~Node();
     void changeLocation(QVector3D coords);
+    void changeColor(QColor color);
 };
 
 #endif // NODE_H

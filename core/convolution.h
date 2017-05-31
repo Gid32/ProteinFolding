@@ -29,12 +29,14 @@ struct Convolution
     QVector<History> history_;
     int result_;
     QVector<CONNECTION> connections_;
+    int changeTurn;
 
     QString coordToQString(QVector3D coord);
     void setValueByCoord(QVector3D coord, BYTE value);
     BYTE getValueByCoord(QVector3D coord);
     bool isHydroFobByCoord(QVector3D coord);
     Convolution();
+    ~Convolution();
 };
 
 #endif // CONVOLUTION_H

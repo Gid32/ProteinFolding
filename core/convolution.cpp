@@ -3,6 +3,13 @@
 Convolution::Convolution()
 {
     result_ = -1;
+    changeTurn = -1;
+}
+
+Convolution::~Convolution()
+{
+    history_.clear();
+    connections_.clear();
 }
 
 QString Convolution::coordToQString(QVector3D coord)
