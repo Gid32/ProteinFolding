@@ -24,6 +24,7 @@ signals:
     void changeStatus(int);
     void factoryStopped();
 private:
+    Convolution* stepBestConvolution_;
     QTime startTime_;
     QTime timeWithoutBetter_;
     int bestResult_;
@@ -42,6 +43,7 @@ private:
     void createAnts(int countAnt, int countThreads);
     void clearVectorConvolution(QVector<Convolution *> *vect);
     bool isExit();
+    void performLocalSearch();
 public:
     explicit Core();
 public slots:

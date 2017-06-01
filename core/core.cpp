@@ -95,6 +95,9 @@ void Core::antFinish()
     countAntsReady_++;
     if(countAntsReady_ == ants_.size())
     {
+
+        performLocalSearch();
+
         ConvolutionFactory::getFactory()->changeTrace(tempConvolutions_);
         clearVectorConvolution(&tempConvolutions_);
         bool done = isExit();
@@ -121,6 +124,10 @@ void Core::getConvolution(Convolution *convolution)
     tempConvolutions_.push_back(convolution);
     QTime time = QTime(0,0,0,0).addMSecs(startTime_.elapsed());
     QString timeStr = time.toString("hh:mm:ss.zzz");
+    if(stepBestConvolution_ != nullptr || convolution->result_ > stepBestConvolution_->result_)
+    {
+        stepBestConvolution_ = new Convolution(*convolution);
+    }
     if(convolution->result_ > bestResult_)
     {
         bestResult_ = convolution->result_;
@@ -136,4 +143,25 @@ void Core::stop()
 {
     isBreak_ = true;
     emit factoryStopped();
+}
+
+void Core::performLocalSearch()
+{
+    stepBestConvolution_ = ConvolutionFactory::getFactory()->localSearch(stepBestConvolution_);
+    if(stepBestConvolution_->result_ > bestResult_)
+    {
+        allConvolutions_++;
+        allResult_ += stepBestConvolution_->result_;
+        tempConvolutions_.push_back(stepBestConvolution_);
+        QTime time = QTime(0,0,0,0).addMSecs(startTime_.elapsed());
+        QString timeStr = time.toString("hh:mm:ss.zzz");
+
+        bestResult_ = stepBestConvolution_->result_;
+        timeWithoutBetter_.start();
+        countWithoutBetter_ = 0;
+        emit hasBetterVariant(*stepBestConvolution_,timeStr);
+        emit countConvolution(allConvolutions_, allResult_);
+        emit hasVariant(*stepBestConvolution_,timeStr);
+    }
+    stepBestConvolution_->result_ = 0;
 }

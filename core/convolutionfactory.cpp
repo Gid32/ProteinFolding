@@ -264,8 +264,8 @@ Convolution* ConvolutionFactory::getConvolution()
         currentTurnNumber++;
     }
     currentConv->result_ = getResult(currentConv);
-    return localSearch(currentConv);
-    //return currentConv;
+//    return localSearch(currentConv);
+    return currentConv;
 }
 
 Convolution* ConvolutionFactory::localSearch(Convolution* convolution)
