@@ -251,56 +251,87 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
-    <widget class="QGroupBox" name="ants">
-     <property name="title">
-      <string>Мурахи</string>
+   <item row="3" column="1">
+    <widget class="QGroupBox" name="weights">
+     <property name="minimumSize">
+      <size>
+       <width>171</width>
+       <height>101</height>
+      </size>
      </property>
-     <layout class="QGridLayout" name="gridLayout_5">
+     <property name="title">
+      <string>Евристичні коєфіцієнти</string>
+     </property>
+     <widget class="QTableWidget" name="tableWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>150</width>
+        <height>75</height>
+       </rect>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustIgnored</enum>
+      </property>
+      <property name="autoScroll">
+       <bool>false</bool>
+      </property>
+      <property name="showGrid">
+       <bool>true</bool>
+      </property>
+      <attribute name="horizontalHeaderCascadingSectionResizes">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="horizontalHeaderStretchLastSection">
+       <bool>false</bool>
+      </attribute>
+      <row>
+       <property name="text">
+        <string>H</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>P</string>
+       </property>
+      </row>
+      <column>
+       <property name="text">
+        <string>H</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>P</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>0</string>
+       </property>
+      </column>
       <item row="0" column="0">
-       <widget class="QLabel" name="countThreadLabel">
-        <property name="text">
-         <string>Потоки</string>
-        </property>
-       </widget>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsEnabled</set>
+       </property>
       </item>
-      <item row="0" column="1">
-       <widget class="QSpinBox" name="threadsCount">
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="value">
-         <number>3</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="countAntLabel">
-        <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
-        </property>
-        <property name="text">
-         <string>Кількість мурах</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QSpinBox" name="antsCount">
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>200</number>
-        </property>
-        <property name="value">
-         <number>40</number>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     </widget>
     </widget>
    </item>
-   <item row="1" column="1" rowspan="2">
+   <item row="2" column="1">
     <widget class="QGroupBox" name="exitGroup">
      <property name="title">
       <string>Умова завершення</string>
@@ -382,84 +413,60 @@
      <zorder>timeExit</zorder>
     </widget>
    </item>
-   <item row="3" column="1">
-    <widget class="QGroupBox" name="weights">
-     <property name="minimumSize">
-      <size>
-       <width>171</width>
-       <height>101</height>
-      </size>
-     </property>
+   <item row="0" column="1" rowspan="2">
+    <widget class="QGroupBox" name="ants">
      <property name="title">
-      <string>Евристичні коєфіцієнти</string>
+      <string>Мурахи</string>
      </property>
-     <widget class="QTableWidget" name="tableWidget">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>150</width>
-        <height>75</height>
-       </rect>
-      </property>
-      <property name="verticalScrollBarPolicy">
-       <enum>Qt::ScrollBarAlwaysOff</enum>
-      </property>
-      <property name="horizontalScrollBarPolicy">
-       <enum>Qt::ScrollBarAlwaysOff</enum>
-      </property>
-      <property name="sizeAdjustPolicy">
-       <enum>QAbstractScrollArea::AdjustIgnored</enum>
-      </property>
-      <property name="autoScroll">
-       <bool>false</bool>
-      </property>
-      <property name="showGrid">
-       <bool>true</bool>
-      </property>
-      <attribute name="horizontalHeaderCascadingSectionResizes">
-       <bool>false</bool>
-      </attribute>
-      <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-       <bool>false</bool>
-      </attribute>
-      <attribute name="horizontalHeaderStretchLastSection">
-       <bool>false</bool>
-      </attribute>
-      <row>
-       <property name="text">
-        <string>H</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>P</string>
-       </property>
-      </row>
-      <column>
-       <property name="text">
-        <string>H</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>P</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>0</string>
-       </property>
-      </column>
-      <item row="0" column="0">
-       <property name="text">
-        <string/>
-       </property>
-       <property name="flags">
-        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsEnabled</set>
-       </property>
+     <layout class="QGridLayout" name="gridLayout_5">
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="threadsCount">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="value">
+         <number>3</number>
+        </property>
+       </widget>
       </item>
-     </widget>
+      <item row="0" column="0">
+       <widget class="QLabel" name="countThreadLabel">
+        <property name="text">
+         <string>Потоки</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="antsCount">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>200</number>
+        </property>
+        <property name="value">
+         <number>40</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="countAntLabel">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="text">
+         <string>Кількість мурах</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="farSight">
+        <property name="text">
+         <string>Далекозорість</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>

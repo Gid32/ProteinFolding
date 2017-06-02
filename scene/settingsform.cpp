@@ -76,7 +76,10 @@ SETTINGS SettingsForm::getSettings()
     settings.insert(ui->timeExit->objectName(),ui->timeExit->time());
     settings.insert(ui->countExit->objectName(),ui->countExit->value());
     settings.insert(ui->countLaunch->objectName(),ui->countLaunch->value());
-    //settings.insert("PROTEIN", QVariant::fromValue(protein_));
+    bool checked = false;
+    if(ui->farSight->checkState() == Qt::Checked)
+        checked = true;
+    settings.insert(ui->farSight->objectName(),checked);
 
     return settings;
 }

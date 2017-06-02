@@ -114,6 +114,8 @@ void ConvolutionFactory::setSettings(SETTINGS settings)
     weights_[H_FILL][FILL_AREA] = settings.value("weightsFILFREE").toDouble();
     weights_[H_FILL][BLOCK_AREA] = settings.value("weightsFILFREE").toDouble();
 
+    farSight = settings.value("farSight").toBool();
+
     convergence_ = settings.value("elitizm").toInt();
     antCount_ = settings.value("antsCount").toInt();
 
@@ -159,6 +161,21 @@ double ConvolutionFactory::getWeights(Convolution *convolution, QVector3D coord,
     return weights;
 }
 
+double ConvolutionFactory::getWeightsFarSight(Convolution *convolution, QVector3D coord, BYTE currentAm,BYTE nextAm, int currentDirection)
+{
+    double weights = 0.0;
+    for(int i=0;i<=net_->getMaxTurn();i++)
+    {
+        int direction = net_->turnToDirection(currentDirection,i);
+        QVector3D testCoord = net_->getDirectionCoord(direction,coord);
+        BYTE value = convolution->getValueByCoord(testCoord);
+        if(value == FILL_AREA)
+            weights += getWeights(convolution,testCoord,nextAm,direction);
+        weights += weights_[currentAm][value];
+    }
+    return weights;
+}
+
 int ConvolutionFactory::probabilistic(Convolution *convolution,QVector<QVector3D> possible, QVector<int> turns,int currentDirection)
 {
     if(possible.size()==1)
@@ -173,7 +190,12 @@ int ConvolutionFactory::probabilistic(Convolution *convolution,QVector<QVector3D
     QVector<double> weights;//для того чтобы не пересчитывать каждый раз соседей, должно ускорить
     for(int i=0;i<possible.size();i++)
     {
-       double weight = getWeights(convolution,possible.at(i),protein_.at(turnNumber),currentDirection);//получаем веса
+       int newDirection = net_->turnToDirection(currentDirection,turns.at(i));
+       double weight = 0;
+       if(turnNumber == protein_.size()-1 || !farSight)
+           weight = getWeights(convolution,possible.at(i),protein_.at(turnNumber),newDirection);//получаем веса
+       else
+           weight = getWeightsFarSight(convolution,possible.at(i),protein_.at(turnNumber),protein_.at(turnNumber+1),newDirection);//получаем веса
        sumEvrist += weight;
        sumTrace += trace_[turnNumber][turns.at(i)];//получаем следы
        weights.push_back(weight);
@@ -197,6 +219,7 @@ int ConvolutionFactory::probabilistic(Convolution *convolution,QVector<QVector3D
     //baraban end
     return 0;
 }
+
 
 bool ConvolutionFactory::getNext(Convolution *convolution, int currentDirection, QVector3D currentCoords, QVector3D &coords, int &direction,int &turn)
 {

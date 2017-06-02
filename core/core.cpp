@@ -63,7 +63,9 @@ void Core::createAnts(int countAnt, int countThreads)
 
 void Core::runAnts()
 {
-     countAntsReady_ = 0;
+    stepBestConvolution_ = new Convolution();
+    stepBestConvolution_->result_ = 0;
+    countAntsReady_ = 0;
      for(int i=0;i<ants_.size();i++)
          ants_[i]->start();
 }
@@ -124,8 +126,9 @@ void Core::getConvolution(Convolution *convolution)
     tempConvolutions_.push_back(convolution);
     QTime time = QTime(0,0,0,0).addMSecs(startTime_.elapsed());
     QString timeStr = time.toString("hh:mm:ss.zzz");
-    if(stepBestConvolution_ != nullptr || convolution->result_ > stepBestConvolution_->result_)
+    if(convolution->result_ > stepBestConvolution_->result_)
     {
+        delete stepBestConvolution_;
         stepBestConvolution_ = new Convolution(*convolution);
     }
     if(convolution->result_ > bestResult_)
@@ -147,8 +150,9 @@ void Core::stop()
 
 void Core::performLocalSearch()
 {
+    int bestStep = stepBestConvolution_->result_;
     stepBestConvolution_ = ConvolutionFactory::getFactory()->localSearch(stepBestConvolution_);
-    if(stepBestConvolution_->result_ > bestResult_)
+    if(stepBestConvolution_->result_ > bestStep)
     {
         allConvolutions_++;
         allResult_ += stepBestConvolution_->result_;
@@ -156,12 +160,16 @@ void Core::performLocalSearch()
         QTime time = QTime(0,0,0,0).addMSecs(startTime_.elapsed());
         QString timeStr = time.toString("hh:mm:ss.zzz");
 
-        bestResult_ = stepBestConvolution_->result_;
-        timeWithoutBetter_.start();
-        countWithoutBetter_ = 0;
-        emit hasBetterVariant(*stepBestConvolution_,timeStr);
-        emit countConvolution(allConvolutions_, allResult_);
+        qDebug()<<"localSearch";
+        if(stepBestConvolution_->result_ > bestResult_)
+        {
+            bestResult_ = stepBestConvolution_->result_;
+            timeWithoutBetter_.start();
+            countWithoutBetter_ = 0;
+            emit hasBetterVariant(*stepBestConvolution_,timeStr);
+        }
         emit hasVariant(*stepBestConvolution_,timeStr);
+        emit countConvolution(allConvolutions_, allResult_);
     }
     stepBestConvolution_->result_ = 0;
 }

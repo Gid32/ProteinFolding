@@ -132,7 +132,8 @@ void ResultForm::showProtein()
     QVector<SubResult> subResults = results[launchIndex].getSubResults();
     SubResult subResult = subResults.at(subLaunchIndex);
 
-    QVector<QVector3D> vectorCoords = ConvolutionFactory::getFactory()->getVectorCoords(&subResult.getConvolution());
+    Convolution conv = subResult.getConvolution();
+    QVector<QVector3D> vectorCoords = ConvolutionFactory::getFactory()->getVectorCoords(&conv);
     for(int i=1;i<nodes_.size();i++)//0 нод не трогаем
         nodes_.at(i)->changeLocation(vectorCoords.at(i-1));
 }
