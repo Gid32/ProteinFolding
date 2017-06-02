@@ -12,6 +12,9 @@ ProteinForm::ProteinForm(QWidget *parent) :
     connect(ui->genericButton,SIGNAL(clicked()),this,SLOT(createProtein()));
     connect(ui->saveButton,SIGNAL(clicked()),this,SLOT(saveToFileProtein()));
     connect(ui->loadButton,SIGNAL(clicked()),this,SLOT(loadFromFileProtein()));
+
+
+    selfilter = tr("protein (*.protein)");
 }
 
 ProteinForm::~ProteinForm()
@@ -59,7 +62,7 @@ Qt3DCore::QEntity* ProteinForm::initWidget(QWidget *widget,Qt3DExtras::Qt3DWindo
 
 void ProteinForm::saveToFileProtein()
 {
-    QString selfilter = tr("protein (*.protein)");
+    //QString selfilter = tr("protein (*.protein)");
     QString filename = QFileDialog::getSaveFileName(
             this,
             "Збереження протеїну",
@@ -73,6 +76,7 @@ void ProteinForm::saveToFileProtein()
     if(!file.open(QIODevice::WriteOnly))
         return;
     QString fileExt = QFileInfo(filename).suffix();
+    setLastFileType(fileExt);
     QTextStream out(&file);
     if(fileExt == "protein")
         for(int i = 0;i < protein_.size();i++)
@@ -91,7 +95,6 @@ void ProteinForm::saveToFileProtein()
 
 void ProteinForm::loadFromFileProtein()
 {
-    QString selfilter = tr("proteinN (*.proteinN)");
     QString fileName = QFileDialog::getOpenFileName(
             this,
             "Звантаження протеїну",
@@ -103,6 +106,7 @@ void ProteinForm::loadFromFileProtein()
         return;
     QFile file(fileName);
     QString fileExt = QFileInfo(fileName).suffix();
+    setLastFileType(fileExt);
     file.open(QIODevice::ReadOnly);
     QByteArray array;
     QTextStream in(&file);
@@ -155,4 +159,17 @@ void ProteinForm::getProtein(VECTORBYTE protein)
          prev = nodes.at(i);
     }
     ui->genericCount->setValue(protein_.size());
+}
+
+
+void ProteinForm::setLastFileType(QString fileExt)
+{
+    //protein (*.protein);;proteinN (*.proteinN);;proteinS (*.proteinS)
+    if(fileExt == "protein")
+        selfilter = tr("protein (*.protein)");
+    else if(fileExt == "proteinN")
+        selfilter = tr("proteinN (*.proteinN)");
+    else if(fileExt == "proteinS")
+        selfilter = tr("proteinS (*.proteinS)");
+
 }

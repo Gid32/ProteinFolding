@@ -58,6 +58,8 @@ private:
     Qt3DCore::QEntity* rootEntity_;
     Qt3DExtras::Qt3DWindow *view_;
     QVector<Node*> nodes;
+    QString selfilter;
+    void setLastFileType(QString fileExt);
 };
 
 #endif // PROTEIN_H
