@@ -509,7 +509,7 @@ void ConvolutionFactory::evaporateTraceEXP()
 {
     for(int i=0;i<traceM_;i++)
         for(int j=0;j<traceN_;j++)
-             trace_[i][j] *= qExp(-trace_[i][j] /(10 * traceEvaporation_ * antCount_));
+             trace_[i][j] *= qExp(-trace_[i][j] /(traceEvaporation_ * antCount_));
 }
 
 void ConvolutionFactory::evaporateTrace()
