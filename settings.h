@@ -5,12 +5,12 @@
 #include <QDebug>
 #include <QMap>
 
-#define RADIUS_NODE 0.2f
-#define RADIUS_CONNECTION 0.05f
-#define LENGTH_CONNECTION 0.9f
-#define DISTANCE_NODE 1.0
+const float RADIUS_NODE 0.2;
+const float RADIUS_CONNECTION 0.05;
+const float LENGTH_CONNECTION 0.9;
+const double DISTANCE_NODE 1.0;
 
-#define PI 3.14159265
+const double PI 3.14159265;
 
 #define H_FILL 0x0
 #define H_FOB 0x1
